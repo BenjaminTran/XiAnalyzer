@@ -9,5 +9,8 @@
 *.root
 *.txt
 *.pcm
+<<<<<<< ours
 *.pyc
 XiAnalyzer/crab/HLT185_220*
+=======
+>>>>>>> theirs
