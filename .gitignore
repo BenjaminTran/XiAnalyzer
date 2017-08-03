@@ -1,0 +1,13 @@
+*.pdf
+*.gif
+*.png
+*.un*
+*.swp
+*.so
+*.d
+*_Store
+*.root
+*.txt
+*.pcm
+*.pyc
+XiAnalyzer/crab/HLT185_220*
