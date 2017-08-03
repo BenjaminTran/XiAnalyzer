@@ -28,6 +28,7 @@ process.GlobalTag.globaltag = '80X_dataRun2_Prompt_v15'
 #process.load("SimTracker.TrackAssociation.TrackAssociatorByChi2_cfi")
 process.load("XiAnalyzer.XiAnalyzer.xiselector_cff")
 process.load("XiAnalyzer.XiAnalyzer.v0selector_cff")
+process.load("XiAnalyzer.XiAnalyzer.omegaselector_cff")
 process.load("XiAnalyzer.XiAnalyzer.xicorrelation_cff")
 process.load("XiAnalyzer.XiAnalyzer.v0correlation_cff")
 process.load("XiAnalyzer.XiAnalyzer.ximasspt_cff")
@@ -87,24 +88,9 @@ process.TFileService = cms.Service("TFileService",
 #process.XiAnalysis = cms.Sequence(process.hltHM*process.selectV0CandidatesLowXi*process.xiCorrelation)
 process.XiCorrAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.xiCorrelation)
 process.V0CorrAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdatight*process.selectV0CandidatesNewkshort*process.v0Correlation)
+process.OmCorrAnalysis = cms.Sequence(process.selectOmegaCandidatesNew)
 
-# 2D Mass Pt hist Note: only one process at a time pls
-# all particles
-process.MassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.selectV0CandidatesNewlambdatight*process.selectV0CandidatesNewkshort*process.MassPt)
-
-# Xi only
-process.XiMassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.selectV0CandidatesNewlambdatight*process.selectV0CandidatesNewkshort*process.XiMassPt)
-
-# KsLa only
-process.V0MassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.selectV0CandidatesNewlambdatight*process.selectV0CandidatesNewkshort*process.KslaMassPt)
-
-# Ks only
-process.KsMassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.selectV0CandidatesNewlambdatight*process.selectV0CandidatesNewkshort*process.KsMassPt)
-
-# La only
-process.LaMassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.selectV0CandidatesNewlambdatight*process.selectV0CandidatesNewkshort*process.LaMassPt)
-
-process.p = cms.Path(process.XiCorrAnalysis)
+process.p = cms.Path(process.OmCorrAnalysis)
 
 process.schedule = cms.Schedule(process.p)
 
