@@ -9,7 +9,6 @@
 <use name="TrackingTools/IPTools"/>
 <use name="RecoVertex/KinematicFit"/>
 <use name="RecoVertex/KinematicFitPrimitives"/>
-<use name="RecoVertex/KinematicFit"/>
 <use name="RecoVertex/KalmanVertexFit"/>
 
 <flags EDM_PLUGIN="1"/>
