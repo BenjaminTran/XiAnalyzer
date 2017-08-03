@@ -9,3 +9,5 @@
 *.root
 *.txt
 *.pcm
+*.pyc
+XiAnalyzer/crab/HLT185_220*
