@@ -5,6 +5,7 @@ config = Configuration()
 config.section_("General")
 config.General.requestName = 'HLT185_220FlowCascadev2ppb2016PD4JL48'
 config.General.workArea = 'HLT185_220FlowCascadev2ppb2016PD4CutLoose'
+#test line for git learning purposes
 
 config.section_("JobType")
 config.JobType.pluginName = 'Analysis'
