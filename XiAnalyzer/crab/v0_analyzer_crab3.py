@@ -3,8 +3,8 @@ from WMCore.Configuration import Configuration
 config = Configuration()
 
 config.section_("General")
-config.General.requestName = 'HLT185_220FlowKslav2ppb2016PD5CorrelationJL8'
-config.General.workArea = 'HLT185_220FlowKslav2ppb2016PD5'
+config.General.requestName = 'HLT185_220FlowKslav2ppb2016PD5CorrelationJL9'
+config.General.workArea = 'HLT185_220FlowKslav2ppb2016PD1'
 
 config.section_("JobType")
 config.JobType.pluginName = 'Analysis'
@@ -16,7 +16,7 @@ config.section_("Data")
 #config.Data.inputDataset = '/PAHighMultiplicity2/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
 #config.Data.inputDataset = '/PAHighMultiplicity3/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
 #config.Data.inputDataset = '/PAHighMultiplicity4/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-config.Data.inputDataset = '/PAHighMultiplicity5/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+config.Data.inputDataset = '/PAHighMultiplicity1/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
 #config.Data.inputDataset = '/PAHighMultiplicity6/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
 #config.Data.userInputFiles = list(open('HMMC90.txt'))
 config.Data.inputDBS = 'phys03'
