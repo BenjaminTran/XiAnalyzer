@@ -1,31 +1,19 @@
 import FWCore.ParameterSet.Config as cms
 
-#import HLTrigger.HLTfilters.hltHighLevel_cfi
-#hltHM = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
-#hltHM.HLTPaths = [
-#                'HLT_PAPixelTracks_Multiplicity100_v*',
-#                'HLT_PAPixelTracks_Multiplicity130_v*',
-#                'HLT_PAPixelTracks_Multiplicity160_v*'
-#                #'HLT_PAPixelTracks_Multiplicity190_v',
-#                #'HLT_PAPixelTracks_Multiplicity220_v'
-#            ]
-
 xiMassPt = cms.EDAnalyzer('XiMassPt',
-        trkSrc = cms.InputTag('generalTracks'),
-        xiCollection   = cms.InputTag('selectV0CandidatesLowXi:Xi'),
-        laCollection = cms.InputTag('selectV0CandidatesNewlambdatight:Lambda'),
-        ksCollection = cms.InputTag('selectV0CandidatesNewkshort:Kshort'),
+        ksCollection   = cms.InputTag('selectV0CandidatesNewkshort:Kshort'),
+        laCollection   = cms.InputTag('selectV0CandidatesNewlambdatight:Lambda'),
+        trkSrc         = cms.InputTag('generalTracks'),
         vertexCollName = cms.InputTag('offlinePrimaryVertices'),
-        zVtxHigh       = cms.double(15.0),
-        zVtxLow        = cms.double(-15.0),
+        xiCollection   = cms.InputTag('selectV0CandidatesLowXi:Xi'),
         multHigh       = cms.double(220),
         multLow        = cms.double(185),
-        rapMax = cms.double(1.0),
-        rapMin = cms.double(-1.0),
-        dorap = cms.untracked.bool(True),
-        #Leave these as true, select variations from cff cloned processes
-        xi = cms.untracked.bool(True),
-        ks = cms.untracked.bool(True),
-        la = cms.untracked.bool(True)
-
+        rapMax         = cms.double(1.0),
+        rapMin         = cms.double(-1.0),
+        zVtxHigh       = cms.double(15.0),
+        zVtxLow        = cms.double(-15.0),
+        dorap          = cms.untracked.bool(True),
+        ks             = cms.untracked.bool(True),
+        la             = cms.untracked.bool(True),
+        xi             = cms.untracked.bool(True)
 )

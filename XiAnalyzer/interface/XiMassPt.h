@@ -153,7 +153,7 @@
 // Root include files
 #include "TTree.h"
 //
-// Track Matching and fake rate calculations     
+// Track Matching and fake rate calculations
 //#include "RiceHIG/V0Analysis/interface/V0Validator.h"
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
 
@@ -171,27 +171,23 @@ class XiMassPt : public edm::EDAnalyzer {
 
         edm::Service<TFileService> fs;
 
-        edm::InputTag xiCollection_;
-        edm::InputTag vertexCollName_;
-        edm::InputTag trkSrc_;
-
-        edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _xiCollection;
+        edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
+        edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
         edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _ksCollection;
         edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _laCollection;
-        edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
-        edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
-        
-		bool la_;
-		bool ks_;
-		bool xi_;
-        bool dorap_;
+        edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _xiCollection;
 
-        double zVtxHigh_;
-        double zVtxLow_;
+        bool dorap_;
+        bool ks_;
+        bool la_;
+        bool xi_;
+
         double multHigh_;
         double multLow_;
         double rapMax_;
         double rapMin_;
+        double zVtxHigh_;
+        double zVtxLow_;
 
         vector<double> *zvtxVect;
 
