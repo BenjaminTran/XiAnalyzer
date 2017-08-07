@@ -365,7 +365,7 @@ XiCorrelation::beginJob()
     HadPerEvt       = fs->make<TH1D>("HadPerEvent", "Hadrons per Event", 1500, 0, 1500);
     TrkassPerEvt    = fs->make<TH1D>("TrkassPerEvent", "Associated trks per Event", 300,0, 300);
 
-    MassPt          = fs->make<TH2D>("MassPt", "", 150, 1.25, 1.40, 200, 0 ,20);
+    MassPt          = fs->make<TH2D>("MassPt", "", 150, 1.25, 1.40, 300, 0 ,30);
     BackgroundHad   = fs->make<TH2D>("BackgroundHad", "BkgHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     SignalHad       = fs->make<TH2D>("SignalHad", "SigHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     SignalXiHad     = fs->make<TH2D>("SignalXiHad", ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
