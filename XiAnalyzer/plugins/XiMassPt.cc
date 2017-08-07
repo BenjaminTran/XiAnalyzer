@@ -132,6 +132,7 @@ XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         nEvtCut->Fill(1);
         EtaPtCutnTrackHist->Fill(EtaPtCutnTracks);
         //XI
+        if(!xiCollection.isValid()) cout << "Bad XiCollection" << endl;
         if(xi_ && xiCollection.isValid())
         {
             for(reco::VertexCompositeCandidateCollection::const_iterator xiCand =
@@ -191,9 +192,9 @@ XiMassPt::beginJob()
     if(ks_) cout << "Will Access Ks" << endl;
     if(la_) cout << "Will Access La" << endl;
 
-    MassPt             = fs->make<TH2D>("MassPt", "#Xi Mass and Pt", 150, 1.25, 1.40, 250, 0, 25);
-    LaMassPt           = fs->make<TH2D>("LaMassPt", "#Lambda Mass and Pt", 160, 1.08, 1.160, 250, 0, 25);
-    KsMassPt           = fs->make<TH2D>("KsMassPt", "Ks Mass and Pt", 270, 0.43, 0.565, 250, 0, 25);
+    MassPt             = fs->make<TH2D>("MassPt", "#Xi Mass and Pt", 150, 1.25, 1.40, 300, 0, 30);
+    LaMassPt           = fs->make<TH2D>("LaMassPt", "#Lambda Mass and Pt", 160, 1.08, 1.160, 300, 0, 30);
+    KsMassPt           = fs->make<TH2D>("KsMassPt", "Ks Mass and Pt", 270, 0.43, 0.565, 300, 0, 30);
     nTrk               = fs->make<TH1D>("nTrk", "nTrk", 400, 0, 400);
     nEvtCut            = fs->make<TH1D>("nEvtCut", "nEvtCut", 10,0,10);
     EtaPtCutnTrackHist = fs->make<TH1D>("EtaPtCutnTrackHist", "EtaPtCutnTrack",250,0,250);
