@@ -67,8 +67,8 @@ XiSelector::XiSelector(const edm::ParameterSet& iConfig)
     xi3DIpSigValue_     = iConfig.getParameter<double>("xi3DIpSigValue");
     xiFlightSigValue_   = iConfig.getParameter<double>("xi3DIpSigValue");
     xiPi3DIpSigValue_   = iConfig.getParameter<double>("xiPi3DIpSigValue");
-    zVertexHigh_        = iConfig.getParameter<double>("zVertexHigh"),
-    zVertexLow_         = iConfig.getParameter<double>("zVertexLow"),
+    zVertexHigh_        = iConfig.getParameter<double>("zVertexHigh");
+    zVertexLow_         = iConfig.getParameter<double>("zVertexLow");
     vtxChi2Cut_      = iConfig.getParameter<double>("vtxChi2Cut");
     cosThetaCut_     = iConfig.getParameter<double>("cosThetaCut");
 
