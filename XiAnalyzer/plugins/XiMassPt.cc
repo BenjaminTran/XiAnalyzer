@@ -192,9 +192,9 @@ XiMassPt::beginJob()
     if(ks_) cout << "Will Access Ks" << endl;
     if(la_) cout << "Will Access La" << endl;
 
-    MassPt             = fs->make<TH2D>("MassPt", "#Xi Mass and Pt", 150, 1.25, 1.40, 300, 0, 30);
-    LaMassPt           = fs->make<TH2D>("LaMassPt", "#Lambda Mass and Pt", 160, 1.08, 1.160, 300, 0, 30);
-    KsMassPt           = fs->make<TH2D>("KsMassPt", "Ks Mass and Pt", 270, 0.43, 0.565, 300, 0, 30);
+    MassPt             = fs->make<TH2D>("MassPt", "#Xi Mass and Pt", 150, 1.25, 1.40, 400, 0, 40);
+    LaMassPt           = fs->make<TH2D>("LaMassPt", "#Lambda Mass and Pt", 160, 1.08, 1.160, 400, 0, 40);
+    KsMassPt           = fs->make<TH2D>("KsMassPt", "Ks Mass and Pt", 270, 0.43, 0.565, 400, 0, 40);
     nTrk               = fs->make<TH1D>("nTrk", "nTrk", 400, 0, 400);
     nEvtCut            = fs->make<TH1D>("nEvtCut", "nEvtCut", 10,0,10);
     EtaPtCutnTrackHist = fs->make<TH1D>("EtaPtCutnTrackHist", "EtaPtCutnTrack",250,0,250);

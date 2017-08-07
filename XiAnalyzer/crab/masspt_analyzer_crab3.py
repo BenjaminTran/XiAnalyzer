@@ -3,7 +3,7 @@ from WMCore.Configuration import Configuration
 config = Configuration()
 
 config.section_("General")
-config.General.requestName = 'HLT185_220FlowMassPtv2ppb2016PD1CorrelationJL2'
+config.General.requestName = 'HLT185_220FlowMassPtv2ppb2016PD1CorrelationJL4'
 config.General.workArea = 'HLT185_220FlowMassPtv2ppb2016PD1'
 
 config.section_("JobType")
@@ -25,7 +25,7 @@ config.Data.inputDBS = 'phys03'
 #config.Data.unitsPerJob = 1
 config.Data.splitting = 'EventAwareLumiBased'
 config.Data.unitsPerJob = 60000
-#config.Data.totalUnits = 300
+config.Data.totalUnits = 120000
 config.Data.outLFNDirBase = '/store/group/phys_heavyions/btran/'
 config.Data.useParent = True
 config.Data.publication = False
