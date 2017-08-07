@@ -56,8 +56,6 @@ XiSelector::XiSelector(const edm::ParameterSet& iConfig)
 
     VTrkP3DIpSigValue_  = iConfig.getParameter<double>("VTrkP3DIpSigValue");
     VTrkPi3DIpSigValue_ = iConfig.getParameter<double>("VTrkPi3DIpSigValue");
-    _XiCollection       = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag(v0CollName_,v0IDName_,"ANASKIM"));
-    _vertexCollName     = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName"));
     distanceSigValue_   = iConfig.getParameter<double>("distanceSigValue");
     etaCutMax_          = iConfig.getParameter<double>("etaCutMax");
     etaCutMin_          = iConfig.getParameter<double>("etaCutMin");
@@ -71,6 +69,8 @@ XiSelector::XiSelector(const edm::ParameterSet& iConfig)
     zVertexLow_         = iConfig.getParameter<double>("zVertexLow");
     vtxChi2Cut_      = iConfig.getParameter<double>("vtxChi2Cut");
     cosThetaCut_     = iConfig.getParameter<double>("cosThetaCut");
+    _XiCollection       = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag(v0CollName_,v0IDName_,"ANASKIM"));
+    _vertexCollName     = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName"));
 
     // The argument gives the instance name of the collection
     produces< reco::VertexCompositeCandidateCollection >(v0IDName_);
