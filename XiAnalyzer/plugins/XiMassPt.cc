@@ -42,10 +42,13 @@ XiMassPt::XiMassPt(const edm::ParameterSet& iConfig)
     zVtxLow_ = iConfig.getParameter<double>( "zVtxLow" );
     multHigh_ = iConfig.getParameter<double>( "multHigh" );
     multLow_ = iConfig.getParameter<double>( "multLow" );
+    rapMax_ = iConfig.getParameter<double>("rapMax");
+    rapMin_ = iConfig.getParameter<double>("rapMin");
 
 	xi_ = iConfig.getUntrackedParameter<bool>( "xi",false );
 	la_ = iConfig.getUntrackedParameter<bool>( "la",false );
 	ks_ = iConfig.getUntrackedParameter<bool>( "ks",false );
+    dorap_ = iConfig.getUntrackedParameter<bool>("dorap",false);
 
 }
 
@@ -129,49 +132,49 @@ XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     if( EtaPtCutnTracks >= multLow_ && EtaPtCutnTracks < multHigh_ ){
         nEvtCut->Fill( 1 );
         EtaPtCutnTrackHist->Fill( EtaPtCutnTracks );
+        //XI
         if( xi_ && xiCollection.isValid())
         {
             for(reco::VertexCompositeCandidateCollection::const_iterator xiCand =
                     xiCollection->begin(); xiCand != xiCollection->end(); xiCand++ ) {
 
-                // Make InvMass for Xi
+                double rap = xiCand->rapidity();
                 double mass = xiCand->mass();
-
-                // Xi pT Spectrum
                 double xi_pT = xiCand->pt();
 
+                if(dorap_ && (rap > rapMax_ || rap < rapMin_)) continue;
                 MassPt->Fill( mass, xi_pT );
 
                 cout<<"Fill Xi"<<endl;
             }
         }
+        //KS
         if( ks_ && ksCollection.isValid())
         {
             for(reco::VertexCompositeCandidateCollection::const_iterator ksCand =
                     ksCollection->begin(); ksCand != ksCollection->end(); ksCand++ ) {
 
-                // Make InvMass for Ks
+                double rap = ksCand->rapidity();
                 double mass = ksCand->mass();
-
-                // Ks pT Spectrum
                 double ks_pT = ksCand->pt();
 
+                if(dorap_ && (rap > rapMax_ || rap < rapMin_)) continue;
                 KsMassPt->Fill( mass, ks_pT );
 
                 cout<<"Fill Ks"<<endl;
             }
         }
+        //LAMBDA
         if( la_ && laCollection.isValid())
         {
             for(reco::VertexCompositeCandidateCollection::const_iterator laCand =
                     laCollection->begin(); laCand != laCollection->end(); laCand++ ) {
 
-                // Make InvMass for Xi
+                double rap = laCand->rapidity();
                 double mass = laCand->mass();
-
-                // Xi pT Spectrum
                 double la_pT = laCand->pt();
 
+                if(dorap_ && (rap > rapMax_ || rap < rapMin_)) continue;
                 LaMassPt->Fill( mass, la_pT );
 
                 cout<<"Fill La"<<endl;

@@ -184,11 +184,14 @@ class XiMassPt : public edm::EDAnalyzer {
 		bool la_;
 		bool ks_;
 		bool xi_;
+        bool dorap_;
 
         double zVtxHigh_;
         double zVtxLow_;
         double multHigh_;
         double multLow_;
+        double rapMax_;
+        double rapMin_;
 
         vector<double> *zvtxVect;
 
