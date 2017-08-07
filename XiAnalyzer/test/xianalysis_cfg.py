@@ -36,8 +36,8 @@ process.load("XiAnalyzer.XiAnalyzer.ximasspt_cff")
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10000))
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -68,16 +68,15 @@ process.source = cms.Source("PoolSource",
     #'/store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_Pbp_V0Cascade_FullSkim_v1/170301_205443/0000/pPb_HM_100.root'
     #'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_Pbp_V0Cascade_FullSkim_v1/170301_205443/0000/pPb_HM_90.root'
     #'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_pPb_V0Cascade_FullSkim_v1/170301_205416/0000/pPb_HM_100.root'
-   'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_pPb_V0Cascade_FullSkim_v3/170706_190142/0000/pPb_HM_100.root'
+    'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_pPb_V0Cascade_FullSkim_v4/170803_222621/0000/pPb_HM_101.root'
    )
 )
 
 # Additional output definition
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
-                                    #'kslaMassPt.root'
-				    #'CasCutLoose.root'
-                                    'V0Correlation.root'
+                                    #'V0Correlation.root'
+                                    'XiCorrelation.root'
 				    )
                                   )
 # CORRELATION
@@ -90,7 +89,7 @@ process.XiCorrAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.xi
 process.V0CorrAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdatight*process.selectV0CandidatesNewkshort*process.v0Correlation)
 process.OmCorrAnalysis = cms.Sequence(process.selectOmegaCandidatesNew)
 
-process.p = cms.Path(process.OmCorrAnalysis)
+process.p = cms.Path(process.XiCorrAnalysis)
 
 process.schedule = cms.Schedule(process.p)
 
