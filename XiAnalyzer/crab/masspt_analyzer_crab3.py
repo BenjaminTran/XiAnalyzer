@@ -3,7 +3,7 @@ from WMCore.Configuration import Configuration
 config = Configuration()
 
 config.section_("General")
-config.General.requestName = 'HLT185_220FlowMassPtv2ppb2016PD1CorrelationJL0'
+config.General.requestName = 'HLT185_220FlowMassPtv2ppb2016PD1CorrelationJL2'
 config.General.workArea = 'HLT185_220FlowMassPtv2ppb2016PD1'
 
 config.section_("JobType")
