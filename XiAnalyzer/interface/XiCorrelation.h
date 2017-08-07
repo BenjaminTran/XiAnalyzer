@@ -127,7 +127,7 @@
 #include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerObjectMap.h"
 
 //#include "L1Trigger/GlobalTrigger/interface/L1GlobalTrigger.h" // Don't know why but this has been moved from interface to plugin
-#include "L1Trigger/GlobalTrigger/plugins/L1GlobalTrigger.h" 
+#include "L1Trigger/GlobalTrigger/plugins/L1GlobalTrigger.h"
 
 #include "DataFormats/Math/interface/Point3D.h"
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
@@ -156,7 +156,7 @@
 // Root include files
 #include "TTree.h"
 //
-// Track Matching and fake rate calculations     
+// Track Matching and fake rate calculations
 //#include "RiceHIG/V0Analysis/interface/V0Validator.h"
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
 
@@ -180,28 +180,27 @@ class XiCorrelation : public edm::EDAnalyzer {
 
         edm::Service<TFileService> fs;
 
-        edm::InputTag xiCollection_;
-        edm::InputTag vertexCollName_;
-        edm::InputTag trkSrc_;
-
-        edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _xiCollection;
-        edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
         edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
+        edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
+        edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _xiCollection;
 
-        double zVtxHigh_;
-        double zVtxLow_;
-        double ptMax_ass_;
-        double ptMin_ass_;
+        bool dorap_;
+        double bkgnum_;
         double etaMax_ass_;
         double etaMin_ass_;
-        double bkgnum_;
+        double ptMax_ass_;
+        double ptMin_ass_;
+        double rapMax_;
+        double rapMin_;
         double xiMassHigh_;
         double xiMassLow_;
+        double zVtxHigh_;
+        double zVtxLow_;
+        int PtBinNum_;
         int multHigh_;
         int multLow_;
         int peakFactor_;
         int sideFactor_;
-        int PtBinNum_;
 
         //vector<TVector3> *pepVect_trkhad;
         vector<TVector3> *pepVect_trkass;
@@ -222,7 +221,6 @@ class XiCorrelation : public edm::EDAnalyzer {
         TH1D* nEvtCut;
         TH1D* HadPerEvt;
         TH1D* TrkassPerEvt;
-        //TH1D* TrktrgPerEvt;
 
         TH2D* MassPt;
         TH2D* BackgroundXiPeak[7];
@@ -233,12 +231,6 @@ class XiCorrelation : public edm::EDAnalyzer {
         TH2D* SignalXiSide[7];
         TH2D* SignalHad;
         TH2D* SignalXiHad;
-        /*
-        TH2D* Correlation;
-        TH2D* CorrelationPeak;
-        TH2D* CorrelationSide;
-        TH2D* CorrelationHad;
-        */
 
 
 };

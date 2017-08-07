@@ -95,9 +95,9 @@ private:
   edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _XiCollection;
   std::string v0CollName_;
   std::string v0IDName_;
-  double ptCut1_,ptCut2_;
+  double ptCut1_, ptCut2_;
   int nHitCut1_;
-  double etaCutMin_,etaCutMax_;
+  double etaCutMin_, etaCutMax_;
   double zVertexLow_, zVertexHigh_;
   double xi3DIpSigValue_;
   double xiPi3DIpSigValue_;

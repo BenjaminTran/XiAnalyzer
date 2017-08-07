@@ -1,9 +1,8 @@
 import FWCore.ParameterSet.Config as cms
 
-selectV0CandidatesLow   = cms.EDProducer('XiSelector',
+selectV0CandidatesLow  = cms.EDProducer('XiSelector',
     vertexCollName     = cms.InputTag('offlinePrimaryVertices'),
-    #v0CollName         = cms.string("generalCascadeCandidatesNew"),
-    v0CollName         = cms.string("generalV0CandidatesNew"),
+    v0CollName         = cms.string("generalCascadeCandidatesNew"),
     v0IDName           = cms.string("Xi"),
     etaCutMin          = cms.double(-2.4),
     etaCutMax          = cms.double(2.4),
