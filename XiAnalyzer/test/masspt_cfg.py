@@ -75,8 +75,7 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
                                         #'CasCutLooseTester.root'
-                                        #'XiOmTTree.root'
-                                        'TestWei.root'
+                                        'V0CasMassPt.root'
                                         )
                                   )
 # CORRELATION
@@ -107,8 +106,8 @@ process.LaMassPtAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdatight
 #Tree producer
 process.XiOmTreeProd = cms.Sequence(process.xiTree)
 
-process.p = cms.Path(process.XiOmTreeProd)
-#process.p = cms.Path(process.XiMassPtAnalysis)
+#process.p = cms.Path(process.XiOmTreeProd)
+process.p = cms.Path(process.MassPtAnalysis)
 
 process.schedule = cms.Schedule(process.p)
 
