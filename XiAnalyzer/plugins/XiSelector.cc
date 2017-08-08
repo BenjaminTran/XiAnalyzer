@@ -70,7 +70,6 @@ XiSelector::XiSelector(const edm::ParameterSet& iConfig)
     dorap_              = iConfig.getParameter<bool>("dorap");
     rapMax_             = iConfig.getParameter<double>("rapMax");
     rapMin_             = iConfig.getParameter<double>("rapMin");
-
     _XiCollection       = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag(v0CollName_,v0IDName_,"ANASKIM"));
     _vertexCollName     = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName"));
 
