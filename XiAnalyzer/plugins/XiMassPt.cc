@@ -66,7 +66,7 @@ XiMassPt::~XiMassPt()
 void
 XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-   using namespace edm;
+    using namespace edm;
 
     edm::Handle<reco::VertexCollection> vertices;
     iEvent.getByToken(_vertexCollName, vertices);
@@ -142,7 +142,7 @@ XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
                 XiMassPt         ->Fill(mass_xi,pT_xi);
                 rapidity_xi      ->Fill(rap_xi);
-                pseudorapidity_xi->Fill(eta_xi)
+                pseudorapidity_xi->Fill(eta_xi);
 
                 cout<<"Fill Xi"<<endl;
             }
@@ -158,7 +158,7 @@ XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double pT_ks   = ksCand->pt();
                 double eta_ks  = ksCand->eta();
 
-                KsMassPt         -> Fill(mass,pT_ks);
+                KsMassPt         -> Fill(mass_ks,pT_ks);
                 rapidity_ks      -> Fill(rap_ks);
                 pseudorapidity_ks-> Fill(eta_ks);
 
@@ -174,11 +174,11 @@ XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double rap_la  = laCand->rapidity();
                 double mass_la = laCand->mass();
                 double pT_la   = laCand->pt();
-                double eta_ks  = ksCand->eta();
+                double eta_la  = laCand->eta();
 
-                LaMassPt         -> Fill(mass, la_pT);
+                LaMassPt         -> Fill(mass, pT_la);
                 rapidity_la      -> Fill(rap_ks);
-                pseudorapidity_la-> Fill(mass, pT_la);
+                pseudorapidity_la-> Fill(eta_la);
 
                 cout<<"Fill La"<<endl;
             }
@@ -195,7 +195,7 @@ XiMassPt::beginJob()
     if(ks_) cout << "Will Access Ks" << endl;
     if(la_) cout << "Will Access La" << endl;
 
-    XiMassPt             = fs->make<TH2D>("MassPt", "#Xi Mass and Pt", 150, 1.25, 1.40, 400, 0, 40);
+    XiMassPt           = fs->make<TH2D>("MassPt", "#Xi Mass and Pt", 150, 1.25, 1.40, 400, 0, 40);
     LaMassPt           = fs->make<TH2D>("LaMassPt", "#Lambda Mass and Pt", 160, 1.08, 1.160, 400, 0, 40);
     KsMassPt           = fs->make<TH2D>("KsMassPt", "Ks Mass and Pt", 270, 0.43, 0.565, 400, 0, 40);
     nTrk               = fs->make<TH1D>("nTrk", "nTrk", 400, 0, 400);
