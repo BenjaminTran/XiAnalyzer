@@ -105,10 +105,9 @@ private:
   double VTrkP3DIpSigValue_;
   double xiFlightSigValue_;
   double distanceSigValue_;
-  double vtxChi2Cut_;
-  double cosThetaCut_;
-  double misIDMassCut_;
-  double misIDMassCutEE_;
+  bool dorap_;
+  double rapMax_;
+  double rapMin_;
 };
 
 #endif

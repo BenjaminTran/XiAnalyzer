@@ -39,12 +39,9 @@ XiMassPt::XiMassPt(const edm::ParameterSet& iConfig)
 
     multHigh_ = iConfig.getParameter<double>("multHigh");
     multLow_  = iConfig.getParameter<double>("multLow");
-    rapMax_   = iConfig.getParameter<double>("rapMax");
-    rapMin_   = iConfig.getParameter<double>("rapMin");
     zVtxHigh_ = iConfig.getParameter<double>("zVtxHigh");
     zVtxLow_  = iConfig.getParameter<double>("zVtxLow");
 
-    dorap_ = iConfig.getUntrackedParameter<bool>("dorap",false);
     ks_    = iConfig.getUntrackedParameter<bool>("ks",false);
     la_    = iConfig.getUntrackedParameter<bool>("la",false);
     xi_    = iConfig.getUntrackedParameter<bool>("xi",false);
@@ -138,12 +135,14 @@ XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             for(reco::VertexCompositeCandidateCollection::const_iterator xiCand =
                     xiCollection->begin(); xiCand != xiCollection->end(); xiCand++) {
 
-                double rap = xiCand->rapidity();
-                double mass = xiCand->mass();
-                double xi_pT = xiCand->pt();
+                double rap_xi  = xiCand->rapidity();
+                double mass_xi = xiCand->mass();
+                double pT_xi   = xiCand->pt();
+                double eta_xi  = xiCand->eta();
 
-                if(dorap_ && (rap > rapMax_ || rap < rapMin_)) continue;
-                MassPt->Fill(mass, xi_pT);
+                XiMassPt         ->Fill(mass_xi,pT_xi);
+                rapidity_xi      ->Fill(rap_xi);
+                pseudorapidity_xi->Fill(eta_xi)
 
                 cout<<"Fill Xi"<<endl;
             }
@@ -154,12 +153,14 @@ XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             for(reco::VertexCompositeCandidateCollection::const_iterator ksCand =
                     ksCollection->begin(); ksCand != ksCollection->end(); ksCand++) {
 
-                double rap   = ksCand->rapidity();
-                double mass  = ksCand->mass();
-                double ks_pT = ksCand->pt();
+                double rap_ks  = ksCand->rapidity();
+                double mass_ks = ksCand->mass();
+                double pT_ks   = ksCand->pt();
+                double eta_ks  = ksCand->eta();
 
-                if(dorap_ && (rap > rapMax_ || rap < rapMin_)) continue;
-                KsMassPt->Fill(mass, ks_pT);
+                KsMassPt         -> Fill(mass,pT_ks);
+                rapidity_ks      -> Fill(rap_ks);
+                pseudorapidity_ks-> Fill(eta_ks);
 
                 cout<<"Fill Ks"<<endl;
             }
@@ -170,12 +171,14 @@ XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             for(reco::VertexCompositeCandidateCollection::const_iterator laCand =
                     laCollection->begin(); laCand != laCollection->end(); laCand++) {
 
-                double rap   = laCand->rapidity();
-                double mass  = laCand->mass();
-                double la_pT = laCand->pt();
+                double rap_la  = laCand->rapidity();
+                double mass_la = laCand->mass();
+                double pT_la   = laCand->pt();
+                double eta_ks  = ksCand->eta();
 
-                if(dorap_ && (rap > rapMax_ || rap < rapMin_)) continue;
-                LaMassPt->Fill(mass, la_pT);
+                LaMassPt         -> Fill(mass, la_pT);
+                rapidity_la      -> Fill(rap_ks);
+                pseudorapidity_la-> Fill(mass, pT_la);
 
                 cout<<"Fill La"<<endl;
             }
@@ -192,13 +195,18 @@ XiMassPt::beginJob()
     if(ks_) cout << "Will Access Ks" << endl;
     if(la_) cout << "Will Access La" << endl;
 
-    MassPt             = fs->make<TH2D>("MassPt", "#Xi Mass and Pt", 150, 1.25, 1.40, 400, 0, 40);
+    XiMassPt             = fs->make<TH2D>("MassPt", "#Xi Mass and Pt", 150, 1.25, 1.40, 400, 0, 40);
     LaMassPt           = fs->make<TH2D>("LaMassPt", "#Lambda Mass and Pt", 160, 1.08, 1.160, 400, 0, 40);
     KsMassPt           = fs->make<TH2D>("KsMassPt", "Ks Mass and Pt", 270, 0.43, 0.565, 400, 0, 40);
     nTrk               = fs->make<TH1D>("nTrk", "nTrk", 400, 0, 400);
     nEvtCut            = fs->make<TH1D>("nEvtCut", "nEvtCut", 10,0,10);
     EtaPtCutnTrackHist = fs->make<TH1D>("EtaPtCutnTrackHist", "EtaPtCutnTrack",250,0,250);
-    zvtxVect           = new vector<double>;
+    rapidity_xi        = fs->make<TH1D>("Rapidity","Rapidity",200,-10,10);
+    rapidity_ks        = fs->make<TH1D>("Rapidity","Rapidity",200,-10,10);
+    rapidity_la        = fs->make<TH1D>("Rapidity","Rapidity",200,-10,10);
+    pseudorapidity_xi  = fs->make<TH1D>("eta","eta",200,-10,10);
+    pseudorapidity_ks  = fs->make<TH1D>("eta","eta",200,-10,10);
+    pseudorapidity_la  = fs->make<TH1D>("eta","eta",200,-10,10);
 }
 
 // ------------ method called once each job just after ending the event loop  ------------

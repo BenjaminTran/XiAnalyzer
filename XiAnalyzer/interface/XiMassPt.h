@@ -177,15 +177,12 @@ class XiMassPt : public edm::EDAnalyzer {
         edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _laCollection;
         edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _xiCollection;
 
-        bool dorap_;
         bool ks_;
         bool la_;
         bool xi_;
 
         double multHigh_;
         double multLow_;
-        double rapMax_;
-        double rapMin_;
         double zVtxHigh_;
         double zVtxLow_;
 

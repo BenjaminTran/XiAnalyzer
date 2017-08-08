@@ -53,6 +53,9 @@ V0Selector::V0Selector(const edm::ParameterSet& iConfig)
   decayLSigCut_   = iConfig.getParameter<double>("decayLSigCut");
   misIDMassCut_   = iConfig.getParameter<double>("misIDMassCut");
   misIDMassCutEE_ = iConfig.getParameter<double>("misIDMassCutEE");
+  dorap_          = iConfig.getParameter<bool>("dorap");
+  rapMax_         = iConfig.getParameter<double>("rapMax");
+  rapMin_         = iConfig.getParameter<double>("rapMin");
   _vertexCollName = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName" ) );
   _V0Collection = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag( v0CollName_,v0IDName_,"ANASKIM" ) );
   // Trying this with Candidates instead of the simple reco::Vertex
@@ -112,9 +115,12 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
        double px = v0cand->px();
        double py = v0cand->py();
        double pz = v0cand->pz();
+       double rap = v0cand->rapidity();
 //       double mass = v0cand->mass();
 
-       if(eta > etaCutMax_ || eta < etaCutMin_) continue;
+        if(dorap_ && (rap > rapMax_ || rap < rapMin_)) continue;
+        else
+            if(eta > etaCutMax_ || eta < etaCutMin_) continue;
 
        secvz = v0cand->vz(); secvx = v0cand->vx(); secvy = v0cand->vy();
 
