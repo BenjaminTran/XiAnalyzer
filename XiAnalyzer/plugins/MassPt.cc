@@ -176,8 +176,8 @@ MassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double pT_la   = laCand->pt();
                 double eta_la  = laCand->eta();
 
-                LaMassPt         -> Fill(mass, pT_la);
-                rapidity_la      -> Fill(rap_ks);
+                LaMassPt         -> Fill(mass_la, pT_la);
+                rapidity_la      -> Fill(rap_la);
                 pseudorapidity_la-> Fill(eta_la);
 
                 cout<<"Fill La"<<endl;
