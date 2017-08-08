@@ -81,6 +81,9 @@ private:
   double decayLSigCut_;
   double misIDMassCut_;
   double misIDMassCutEE_;
+  bool dorap_;
+  double rapMax_;
+  double rapMin_;
 };
 
 #endif

@@ -17,8 +17,7 @@ selectV0CandidatesLow  = cms.EDProducer('XiSelector',
     VTrkP3DIpSigValue  = cms.double(3),
     xiFlightSigValue   = cms.double(3),
     distanceSigValue   = cms.double(12),
-    vtxChi2Cut         = cms.double(10000.0),
-    cosThetaCut        = cms.double(0.999),
-    misIDMassCut       = cms.double(0.010),
-    misIDMassCutEE     = cms.double(0.015)
+    dorap              = cms.bool(True),
+    rapMax             = cms.double(1.0),
+    rapMin             = cms.double(-1.0)
     )

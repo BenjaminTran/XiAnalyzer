@@ -56,8 +56,6 @@ XiSelector::XiSelector(const edm::ParameterSet& iConfig)
 
     VTrkP3DIpSigValue_  = iConfig.getParameter<double>("VTrkP3DIpSigValue");
     VTrkPi3DIpSigValue_ = iConfig.getParameter<double>("VTrkPi3DIpSigValue");
-    _XiCollection       = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag(v0CollName_,v0IDName_,"ANASKIM"));
-    _vertexCollName     = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName"));
     distanceSigValue_   = iConfig.getParameter<double>("distanceSigValue");
     etaCutMax_          = iConfig.getParameter<double>("etaCutMax");
     etaCutMin_          = iConfig.getParameter<double>("etaCutMin");
@@ -69,8 +67,12 @@ XiSelector::XiSelector(const edm::ParameterSet& iConfig)
     xiPi3DIpSigValue_   = iConfig.getParameter<double>("xiPi3DIpSigValue");
     zVertexHigh_        = iConfig.getParameter<double>("zVertexHigh");
     zVertexLow_         = iConfig.getParameter<double>("zVertexLow");
-    vtxChi2Cut_      = iConfig.getParameter<double>("vtxChi2Cut");
-    cosThetaCut_     = iConfig.getParameter<double>("cosThetaCut");
+    dorap_              = iConfig.getParameter<bool>("dorap");
+    rapMax_             = iConfig.getParameter<double>("rapMax");
+    rapMin_             = iConfig.getParameter<double>("rapMin");
+
+    _XiCollection       = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag(v0CollName_,v0IDName_,"ANASKIM"));
+    _vertexCollName     = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName"));
 
     // The argument gives the instance name of the collection
     produces< reco::VertexCompositeCandidateCollection >(v0IDName_);
@@ -143,12 +145,15 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
 
         //pt,mass
-        double eta_xi  = v0cand->eta();
+        double eta_xi = v0cand->eta();
+        double rap_xi = v0cand->rapidity();
         //double px_xi   = v0cand->px();
         //double py_xi   = v0cand->py();
         //double pz_xi   = v0cand->pz();
 
-        if(eta_xi > etaCutMax_ || eta_xi < etaCutMin_) continue;
+        if(dorap_ && (rap_xi > rapMax_ || rap_xi < rapMin_)) continue;
+        else
+            if(eta_xi > etaCutMax_ || eta_xi < etaCutMin_) continue;
 
         //secvz  = v0cand->vz();
         //secvx  = v0cand->vx();
