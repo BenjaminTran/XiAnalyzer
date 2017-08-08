@@ -201,12 +201,12 @@ MassPt::beginJob()
     nTrk               = fs->make<TH1D>("nTrk", "nTrk", 400, 0, 400);
     nEvtCut            = fs->make<TH1D>("nEvtCut", "nEvtCut", 10,0,10);
     EtaPtCutnTrackHist = fs->make<TH1D>("EtaPtCutnTrackHist", "EtaPtCutnTrack",250,0,250);
-    rapidity_xi        = fs->make<TH1D>("Rapidity","Rapidity",200,-10,10);
-    rapidity_ks        = fs->make<TH1D>("Rapidity","Rapidity",200,-10,10);
-    rapidity_la        = fs->make<TH1D>("Rapidity","Rapidity",200,-10,10);
-    pseudorapidity_xi  = fs->make<TH1D>("eta","eta",200,-10,10);
-    pseudorapidity_ks  = fs->make<TH1D>("eta","eta",200,-10,10);
-    pseudorapidity_la  = fs->make<TH1D>("eta","eta",200,-10,10);
+    rapidity_xi        = fs->make<TH1D>("XiRapidity","XiRapidity",200,-10,10);
+    rapidity_ks        = fs->make<TH1D>("KsRapidity","KsRapidity",200,-10,10);
+    rapidity_la        = fs->make<TH1D>("LaRapidity","LaRapidity",200,-10,10);
+    pseudorapidity_xi  = fs->make<TH1D>("XiEta","XiEta",200,-10,10);
+    pseudorapidity_ks  = fs->make<TH1D>("KsEta","KsEta",200,-10,10);
+    pseudorapidity_la  = fs->make<TH1D>("LaEta","LaEta",200,-10,10);
 }
 
 // ------------ method called once each job just after ending the event loop  ------------
