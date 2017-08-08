@@ -159,10 +159,10 @@
 
 using namespace std;
 
-class XiMassPt : public edm::EDAnalyzer {
+class MassPt : public edm::EDAnalyzer {
     public :
-        explicit XiMassPt(const edm::ParameterSet&);
-        ~XiMassPt();
+        explicit MassPt(const edm::ParameterSet&);
+        ~MassPt();
 
     private :
         virtual void beginJob();
@@ -188,7 +188,7 @@ class XiMassPt : public edm::EDAnalyzer {
 
         vector<double> *zvtxVect;
 
-        TH2D* MassPt;
+        TH2D* XiMassPt;
         TH2D* KsMassPt;
         TH2D* LaMassPt;
         TH1D* nTrk;

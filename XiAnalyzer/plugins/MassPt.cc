@@ -1,9 +1,9 @@
 // -*- C++ -*-
 //
-// Package:    XiMassPt
-// Class:      XiMassPt
+// Package:    MassPt
+// Class:      MassPt
 //
-/**\class XiMassPt XiMassPt.cc XiAnalyzer/XiMassPt/src/XiMassPt.cc
+/**\class MassPt MassPt.cc XiAnalyzer/MassPt/src/MassPt.cc
 
  Description: [one line class summary]
 
@@ -18,12 +18,12 @@
 //
 
 
-#include "XiAnalyzer/XiAnalyzer/interface/XiMassPt.h"
+#include "XiAnalyzer/XiAnalyzer/interface/MassPt.h"
 
 //
 // constructors and destructor
 //
-XiMassPt::XiMassPt(const edm::ParameterSet& iConfig)
+MassPt::MassPt(const edm::ParameterSet& iConfig)
 
 {
    //now do what ever initialization is needed
@@ -49,7 +49,7 @@ XiMassPt::XiMassPt(const edm::ParameterSet& iConfig)
 }
 
 
-XiMassPt::~XiMassPt()
+MassPt::~MassPt()
 {
 
    // do anything here that needs to be done at desctruction time
@@ -64,9 +64,9 @@ XiMassPt::~XiMassPt()
 
 // ------------ method called for each event  ------------
 void
-XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+MassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-   using namespace edm;
+    using namespace edm;
 
     edm::Handle<reco::VertexCollection> vertices;
     iEvent.getByToken(_vertexCollName, vertices);
@@ -142,7 +142,7 @@ XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
                 XiMassPt         ->Fill(mass_xi,pT_xi);
                 rapidity_xi      ->Fill(rap_xi);
-                pseudorapidity_xi->Fill(eta_xi)
+                pseudorapidity_xi->Fill(eta_xi);
 
                 cout<<"Fill Xi"<<endl;
             }
@@ -158,7 +158,7 @@ XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double pT_ks   = ksCand->pt();
                 double eta_ks  = ksCand->eta();
 
-                KsMassPt         -> Fill(mass,pT_ks);
+                KsMassPt         -> Fill(mass_ks,pT_ks);
                 rapidity_ks      -> Fill(rap_ks);
                 pseudorapidity_ks-> Fill(eta_ks);
 
@@ -174,11 +174,11 @@ XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double rap_la  = laCand->rapidity();
                 double mass_la = laCand->mass();
                 double pT_la   = laCand->pt();
-                double eta_ks  = ksCand->eta();
+                double eta_la  = laCand->eta();
 
-                LaMassPt         -> Fill(mass, la_pT);
+                LaMassPt         -> Fill(mass, pT_la);
                 rapidity_la      -> Fill(rap_ks);
-                pseudorapidity_la-> Fill(mass, pT_la);
+                pseudorapidity_la-> Fill(eta_la);
 
                 cout<<"Fill La"<<endl;
             }
@@ -189,13 +189,13 @@ XiMassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 // ------------ method called once each job just before starting event loop  ------------
 void
-XiMassPt::beginJob()
+MassPt::beginJob()
 {
     if(xi_) cout << "Will Access Xi" << endl;
     if(ks_) cout << "Will Access Ks" << endl;
     if(la_) cout << "Will Access La" << endl;
 
-    XiMassPt             = fs->make<TH2D>("MassPt", "#Xi Mass and Pt", 150, 1.25, 1.40, 400, 0, 40);
+    XiMassPt           = fs->make<TH2D>("MassPt", "#Xi Mass and Pt", 150, 1.25, 1.40, 400, 0, 40);
     LaMassPt           = fs->make<TH2D>("LaMassPt", "#Lambda Mass and Pt", 160, 1.08, 1.160, 400, 0, 40);
     KsMassPt           = fs->make<TH2D>("KsMassPt", "Ks Mass and Pt", 270, 0.43, 0.565, 400, 0, 40);
     nTrk               = fs->make<TH1D>("nTrk", "nTrk", 400, 0, 400);
@@ -211,38 +211,38 @@ XiMassPt::beginJob()
 
 // ------------ method called once each job just after ending the event loop  ------------
 void
-XiMassPt::endJob()
+MassPt::endJob()
 {
 }
 
 /*
 // ------------ method called when starting to processes a run  ------------
 void
-XiMassPt::beginRun(edm::Run const&, edm::EventSetup const&)
+MassPt::beginRun(edm::Run const&, edm::EventSetup const&)
 {
 }
 
 // ------------ method called when ending the processing of a run  ------------
 void
-XiMassPt::endRun(edm::Run const&, edm::EventSetup const&)
+MassPt::endRun(edm::Run const&, edm::EventSetup const&)
 {
 }
 
 // ------------ method called when starting to processes a luminosity block  ------------
 void
-XiMassPt::beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+MassPt::beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
 {
 }
 
 // ------------ method called when ending the processing of a luminosity block  ------------
 void
-XiMassPt::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+MassPt::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
 {
 }
 
 // ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
 void
-XiMassPt::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+MassPt::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   //The following says we do not know what parameters are allowed so do no validation
   // Please change this to state exactly what you do use, even if it is no parameters
   edm::ParameterSetDescription desc;

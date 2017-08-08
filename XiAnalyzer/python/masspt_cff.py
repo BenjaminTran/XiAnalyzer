@@ -1,24 +1,22 @@
 import FWCore.ParameterSet.Config as cms
 
-from XiAnalyzer.XiAnalyzer.ximasspt_cfi import *
+from XiAnalyzer.XiAnalyzer.masspt_cfi import *
 
-MassPt = xiMassPt.clone()
-
-XiMassPt = xiMassPt.clone(
+XiMassPt = MassPt.clone(
     ks = cms.untracked.bool(False),
     la = cms.untracked.bool(False)
 )
 
-KslaMassPt = xiMassPt.clone(
+KslaMassPt = MassPt.clone(
     xi = cms.untracked.bool(False)
 )
 
-KsMassPt = xiMassPt.clone(
+KsMassPt = MassPt.clone(
     xi = cms.untracked.bool(False),
     la = cms.untracked.bool(False)
 )
 
-LaMassPt = xiMassPt.clone(
+LaMassPt = MassPt.clone(
     xi = cms.untracked.bool(False),
     ks = cms.untracked.bool(False)
 )
