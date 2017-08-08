@@ -194,6 +194,12 @@ class XiMassPt : public edm::EDAnalyzer {
         TH1D* nTrk;
         TH1D* nEvtCut;
         TH1D* EtaPtCutnTrackHist;
+        TH1D* rapidity_xi;
+        TH1D* rapidity_ks;
+        TH1D* rapidity_la;
+        TH1D* pseudorapidity_xi;
+        TH1D* pseudorapidity_ks;
+        TH1D* pseudorapidity_la;
 };
 
 #endif
