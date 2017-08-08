@@ -10,7 +10,7 @@ config.General.workArea = 'HLT185_220FlowCascadev2ppb2016PD4CutLoose'
 config.section_("JobType")
 config.JobType.pluginName = 'Analysis'
 #config.JobType.pluginName = 'PrivateMC'
-config.JobType.psetName = os.path.expandvars('$CMSSW_BASE/src/XiAnalyzer/XiAnalyzer/test/ximassptanalysis_cfg.py')
+config.JobType.psetName = os.path.expandvars('$CMSSW_BASE/src/XiAnalyzer/XiAnalyzer/test/masspt_cfg.py')
 
 config.section_("Data")
 #config.Data.inputDataset = '/PAHighMultiplicity1/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
