@@ -220,12 +220,12 @@ class XiCorrelation : public edm::EDAnalyzer {
         TH1D* TrkassPerEvt;
 
         TH2D* MassPt;
-        TH2D* BackgroundXiPeak[7];
-        TH2D* BackgroundXiSide[7];
+        TH2D* BackgroundXiPeak[11];
+        TH2D* BackgroundXiSide[11];
         TH2D* BackgroundHad;
         TH2D* BackgroundXiHad;
-        TH2D* SignalXiPeak[7];
-        TH2D* SignalXiSide[7];
+        TH2D* SignalXiPeak[11];
+        TH2D* SignalXiSide[11];
         TH2D* SignalHad;
         TH2D* SignalXiHad;
 

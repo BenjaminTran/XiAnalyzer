@@ -73,64 +73,64 @@ private:
     TH2D* effhisto_ks;
     TH2D* effhisto_la;
     
-    TH1D* hMass_ks[13];
-    TH1D* hMass_la[13];
+    TH1D* hMass_ks[18];
+    TH1D* hMass_la[18];
     
-    TH1D* hKET_ks[13];
-    TH1D* hKET_la[13];
+    TH1D* hKET_ks[18];
+    TH1D* hKET_la[18];
     
-    TH1D* hPt_ks[13];
-    TH1D* hPt_la[13];
+    TH1D* hPt_ks[18];
+    TH1D* hPt_la[18];
 
-    TH1D* hEta_ks[13];
-    TH1D* hEta_la[13];
+    TH1D* hEta_ks[18];
+    TH1D* hEta_la[18];
     
-    TH1D* hMult_ks[13];
-    TH2D* hSignal_ks[13];
-    TH2D* hBackground_ks[13];
+    TH1D* hMult_ks[18];
+    TH2D* hSignal_ks[18];
+    TH2D* hBackground_ks[18];
     
-    TH1D* hKET_ks_bkg[13];
-    TH1D* hKET_la_bkg[13];
+    TH1D* hKET_ks_bkg[18];
+    TH1D* hKET_la_bkg[18];
     
-    TH1D* hPt_ks_bkg[13];
-    TH1D* hPt_la_bkg[13];
+    TH1D* hPt_ks_bkg[18];
+    TH1D* hPt_la_bkg[18];
 
-    TH1D* hEta_ks_bkg[13];
-    TH1D* hEta_la_bkg[13];
+    TH1D* hEta_ks_bkg[18];
+    TH1D* hEta_la_bkg[18];
     
-    TH1D* hMult_ks_bkg[13];
-    TH2D* hSignal_ks_bkg[13];
-    TH2D* hBackground_ks_bkg[13];
+    TH1D* hMult_ks_bkg[18];
+    TH2D* hSignal_ks_bkg[18];
+    TH2D* hBackground_ks_bkg[18];
     
     TH1D* hMult_ass;
     
-    TH1D* hMult_la[13];
-    TH2D* hSignal_la[13];
-    TH2D* hBackground_la[13];
+    TH1D* hMult_la[18];
+    TH2D* hSignal_la[18];
+    TH2D* hBackground_la[18];
     
-    vector<TVector3> *pVect_trg_ks[13];
-    vector< vector<TVector3> > *pVectVect_trg_ks[13];
-    vector<TVector3> *pVect_trg_la[13];
-    vector< vector<TVector3> > *pVectVect_trg_la[13];
+    vector<TVector3> *pVect_trg_ks[18];
+    vector< vector<TVector3> > *pVectVect_trg_ks[18];
+    vector<TVector3> *pVect_trg_la[18];
+    vector< vector<TVector3> > *pVectVect_trg_la[18];
     
-    vector<TVector3> *pVect_dau_ks[13];
-    vector< vector<TVector3> > *pVectVect_dau_ks[13];
-    vector<TVector3> *pVect_dau_la[13];
-    vector< vector<TVector3> > *pVectVect_dau_la[13];
+    vector<TVector3> *pVect_dau_ks[18];
+    vector< vector<TVector3> > *pVectVect_dau_ks[18];
+    vector<TVector3> *pVect_dau_la[18];
+    vector< vector<TVector3> > *pVectVect_dau_la[18];
     
-    TH1D* hMult_la_bkg[13];
-    TH2D* hSignal_la_bkg[13];
-    TH2D* hBackground_la_bkg[13];
+    TH1D* hMult_la_bkg[18];
+    TH2D* hSignal_la_bkg[18];
+    TH2D* hBackground_la_bkg[18];
     
-    vector<TVector3> *pVect_trg_ks_bkg[13];
-    vector< vector<TVector3> > *pVectVect_trg_ks_bkg[13];
-    vector<TVector3> *pVect_trg_la_bkg[13];
-    vector< vector<TVector3> > *pVectVect_trg_la_bkg[13];
+    vector<TVector3> *pVect_trg_ks_bkg[18];
+    vector< vector<TVector3> > *pVectVect_trg_ks_bkg[18];
+    vector<TVector3> *pVect_trg_la_bkg[18];
+    vector< vector<TVector3> > *pVectVect_trg_la_bkg[18];
     
-    vector<TVector3> *pVect_dau_ks_bkg[13];
-    vector< vector<TVector3> > *pVectVect_dau_ks_bkg[13];
-    vector<TVector3> *pVect_dau_la_bkg[13];
-    vector< vector<TVector3> > *pVectVect_dau_la_bkg[13];
+    vector<TVector3> *pVect_dau_ks_bkg[18];
+    vector< vector<TVector3> > *pVectVect_dau_ks_bkg[18];
+    vector<TVector3> *pVect_dau_la_bkg[18];
+    vector< vector<TVector3> > *pVectVect_dau_la_bkg[18];
     
     vector<TVector3> *pVect_ass;
     vector< vector<TVector3> > *pVectVect_ass;
