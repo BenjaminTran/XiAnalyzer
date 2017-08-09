@@ -43,8 +43,6 @@ XiCorrelation::XiCorrelation(const edm::ParameterSet& iConfig)
     ptBin_          = iConfig.getParameter<std::vector<double> >("ptBin");
     ptMax_ass_      = iConfig.getParameter<double>("ptMax_ass");
     ptMin_ass_      = iConfig.getParameter<double>("ptMin_ass");
-    rapMax_         = iConfig.getParameter<double>("rapMax");
-    rapMin_         = iConfig.getParameter<double>("rapMin");
     sideFactor_     = iConfig.getParameter<int>("sideFactor");
     xiMassMean_     = iConfig.getParameter<std::vector<double> >("xiMassMean");
     xiMassSigma_    = iConfig.getParameter<std::vector<double> >("xiMassSigma");
@@ -133,12 +131,6 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         for(reco::VertexCompositeCandidateCollection::const_iterator xiCand =
                 xiCollection->begin(); xiCand != xiCollection->end(); xiCand++)
         {
-            if(dorap_)
-            {
-                double rap = xiCand->rapidity();
-                if(rap < rapMin_ || rap > rapMax_) continue;
-            }
-
             // Make 2D Mass v Pt
             double xi_eta = xiCand->eta();
             double xi_phi = xiCand->phi();
