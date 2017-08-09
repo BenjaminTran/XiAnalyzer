@@ -89,7 +89,7 @@ process.XiCorrAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.xi
 process.XiCorrAnalysisRapidity = cms.Sequence(process.selectV0CandidatesLowXi*process.xiCorrelationRapidity)
 process.OmCorrAnalysis = cms.Sequence(process.selectOmegaCandidatesNew)
 
-process.p = cms.Path(process.XiCorrAnalysis)
+process.p = cms.Path(process.XiCorrAnalysisRapidity)
 
 process.schedule = cms.Schedule(process.p)
 

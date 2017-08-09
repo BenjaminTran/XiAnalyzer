@@ -88,7 +88,7 @@ process.TFileService = cms.Service("TFileService",
 process.V0CorrAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdatight*process.selectV0CandidatesNewkshort*process.v0Correlation)
 process.V0CorrAnalysisRapidity = cms.Sequence(process.selectV0CandidatesNewlambdatight*process.selectV0CandidatesNewkshort*process.v0CorrelationRapidity)
 
-process.p = cms.Path(process.V0CorrAnalysis)
+process.p = cms.Path(process.V0CorrAnalysisRapidity)
 
 process.schedule = cms.Schedule(process.p)
 
