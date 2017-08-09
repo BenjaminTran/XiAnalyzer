@@ -34,7 +34,6 @@ XiCorrelation::XiCorrelation(const edm::ParameterSet& iConfig)
     _vertexCollName = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexCollName"));
     PtBinNum_       = iConfig.getParameter<int>("PtBinNum");
     bkgnum_         = iConfig.getParameter<double>("bkgnum");
-    dorap_          = iConfig.getParameter<bool>("dorap");
     etaMax_ass_     = iConfig.getParameter<double>("etaMax_ass");
     etaMin_ass_     = iConfig.getParameter<double>("etaMin_ass");
     multHigh_       = iConfig.getParameter<int>("multHigh");
