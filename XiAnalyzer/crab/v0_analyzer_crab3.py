@@ -5,8 +5,8 @@ config = Configuration()
 config.section_("General")
 #config.General.requestName = 'HLT185_250FlowV0v2ppb2016PD1CorrelationJL6'
 #config.General.workArea = 'HLT185_250FlowV0v2ppb2016PD1Rap'
-config.General.requestName = 'HLT185_250FlowV0v2pbp2016PD1CorrelationJL6'
-config.General.workArea = 'HLT185_250FlowV0v2pbp2016PD1Rap'
+config.General.requestName = 'HLT185_250FlowV0v2pbp2016PD3CorrelationJL8'
+config.General.workArea = 'HLT185_250FlowV0v2pbp2016PD3Rap'
 
 config.section_("JobType")
 config.JobType.pluginName = 'Analysis'
@@ -21,9 +21,9 @@ config.section_("Data")
 #config.Data.inputDataset = '/PAHighMultiplicity5/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
 #config.Data.inputDataset = '/PAHighMultiplicity6/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
 #
-config.Data.inputDataset = '/PAHighMultiplicity1/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+#config.Data.inputDataset = '/PAHighMultiplicity1/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
 #config.Data.inputDataset = '/PAHighMultiplicity2/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-#config.Data.inputDataset = '/PAHighMultiplicity3/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+config.Data.inputDataset = '/PAHighMultiplicity3/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
 #config.Data.inputDataset = '/PAHighMultiplicity4/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
 #config.Data.inputDataset = '/PAHighMultiplicity5/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
 #config.Data.inputDataset = '/PAHighMultiplicity6/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
