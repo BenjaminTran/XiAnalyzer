@@ -135,13 +135,38 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             double xi_phi = xiCand->phi();
             double mass   = xiCand->mass();
             double xi_pT  = xiCand->pt();
+            double xi_rap = xiCand->rapidity();
             MassPt->Fill(mass,xi_pT);
+            double Ket = sqrt(mass*mass - xi_pT*xi_pT) - mass;
 
             // Make vector of Xi Candidate parameters
             TVector3 xiPEPvector;
             xiPEPvector.SetPtEtaPhi(xi_pT,xi_eta,xi_phi);
             pepVect_Xi->push_back(xiPEPvector);
             xiMass->push_back(mass);
+            for(int i=0; i<PtBinNum_;i++)
+            {
+                if(xi_pT <= ptBin_[i+1] && xi_pt >= ptBin_[i])
+                {
+                    Mass[i]->Fill(mass);
+                    //peak
+                    if(mass >= (xiMassMean_[i] - peakFactor_*xiMassSigma_[i]) && mass <= (xiMassMean_[i] + peakFactor_*xiMassSigma_[i]))
+                    {
+                        KET_xi[i]->Fill(Ket);
+                        Pt_xi[i]->Fill(xi_pT);
+                        Eta_xi[i]->Fill(xi_eta);
+                        rap_xi[i]->Fill(xi_rap);
+                    }
+                    //sideband
+                    if((mass <= (xiMassMean_[i] - sideFactor_*xiMassSigma_[i]) && mass >= 1.25) || (mass <= 1.40 && mass >= (xiMassMean_[i] + sideFactor_*xiMassSigma_[i])))
+                    {
+                        KET_xi_bkg[i]->Fill(Ket);
+                        Pt_xi_bkg[i]->Fill(xi_pT);
+                        Eta_xi_bkg[i]->Fill(xi_eta);
+                        rap_xi_bkg[i]->Fill(xi_rap);
+                    }
+                }
+            }
         }
 
         // Make vectors for pairing of primary charged tracks
@@ -352,21 +377,30 @@ XiCorrelation::beginJob()
 {
 
     nTrk            = fs->make<TH1D>("nTrk", "nTrk", 250, 0, 250);
+    nEvt            = fs->make<TH1D>("nEvt","nEvt",10,0,10);
     nEvtCut         = fs->make<TH1D>("nEvtCut", "nEvtCut", 10, 0, 10);
     HadPerEvt       = fs->make<TH1D>("HadPerEvent", "Hadrons per Event", 1500, 0, 1500);
     TrkassPerEvt    = fs->make<TH1D>("TrkassPerEvent", "Associated trks per Event", 300,0, 300);
-
-    MassPt          = fs->make<TH2D>("MassPt", "", 150, 1.25, 1.40, 300, 0 ,30);
+    MassPt          = fs->make<TH2D>("MassPt", "",";GeV",";GeV" 150, 1.25, 1.40, 300, 0 ,30);
     BackgroundHad   = fs->make<TH2D>("BackgroundHad", "BkgHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     SignalHad       = fs->make<TH2D>("SignalHad", "SigHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     SignalXiHad     = fs->make<TH2D>("SignalXiHad", ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     BackgroundXiHad = fs->make<TH2D>("BackgroundXiHad", ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     for(int i=0; i<PtBinNum_; i++)
     {
-        BackgroundXiPeak[i]   = fs->make<TH2D>(Form("BackgroundPeak_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        BackgroundXiSide[i]   = fs->make<TH2D>(Form("BackgroundSide_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        SignalXiPeak[i]       = fs->make<TH2D>(Form("SignalPeak_pt%d",i) , ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        SignalXiSide[i]       = fs->make<TH2D>(Form("SignalSide_pt%d",i) , ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+        BackgroundXiPeak[i] = fs->make<TH2D>(Form("BackgroundPeak_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+        BackgroundXiSide[i] = fs->make<TH2D>(Form("BackgroundSide_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+        SignalXiPeak[i]     = fs->make<TH2D>(Form("SignalPeak_pt%d",i) , ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+        SignalXiSide[i]     = fs->make<TH2D>(Form("SignalSide_pt%d",i) , ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+        KET_xi[i]           = fs->make<TH1D>(Form("KETxi_pt%d",i),";GeV",40000,0,20);
+        KET_xi_bkg[i]       = fs->make<TH1D>(Form("KET_xi_bkg_pt%d",i),";GeV",40000,0,20);
+        Mass[i]             = fs->make<TH1D>(Form("Mass_xi_pt%d",i),";GeV",2000,0.8,1.8);
+        Pt_xi[i]            = fs->make<TH1D>(Form("Pt_xi_pt%d",i),";GeV",40000,0,20);
+        Pt_xi_bkg[i]        = fs->make<TH1D>(Form("Pt_xi_bkg_pt%d",i),";GeV",40000,0,20);
+        Eta_xi[i]           = fs->make<TH1D>(Form("Eta_xi_pt%d",i),";eta",24,-2.4,2.4);
+        Eta_xi_bkg[i]       = fs->make<TH1D>(Form("Eta_xi_bkg_pt%d",i),";eta",24,-2.4,2.4);
+        rap_xi[i]           = fs->make<TH1D>(Form("rap_xi_pt%d",i),";y",100,-5,5);
+        rap_xi_bkg[i]       = fs->make<TH1D>(Form("rap_xi_bkg_pt%d",i),";y",100,-5,5);
 
 
         /*
@@ -383,9 +417,6 @@ XiCorrelation::beginJob()
     PepVect2_ass       = new vector< vector<TVector3> >;
     xiMass2            = new vector< vector<double> >;
     zvtxVect           = new vector<double>;
-
-
-
 }
 
 // ------------ method called once each job just after ending the event loop  ------------
