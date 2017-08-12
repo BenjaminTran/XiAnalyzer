@@ -75,7 +75,7 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
                                         #'CasCutLooseTester.root'
-                                        'V0CasMassPt.root'
+                                        'LaMassPt.root'
                                         )
                                   )
 # CORRELATION

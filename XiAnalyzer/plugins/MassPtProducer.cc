@@ -130,7 +130,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         nEvtCut->Fill(1); //number of events that pass the multiplicity cut
         EtaPtCutnTrackHist->Fill(EtaPtCutnTracks); //number of tracks in the current event that passed multiplicity requirement. Should only be between multlow and multhigh
         //XI
-        if(!xiCollection.isValid()) cout << "Bad XiCollection" << endl;
         if(xi_ && xiCollection.isValid())
         {
             for(reco::VertexCompositeCandidateCollection::const_iterator xiCand =
