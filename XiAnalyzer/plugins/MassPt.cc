@@ -66,6 +66,7 @@ MassPt::~MassPt()
 void
 MassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+    nEvt->Fill(1);
     using namespace edm;
 
     edm::Handle<reco::VertexCollection> vertices;
@@ -123,11 +124,11 @@ MassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         EtaPtCutnTracks++;
     }
 
-    nTrk->Fill(nTracks);
+    nTrk->Fill(nTracks); //number of acceptable tracks
 
     if(EtaPtCutnTracks >= multLow_ && EtaPtCutnTracks < multHigh_){
-        nEvtCut->Fill(1);
-        EtaPtCutnTrackHist->Fill(EtaPtCutnTracks);
+        nEvtCut->Fill(1); //number of events that pass the multiplicity cut
+        EtaPtCutnTrackHist->Fill(EtaPtCutnTracks); //number of tracks in the current event that passed multiplicity requirement. Should only be between multlow and multhigh
         //XI
         if(!xiCollection.isValid()) cout << "Bad XiCollection" << endl;
         if(xi_ && xiCollection.isValid())
@@ -195,9 +196,10 @@ MassPt::beginJob()
     if(ks_) cout << "Will Access Ks" << endl;
     if(la_) cout << "Will Access La" << endl;
 
-    XiMassPt           = fs->make<TH2D>("MassPt", "#Xi Mass and Pt", 150, 1.25, 1.40, 400, 0, 40);
+    XiMassPt           = fs->make<TH2D>("XiMassPt", "#Xi Mass and Pt", 150, 1.25, 1.40, 400, 0, 40);
     LaMassPt           = fs->make<TH2D>("LaMassPt", "#Lambda Mass and Pt", 160, 1.08, 1.160, 400, 0, 40);
     KsMassPt           = fs->make<TH2D>("KsMassPt", "Ks Mass and Pt", 270, 0.43, 0.565, 400, 0, 40);
+    nEvt               = fs->make<TH1D>("nEvt","nEvt",10,0,10);
     nTrk               = fs->make<TH1D>("nTrk", "nTrk", 400, 0, 400);
     nEvtCut            = fs->make<TH1D>("nEvtCut", "nEvtCut", 10,0,10);
     EtaPtCutnTrackHist = fs->make<TH1D>("EtaPtCutnTrackHist", "EtaPtCutnTrack",250,0,250);

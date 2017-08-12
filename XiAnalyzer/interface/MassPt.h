@@ -191,6 +191,7 @@ class MassPt : public edm::EDAnalyzer {
         TH2D* XiMassPt;
         TH2D* KsMassPt;
         TH2D* LaMassPt;
+        TH1D* nEvt;
         TH1D* nTrk;
         TH1D* nEvtCut;
         TH1D* EtaPtCutnTrackHist;
