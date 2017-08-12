@@ -69,6 +69,8 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     using namespace edm;
     using namespace std;
 
+    nEvt->Fill();
+
     edm::Handle<reco::VertexCollection> vertices;
     iEvent.getByToken(_vertexCollName, vertices);
 
@@ -137,7 +139,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             double xi_pT  = xiCand->pt();
             double xi_rap = xiCand->rapidity();
             MassPt->Fill(mass,xi_pT);
-            double Ket = sqrt(mass*mass - xi_pT*xi_pT) - mass;
+            double Ket = sqrt(mass*mass + xi_pT*xi_pT) - mass;
 
             // Make vector of Xi Candidate parameters
             TVector3 xiPEPvector;
@@ -392,7 +394,7 @@ XiCorrelation::beginJob()
         BackgroundXiSide[i] = fs->make<TH2D>(Form("BackgroundSide_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
         SignalXiPeak[i]     = fs->make<TH2D>(Form("SignalPeak_pt%d",i) , ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
         SignalXiSide[i]     = fs->make<TH2D>(Form("SignalSide_pt%d",i) , ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        KET_xi[i]           = fs->make<TH1D>(Form("KETxi_pt%d",i),";GeV",40000,0,20);
+        KET_xi[i]           = fs->make<TH1D>(Form("KET_xi_pt%d",i),";GeV",40000,0,20);
         KET_xi_bkg[i]       = fs->make<TH1D>(Form("KET_xi_bkg_pt%d",i),";GeV",40000,0,20);
         Mass_xi[i]          = fs->make<TH1D>(Form("Mass_xi_pt%d",i),";GeV",2000,0.8,1.8);
         Pt_xi[i]            = fs->make<TH1D>(Form("Pt_xi_pt%d",i),";GeV",40000,0,20);
