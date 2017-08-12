@@ -5,7 +5,7 @@
 #include "XiAnalyzer/XiAnalyzer/interface/OmegaSelector.h"
 #include "XiAnalyzer/XiAnalyzer/interface/XiCorrelation.h"
 #include "XiAnalyzer/XiAnalyzer/interface/V0Correlation.h"
-#include "XiAnalyzer/XiAnalyzer/interface/MassPt.h"
+#include "XiAnalyzer/XiAnalyzer/interface/MassPtProducer.h"
 #include "XiAnalyzer/XiAnalyzer/interface/XiOmTTree.h"
 
 DEFINE_FWK_MODULE(XiSelector);
