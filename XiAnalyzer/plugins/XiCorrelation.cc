@@ -146,9 +146,9 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             xiMass->push_back(mass);
             for(int i=0; i<PtBinNum_;i++)
             {
-                if(xi_pT <= ptBin_[i+1] && xi_pt >= ptBin_[i])
+                if(xi_pT <= ptBin_[i+1] && xi_pT >= ptBin_[i])
                 {
-                    Mass[i]->Fill(mass);
+                    Mass_xi[i]->Fill(mass);
                     //peak
                     if(mass >= (xiMassMean_[i] - peakFactor_*xiMassSigma_[i]) && mass <= (xiMassMean_[i] + peakFactor_*xiMassSigma_[i]))
                     {
@@ -381,7 +381,7 @@ XiCorrelation::beginJob()
     nEvtCut         = fs->make<TH1D>("nEvtCut", "nEvtCut", 10, 0, 10);
     HadPerEvt       = fs->make<TH1D>("HadPerEvent", "Hadrons per Event", 1500, 0, 1500);
     TrkassPerEvt    = fs->make<TH1D>("TrkassPerEvent", "Associated trks per Event", 300,0, 300);
-    MassPt          = fs->make<TH2D>("MassPt", "",";GeV",";GeV" 150, 1.25, 1.40, 300, 0 ,30);
+    MassPt          = fs->make<TH2D>("MassPt", "", 150, 1.25, 1.40, 300, 0 ,30);
     BackgroundHad   = fs->make<TH2D>("BackgroundHad", "BkgHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     SignalHad       = fs->make<TH2D>("SignalHad", "SigHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     SignalXiHad     = fs->make<TH2D>("SignalXiHad", ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
@@ -394,7 +394,7 @@ XiCorrelation::beginJob()
         SignalXiSide[i]     = fs->make<TH2D>(Form("SignalSide_pt%d",i) , ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
         KET_xi[i]           = fs->make<TH1D>(Form("KETxi_pt%d",i),";GeV",40000,0,20);
         KET_xi_bkg[i]       = fs->make<TH1D>(Form("KET_xi_bkg_pt%d",i),";GeV",40000,0,20);
-        Mass[i]             = fs->make<TH1D>(Form("Mass_xi_pt%d",i),";GeV",2000,0.8,1.8);
+        Mass_xi[i]          = fs->make<TH1D>(Form("Mass_xi_pt%d",i),";GeV",2000,0.8,1.8);
         Pt_xi[i]            = fs->make<TH1D>(Form("Pt_xi_pt%d",i),";GeV",40000,0,20);
         Pt_xi_bkg[i]        = fs->make<TH1D>(Form("Pt_xi_bkg_pt%d",i),";GeV",40000,0,20);
         Eta_xi[i]           = fs->make<TH1D>(Form("Eta_xi_pt%d",i),";eta",24,-2.4,2.4);
