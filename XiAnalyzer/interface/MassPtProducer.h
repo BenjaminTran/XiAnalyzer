@@ -159,10 +159,10 @@
 
 using namespace std;
 
-class MassPt : public edm::EDAnalyzer {
+class MassPtProducer : public edm::EDAnalyzer {
     public :
-        explicit MassPt(const edm::ParameterSet&);
-        ~MassPt();
+        explicit MassPtProducer(const edm::ParameterSet&);
+        ~MassPtProducer();
 
     private :
         virtual void beginJob();

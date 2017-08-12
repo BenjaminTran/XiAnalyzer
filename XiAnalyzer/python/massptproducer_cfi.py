@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-MassPt = cms.EDAnalyzer('MassPt',
+MassPt = cms.EDAnalyzer('MassPtProducer',
         ksCollection   = cms.InputTag('selectV0CandidatesNewkshort:Kshort'),
         laCollection   = cms.InputTag('selectV0CandidatesNewlambdatight:Lambda'),
         trkSrc         = cms.InputTag('generalTracks'),

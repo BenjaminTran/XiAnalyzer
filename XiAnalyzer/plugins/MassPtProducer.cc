@@ -1,9 +1,9 @@
 // -*- C++ -*-
 //
-// Package:    MassPt
-// Class:      MassPt
+// Package:    MassPtProducer
+// Class:      MassPtProducer
 //
-/**\class MassPt MassPt.cc XiAnalyzer/MassPt/src/MassPt.cc
+/**\class MassPtProducer MassPtProducer.cc XiAnalyzer/MassPtProducer/src/MassPtProducer.cc
 
  Description: [one line class summary]
 
@@ -18,12 +18,12 @@
 //
 
 
-#include "XiAnalyzer/XiAnalyzer/interface/MassPt.h"
+#include "XiAnalyzer/XiAnalyzer/interface/MassPtProducer.h"
 
 //
 // constructors and destructor
 //
-MassPt::MassPt(const edm::ParameterSet& iConfig)
+MassPtProducer::MassPtProducer(const edm::ParameterSet& iConfig)
 
 {
    //now do what ever initialization is needed
@@ -49,7 +49,7 @@ MassPt::MassPt(const edm::ParameterSet& iConfig)
 }
 
 
-MassPt::~MassPt()
+MassPtProducer::~MassPtProducer()
 {
 
    // do anything here that needs to be done at desctruction time
@@ -64,7 +64,7 @@ MassPt::~MassPt()
 
 // ------------ method called for each event  ------------
 void
-MassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
     nEvt->Fill(1);
     using namespace edm;
@@ -190,7 +190,7 @@ MassPt::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 // ------------ method called once each job just before starting event loop  ------------
 void
-MassPt::beginJob()
+MassPtProducer::beginJob()
 {
     if(xi_) cout << "Will Access Xi" << endl;
     if(ks_) cout << "Will Access Ks" << endl;
@@ -213,38 +213,38 @@ MassPt::beginJob()
 
 // ------------ method called once each job just after ending the event loop  ------------
 void
-MassPt::endJob()
+MassPtProducer::endJob()
 {
 }
 
 /*
 // ------------ method called when starting to processes a run  ------------
 void
-MassPt::beginRun(edm::Run const&, edm::EventSetup const&)
+MassPtProducer::beginRun(edm::Run const&, edm::EventSetup const&)
 {
 }
 
 // ------------ method called when ending the processing of a run  ------------
 void
-MassPt::endRun(edm::Run const&, edm::EventSetup const&)
+MassPtProducer::endRun(edm::Run const&, edm::EventSetup const&)
 {
 }
 
 // ------------ method called when starting to processes a luminosity block  ------------
 void
-MassPt::beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+MassPtProducer::beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
 {
 }
 
 // ------------ method called when ending the processing of a luminosity block  ------------
 void
-MassPt::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+MassPtProducer::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
 {
 }
 
 // ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
 void
-MassPt::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+MassPtProducer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   //The following says we do not know what parameters are allowed so do no validation
   // Please change this to state exactly what you do use, even if it is no parameters
   edm::ParameterSetDescription desc;
