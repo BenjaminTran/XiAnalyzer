@@ -86,7 +86,7 @@ process.TFileService = cms.Service("TFileService",
 # HM
 #process.XiAnalysis = cms.Sequence(process.hltHM*process.selectV0CandidatesLowXi*process.xiCorrelation)
 process.XiCorrAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.xiCorrelation)
-process.XiCorrAnalysisRapidity = cms.Sequence(process.selectV0CandidatesLowXi*process.xiCorrelationRapidity)
+process.XiCorrAnalysisRapidity = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.xiCorrelationRapidity)
 process.OmCorrAnalysis = cms.Sequence(process.selectOmegaCandidatesNew)
 
 process.p = cms.Path(process.XiCorrAnalysisRapidity)

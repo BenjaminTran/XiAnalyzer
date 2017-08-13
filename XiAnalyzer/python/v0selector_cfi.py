@@ -19,7 +19,7 @@ selectV0CandidatesNew = cms.EDProducer('V0Selector',
   decayLSigCut        = cms.double(5.0),
   misIDMassCut        = cms.double(0.010),
   misIDMassCutEE      = cms.double(0.015),
-  dorap               = cms.bool(True),
+  dorap               = cms.bool(False),
   rapMax              = cms.double(1.0),
   rapMin              = cms.double(-1.0)
 )
