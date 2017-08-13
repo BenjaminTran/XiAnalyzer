@@ -17,7 +17,8 @@ hltHM.throw = cms.bool(False)
 
 v0Correlation          = cms.EDAnalyzer('V0Correlation',
         trkSrc         = cms.InputTag('generalTracks'),
-        laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdatight:Lambda'),
+        #laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambda:Lambda'),
+        laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdaRapidity:Lambda'),
         ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshort:Kshort'),
         vertexCollName = cms.InputTag('offlinePrimaryVertices'),
         zVtxHigh       = cms.untracked.double(15.0),
