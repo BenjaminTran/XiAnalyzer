@@ -3,6 +3,10 @@ import FWCore.ParameterSet.Config as cms
 from XiAnalyzer.XiAnalyzer.xiselector_cfi import *
 selectV0CandidatesLowXi = selectV0CandidatesLow.clone()
 
+selectV0CandidatesLowXiRapidity = selectV0CandidatesLow.clone(
+    dorap = cms.bool(True)
+        )
+
 selectV0CandidatesXiLoose = selectV0CandidatesLow.clone(
     xi3DIpSigValue        = cms.double(2.5),
     xiPi3DIpSigValue      = cms.double(5.0),

@@ -43,3 +43,9 @@ selectV0CandidatesNewd0 = selectV0CandidatesNew.clone(
   misIDMassCut   = cms.double(0.000),
   misIDMassCutEE = cms.double(0.000)
 )
+
+selectV0CandidatesNewlambdaRapidity = selectV0CandidatesNew.clone(
+  v0IDName     = cms.string("Lambda"),
+  misIDMassCut = cms.double(0.020),
+  dorap        = cms.bool(True)
+)
