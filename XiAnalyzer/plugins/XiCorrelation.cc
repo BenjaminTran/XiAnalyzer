@@ -69,7 +69,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     using namespace edm;
     using namespace std;
 
-    nEvt->Fill();
+    nEvt->Fill(1);
 
     edm::Handle<reco::VertexCollection> vertices;
     iEvent.getByToken(_vertexCollName, vertices);
