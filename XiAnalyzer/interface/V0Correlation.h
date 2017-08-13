@@ -84,6 +84,8 @@ private:
 
     TH1D* hEta_ks[18];
     TH1D* hEta_la[18];
+    TH1D* hRap_ks[18];
+    TH1D* hRap_la[18];
     
     TH1D* hMult_ks[18];
     TH2D* hSignal_ks[18];
@@ -97,6 +99,8 @@ private:
 
     TH1D* hEta_ks_bkg[18];
     TH1D* hEta_la_bkg[18];
+    TH1D* hRap_ks_bkg[18];
+    TH1D* hRap_la_bkg[18];
     
     TH1D* hMult_ks_bkg[18];
     TH2D* hSignal_ks_bkg[18];
