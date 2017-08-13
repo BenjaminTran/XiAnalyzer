@@ -3,6 +3,8 @@ import FWCore.ParameterSet.Config as cms
 from XiAnalyzer.XiAnalyzer.v0correlation_cfi import *
 
 v0CorrelationRapidity = v0Correlation.clone(
+        laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdaRapidity:Lambda'),
+        ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshortRapidity:Kshort'),
         ptbin_n        = cms.untracked.int32(18),
         sigma_ks       = cms.untracked.vdouble(0.00618431 ,0.0069063 ,0.00670385 ,0.00629998 ,0.0060034 ,0.0059126 ,0.00635576 ,0.00647386 ,0.00607519 ,0.00678218 ,0.00665193 ,0.00728848 ,0.00751979 ,0.0075107 ,0.00795764 ,0.00913178 ,0.00661404 ,0.00643239),
         mean_ks        = cms.untracked.vdouble(0.498204 ,0.497685 ,0.497711 ,0.497739 ,0.497693 ,0.497636 ,0.497599 ,0.497574 ,0.497576 ,0.497598 ,0.49755 ,0.497652 ,0.497674 ,0.49772 ,0.497758 ,0.497828 ,0.497605 ,0.498467),
