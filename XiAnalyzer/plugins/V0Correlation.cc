@@ -144,6 +144,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             double px = trk.px();
             double py = trk.py();
             double pz = trk.pz();
+            double rapidity = trk.rapidity();
             
             TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
             TVector3 secvec(px,py,pz);
@@ -217,6 +218,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         pVect_dau_ks[i]->push_back(pvector_dau2);
                         hPt_ks[i]->Fill(pt);//,1.0/effks);
 						hEta_ks[i]->Fill(eta);//,1.0/effks);
+                        hRap_ks[i]->Fill(rapidity);
                         double KET = sqrt(mass*mass + pt*pt) - mass;
                         hKET_ks[i]->Fill(KET);//,1.0/effks);
                     }
@@ -226,6 +228,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         pVect_dau_ks_bkg[i]->push_back(pvector_dau2);
                         hPt_ks_bkg[i]->Fill(pt);//,1.0/effks);
 						hEta_ks_bkg[i]->Fill(eta);//,1.0/effks);
+                        hRap_ks_bkg[i]->Fill(rapidity);
                         double KET = sqrt(mass*mass + pt*pt) - mass;
                         hKET_ks_bkg[i]->Fill(KET);//,1.0/effks);
                     }
@@ -250,6 +253,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             double px = trk.px();
             double py = trk.py();
             double pz = trk.pz();
+            double rapidity = trk.rapidity();
             
             TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
             TVector3 secvec(px,py,pz);
@@ -323,6 +327,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         pVect_dau_la[i]->push_back(pvector_dau2);
                         hPt_la[i]->Fill(pt);//,1.0/effla);
                         hEta_la[i]->Fill(eta);//,1.0/effla);
+                        hRap_la[i]->Fill(rapidity)
                         double KET = sqrt(mass*mass + pt*pt) - mass;
                         hKET_la[i]->Fill(KET);//,1.0/effla);
                     }
@@ -332,6 +337,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         pVect_dau_la_bkg[i]->push_back(pvector_dau2);
                         hPt_la_bkg[i]->Fill(pt);//,1.0/effla);
                         hEta_la_bkg[i]->Fill(eta);//,1.0/effla);
+                        hRap_la_bkg[i]->Fill(rapidity)
                         double KET = sqrt(mass*mass + pt*pt) - mass;
                         hKET_la_bkg[i]->Fill(KET);//,1.0/effla);
                     }
@@ -687,7 +693,9 @@ V0Correlation::beginJob()
         hPt_ks[i] = fs->make<TH1D>(Form("Ptkshort_pt%d",i),";GeV",25000,0,12.5);
         hPt_la[i] = fs->make<TH1D>(Form("Ptlambda_pt%d",i),";GeV",25000,0,12.5);
         hEta_ks[i] = fs->make<TH1D>(Form("Etakshort_pt%d",i),";eta",24,-2.4,2.4);
+        hRap_ks[i] = fs->make<TH1D>(Form("Rapkshort_pt%d",i),";y",30,-1.5,1.5);
         hEta_la[i] = fs->make<TH1D>(Form("Etalambda_pt%d",i),";eta",24,-2.4,2.4);
+        hRap_la[i] = fs->make<TH1D>(Form("Raplambda_pt%d",i),";y",30,-1.5,1.5);
         hMass_ks[i] = fs->make<TH1D>(Form("masskshort_pt%d",i),";GeV",2000,0,1.0);
         hMass_la[i] = fs->make<TH1D>(Form("masslambda_pt%d",i),";GeV",2000,0.5,1.5);
         hMult_ks[i] = fs->make<TH1D>(Form("mult_ks_pt%d",i),";N",250,0,250);
@@ -705,7 +713,9 @@ V0Correlation::beginJob()
         hPt_ks_bkg[i] = fs->make<TH1D>(Form("Ptkshort_bkg_pt%d",i),";GeV",25000,0,12.5);
         hPt_la_bkg[i] = fs->make<TH1D>(Form("Ptlambda_bkg_pt%d",i),";GeV",25000,0,12.5);
         hEta_ks_bkg[i] = fs->make<TH1D>(Form("Etakshort_bkg_pt%d",i),";GeV",24,-2.4,2.4);
+        hRap_ks_bkg[i] = fs->make<TH1D>(Form("Rapkshort_bkg_pt%d",i),";y",30,-1.5,1.5);
         hEta_la_bkg[i] = fs->make<TH1D>(Form("Etalambda_bkg_pt%d",i),";GeV",24,-2.4,2.4);
+        hRap_la_bkg[i] = fs->make<TH1D>(Form("Raplambda_bkg_pt%d",i),";y",30,-1.5,1.5);
         hMult_ks_bkg[i] = fs->make<TH1D>(Form("mult_ks_bkg_pt%d",i),";N",250,0,250);
         hSignal_ks_bkg[i] = fs->make<TH2D>(Form("signalkshort_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
         hBackground_ks_bkg[i] = fs->make<TH2D>(Form("backgroundkshort_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
