@@ -327,7 +327,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         pVect_dau_la[i]->push_back(pvector_dau2);
                         hPt_la[i]->Fill(pt);//,1.0/effla);
                         hEta_la[i]->Fill(eta);//,1.0/effla);
-                        hRap_la[i]->Fill(rapidity)
+                        hRap_la[i]->Fill(rapidity);
                         double KET = sqrt(mass*mass + pt*pt) - mass;
                         hKET_la[i]->Fill(KET);//,1.0/effla);
                     }
@@ -337,7 +337,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         pVect_dau_la_bkg[i]->push_back(pvector_dau2);
                         hPt_la_bkg[i]->Fill(pt);//,1.0/effla);
                         hEta_la_bkg[i]->Fill(eta);//,1.0/effla);
-                        hRap_la_bkg[i]->Fill(rapidity)
+                        hRap_la_bkg[i]->Fill(rapidity);
                         double KET = sqrt(mass*mass + pt*pt) - mass;
                         hKET_la_bkg[i]->Fill(KET);//,1.0/effla);
                     }
