@@ -6,6 +6,14 @@ selectV0CandidatesNewlambda = selectV0CandidatesNew.clone(
   v0IDName = cms.string("Lambda"),
   misIDMassCut   = cms.double(0.020)
 )
+selectV0CandidatesNewkshortRapidity = selectV0CandidatesNew.clone(
+        dorap = cms.bool(True)
+)
+selectV0CandidatesNewlambdaRapidity = selectV0CandidatesNew.clone(
+  v0IDName     = cms.string("Lambda"),
+  misIDMassCut = cms.double(0.020),
+  dorap        = cms.bool(True)
+)
 
 selectV0CandidatesNewlambdatight = selectV0CandidatesNewlambda.clone(
   dxySigCut1      = cms.double(1.25),
@@ -44,8 +52,3 @@ selectV0CandidatesNewd0 = selectV0CandidatesNew.clone(
   misIDMassCutEE = cms.double(0.000)
 )
 
-selectV0CandidatesNewlambdaRapidity = selectV0CandidatesNew.clone(
-  v0IDName     = cms.string("Lambda"),
-  misIDMassCut = cms.double(0.020),
-  dorap        = cms.bool(True)
-)
