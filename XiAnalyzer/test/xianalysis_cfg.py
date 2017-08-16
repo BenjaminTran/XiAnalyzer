@@ -76,7 +76,7 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
                                     #'V0Correlation.root'
-                                    'XiCorrelation.root'
+                                    'XiCorrelationRapidityA.root'
 				    )
                                   )
 # CORRELATION
