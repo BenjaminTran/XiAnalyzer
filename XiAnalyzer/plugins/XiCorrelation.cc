@@ -137,7 +137,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             double xi_pT  = xiCand->pt();
             double xi_rap = xiCand->rapidity();
             MassPt->Fill(mass,xi_pT);
-            double Ket = sqrt(mass*mass - xi_pT*xi_pT) - mass;
+            double Ket = sqrt(mass*mass + xi_pT*xi_pT) - mass;
 
             // Make vector of Xi Candidate parameters
             TVector3 xiPEPvector;
