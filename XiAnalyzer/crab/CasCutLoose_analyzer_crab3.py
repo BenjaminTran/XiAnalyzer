@@ -22,6 +22,7 @@ config.section_("Data")
 config.Data.inputDataset = '/PAHighMultiplicity1/davidlw-RecoSkim2016_pPb_V0Cascade_FullSkim_v3-02d7eb596f1472bd80752a03aeb4ba99/USER' # Wei test dataset
 #config.Data.userInputFiles = list(open('HMMC90.txt'))
 config.Data.inputDBS = 'phys03'
+config.Data.ignoreLocality = True
 #config.Data.primaryDataset = 'MinBias_TuneZ2star_7TeV_pythia6'
 config.Data.splitting = 'FileBased'
 config.Data.totalUnits = 3
@@ -34,5 +35,5 @@ config.Data.outputDatasetTag = 'pPb2016_Cascade_Rereco_HM185_220Flow'
 
 config.section_("Site")
 config.Site.storageSite = 'T2_CH_CERN'
-config.Site.whitelist = ['T2_US_MIT']
+config.Site.whitelist = ['T2_US_MIT','T2_US_Vanderbilt']
 
