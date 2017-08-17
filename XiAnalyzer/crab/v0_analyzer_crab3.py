@@ -3,8 +3,8 @@ import v0analyzerheader as v0
 #To submit edit counter, CollID, inputDataset
 
 PDcounter = 1
-#collID = 'ppb'
 collID = 'ppb'
+#collID = 'pbp'
 
 v0.config.General.workArea = 'crab_dir/HLT185_250FlowV0v2' + collID + '2016PD' + str(PDcounter) + 'Rap'
 v0.config.General.requestName = 'HLT185_250FlowV0v2' + collID + '2016PD' + str(PDcounter) + 'CorrelationJL' + str(counter)

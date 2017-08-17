@@ -4,7 +4,7 @@ import xianalyzerheader as xi
 
 PDcounter = 2
 #collID = 'ppb'
-collID = 'ppb'
+collID = 'pbp'
 
 xi.config.General.requestName = 'HLT185_250FlowCascadev2' + collID + '2016PD' + str(PDcounter) + 'CorrelationJL' + str(counter)
 xi.config.General.workArea = 'crab_dir/HLT185_250FlowCascadev2' + collID +'2016PD' + str(PDcounter) + 'Rap'
