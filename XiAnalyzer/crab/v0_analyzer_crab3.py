@@ -4,7 +4,7 @@ config = Configuration()
 
 config.section_("General")
 config.General.requestName = 'HLT185_250FlowV0v2ppb2016PD6CorrelationJL20'
-config.General.workArea = 'HLT185_250FlowV0v2ppb2016PD6Rap'
+config.General.workArea = 'crab_dir/HLT185_250FlowV0v2ppb2016PD6Rap'
 #config.General.requestName = 'HLT185_250FlowV0v2pbp2016PD6CorrelationJL18'
 #config.General.workArea = 'HLT185_250FlowV0v2pbp2016PD6Rap'
 
