@@ -201,14 +201,16 @@ class XiCorrelation : public edm::EDAnalyzer {
 
         //vector<TVector3> *pepVect_trkhad;
         vector<TVector3> *pepVect_trkass;
-        vector<TVector3> *pepVect_Xi;
+        vector<TVector3> *pepVect_Xi_peak[11];
+        vector<TVector3> *pepVect_Xi_side[11];
         vector<double> ptBin_;
         vector<double> xiMassMean_;
         vector<double> xiMassSigma_;
         vector<double> *xiMass;
         vector<double> *zvtxVect;
         vector< vector<double> > *xiMass2;
-        vector< vector<TVector3> > *PepVect2_Xi;
+        vector< vector<TVector3> > *PepVect2_Xi_peak[11];
+        vector< vector<TVector3> > *PepVect2_Xi_side[11];
         vector< vector<TVector3> > *PepVect2_ass;
         //vector< vector<TVector3> > *PepVect2_had;
 

@@ -90,7 +90,11 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     }
 
     pepVect_trkass = new vector<TVector3>;
-    pepVect_Xi     = new vector<TVector3>;
+    for(int i=0; i<PtBinNum_; i++)
+    {
+        pepVect_Xi_peak[i]    = new vector<TVector3>;
+        pepVect_Xi_side[i]    = new vector<TVector3>;
+    }
     xiMass         = new vector<double>;
 
     edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
@@ -129,6 +133,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     if(EtaPtCutnTracks >= multLow_ && EtaPtCutnTracks < multHigh_){
         nEvtCut->Fill(1);
         nTrk->Fill(EtaPtCutnTracks);
+        //Make vector of cascade PEP
         for(reco::VertexCompositeCandidateCollection::const_iterator xiCand =
                 xiCollection->begin(); xiCand != xiCollection->end(); xiCand++)
         {
@@ -144,7 +149,6 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             // Make vector of Xi Candidate parameters
             TVector3 xiPEPvector;
             xiPEPvector.SetPtEtaPhi(xi_pT,xi_eta,xi_phi);
-            pepVect_Xi->push_back(xiPEPvector);
             xiMass->push_back(mass);
             for(int i=0; i<PtBinNum_;i++)
             {
@@ -154,6 +158,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     //peak
                     if(mass >= (xiMassMean_[i] - peakFactor_*xiMassSigma_[i]) && mass <= (xiMassMean_[i] + peakFactor_*xiMassSigma_[i]))
                     {
+                        pepVect_Xi_peak[i]->push_back(xiPEPvector);
                         KET_xi[i]->Fill(Ket);
                         Pt_xi[i]->Fill(xi_pT);
                         Eta_xi[i]->Fill(xi_eta);
@@ -162,6 +167,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     //sideband
                     if((mass <= (xiMassMean_[i] - sideFactor_*xiMassSigma_[i]) && mass >= 1.25) || (mass <= 1.40 && mass >= (xiMassMean_[i] + sideFactor_*xiMassSigma_[i])))
                     {
+                        pepVect_Xi_side[i]->push_back(xiPEPvector);
                         KET_xi_bkg[i]->Fill(Ket);
                         Pt_xi_bkg[i]->Fill(xi_pT);
                         Eta_xi_bkg[i]->Fill(xi_eta);
@@ -208,89 +214,84 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         // tracks
         for(int i=0; i<PtBinNum_; i++)
         {
-            int pepVect_Xi_size     = (int)pepVect_Xi->size();
+            int pepVect_Xi_peak_size     = (int)pepVect_Xi_peak[i]->size();
+            int pepVect_Xi_side_size     = (int)pepVect_Xi_side[i]->size();
             int pepVect_trkass_size = (int)pepVect_trkass->size();
             TrkassPerEvt->Fill(pepVect_trkass_size);
 
             // PEAK REGION signal
-            for(int xi_trg = 0; xi_trg < pepVect_Xi_size; xi_trg++)
+            for(int xi_trg = 0; xi_trg < pepVect_Xi_peak_size; xi_trg++)
             {
-                if((*xiMass)[xi_trg] >= (xiMassMean_[i] - peakFactor_*xiMassSigma_[i]) && (*xiMass)[xi_trg] <= (xiMassMean_[i] + peakFactor_*xiMassSigma_[i]))
+                TVector3 pepVect_trg = (*pepVect_Xi_peak)[xi_trg];
+                double eta_trg       = pepVect_trg.Eta();
+                double phi_trg       = pepVect_trg.Phi();
+                double pT            = pepVect_trg.Pt();
+
+                for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
                 {
-                    TVector3 pepVect_trg = (*pepVect_Xi)[xi_trg];
-                    double eta_trg       = pepVect_trg.Eta();
-                    double phi_trg       = pepVect_trg.Phi();
-                    double pT            = pepVect_trg.Pt();
-                    if(pT >= ptBin_[i] && pT <= ptBin_[i+1]){
+                    TVector3 pepVect_ass = (*pepVect_trkass)[assoc];
+                    double eta_ass       = pepVect_ass.Eta();
+                    double phi_ass       = pepVect_ass.Phi();
 
-                        for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
-                        {
-                            TVector3 pepVect_ass = (*pepVect_trkass)[assoc];
-                            double eta_ass       = pepVect_ass.Eta();
-                            double phi_ass       = pepVect_ass.Phi();
+                    double dEta = eta_ass - eta_trg;
+                    double dPhi = phi_ass - phi_trg;
 
-                            double dEta = eta_ass - eta_trg;
-                            double dPhi = phi_ass - phi_trg;
+                    if(dPhi > PI)
+                        dPhi=dPhi-2*PI;
+                    if(dPhi < -PI)
+                        dPhi=dPhi+2*PI;
+                    if(dPhi > -PI && dPhi < -PI/2.0)
+                        dPhi=dPhi+2*PI;
 
-                            if(dPhi > PI)
-                                dPhi=dPhi-2*PI;
-                            if(dPhi < -PI)
-                                dPhi=dPhi+2*PI;
-                            if(dPhi > -PI && dPhi < -PI/2.0)
-                                dPhi=dPhi+2*PI;
-
-                            // To reduce jet fragmentation contributions
-                            if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                            SignalXiPeak[i]->Fill(dEta, dPhi, 1.0/pepVect_Xi_size);
-                        }
-                    }
+                    // To reduce jet fragmentation contributions
+                    if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
+                    SignalXiPeak[i]->Fill(dEta, dPhi);//, 1.0/pepVect_Xi_size);
                 }
             }
 
-
-
             // SIDEBAND REGION signal
-            for(int xi_trg = 0; xi_trg < pepVect_Xi_size; xi_trg++)
+            for(int xi_trg = 0; xi_trg < pepVect_Xi_side_size; xi_trg++)
             {
-                if(((*xiMass)[xi_trg] <= (xiMassMean_[i] - sideFactor_*xiMassSigma_[i]) && (*xiMass)[xi_trg] >= 1.25) || ((*xiMass)[xi_trg] <= 1.40 && (*xiMass)[xi_trg] >= (xiMassMean_[i] + sideFactor_*xiMassSigma_[i])))
+                TVector3 pepVect_trg = (*pepVect_Xi_side)[xi_trg];
+                double eta_trg       = pepVect_trg.Eta();
+                double phi_trg       = pepVect_trg.Phi();
+                double pT = pepVect_trg.Pt();
+
+                for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
                 {
-                    TVector3 pepVect_trg = (*pepVect_Xi)[xi_trg];
-                    double eta_trg       = pepVect_trg.Eta();
-                    double phi_trg       = pepVect_trg.Phi();
-                    double pT = pepVect_trg.Pt();
-                    if(pT >= ptBin_[i] && pT <= ptBin_[i+1])
-                    {
-                        for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
-                        {
-                            TVector3 pepVect_ass = (*pepVect_trkass)[assoc];
-                            double eta_ass       = pepVect_ass.Eta();
-                            double phi_ass       = pepVect_ass.Phi();
+                    TVector3 pepVect_ass = (*pepVect_trkass)[assoc];
+                    double eta_ass       = pepVect_ass.Eta();
+                    double phi_ass       = pepVect_ass.Phi();
 
-                            double dEta = eta_ass - eta_trg;
-                            double dPhi = phi_ass - phi_trg;
+                    double dEta = eta_ass - eta_trg;
+                    double dPhi = phi_ass - phi_trg;
 
-                            if(dPhi > PI)
-                                dPhi=dPhi-2*PI;
-                            if(dPhi < -PI)
-                                dPhi=dPhi+2*PI;
-                            if(dPhi > -PI && dPhi < -PI/2.0)
-                                dPhi=dPhi+2*PI;
+                    if(dPhi > PI)
+                        dPhi=dPhi-2*PI;
+                    if(dPhi < -PI)
+                        dPhi=dPhi+2*PI;
+                    if(dPhi > -PI && dPhi < -PI/2.0)
+                        dPhi=dPhi+2*PI;
 
-                            // To reduce jet fragmentation contributions
-                            if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                            SignalXiSide[i]->Fill(dEta, dPhi, 1.0/pepVect_Xi_size);
-                        }
-                    }
+                    // To reduce jet fragmentation contributions
+                    if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
+                    SignalXiSide[i]->Fill(dEta, dPhi);//, 1.0/pepVect_Xi_size);
                 }
             }
         }
 
-        PepVect2_Xi->push_back(*pepVect_Xi);
+        for(int i=0 ; i<PtBinNum_; i++)
+        {
+            PepVect2_Xi_peak[i]->push_back(*pepVect_Xi_peak[i]);
+            PepVect2_Xi_side[i]->push_back(*pepVect_Xi_side[i]);
+            delete pepVect_Xi_peak[i];
+            delete pepVect_Xi_side[i];
+        }
         xiMass2->push_back(*xiMass);
         PepVect2_ass->push_back(*pepVect_trkass);
         zvtxVect->push_back(bestvz);
 
-        //
+        /* SignalXiHad
         // Make signal histogram of Xi-h but now with 1 < pT < 3 GeV and no mass
         // window
         //
@@ -327,7 +328,9 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 }
             }
         }
+        */
 
+        /* Already have these from past jobs so can just use those...
         //
         // Make signal histogram for pairing of two charged primary tracks
         //
@@ -364,8 +367,8 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 SignalHad->Fill(dEta, dPhi, 1.0/pepVect_trkhad_size);
             }
         }
+        */
 
-        delete pepVect_Xi;
         delete pepVect_trkass;
         delete xiMass;
 
@@ -384,10 +387,10 @@ XiCorrelation::beginJob()
     HadPerEvt       = fs->make<TH1D>("HadPerEvent", "Hadrons per Event", 1500, 0, 1500);
     TrkassPerEvt    = fs->make<TH1D>("TrkassPerEvent", "Associated trks per Event", 300,0, 300);
     MassPt          = fs->make<TH2D>("MassPt", "", 150, 1.25, 1.40, 300, 0 ,30);
-    BackgroundHad   = fs->make<TH2D>("BackgroundHad", "BkgHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-    SignalHad       = fs->make<TH2D>("SignalHad", "SigHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-    SignalXiHad     = fs->make<TH2D>("SignalXiHad", ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-    BackgroundXiHad = fs->make<TH2D>("BackgroundXiHad", ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+    //BackgroundHad   = fs->make<TH2D>("BackgroundHad", "BkgHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+    //SignalHad       = fs->make<TH2D>("SignalHad", "SigHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+    //SignalXiHad     = fs->make<TH2D>("SignalXiHad", ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+    //BackgroundXiHad = fs->make<TH2D>("BackgroundXiHad", ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     for(int i=0; i<PtBinNum_; i++)
     {
         BackgroundXiPeak[i] = fs->make<TH2D>(Form("BackgroundPeak_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
@@ -403,19 +406,12 @@ XiCorrelation::beginJob()
         Eta_xi_bkg[i]       = fs->make<TH1D>(Form("Eta_xi_bkg_pt%d",i),";eta",24,-2.4,2.4);
         rap_xi[i]           = fs->make<TH1D>(Form("rap_xi_pt%d",i),";y",100,-5,5);
         rap_xi_bkg[i]       = fs->make<TH1D>(Form("rap_xi_bkg_pt%d",i),";y",100,-5,5);
-
-
-        /*
-        Correlation        = fs->make<TH2D>("Correlation", "Correlation", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        CorrelationPeak        = fs->make<TH2D>("CorrelationPeak", "Correlation Peak", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        CorrelationSide        = fs->make<TH2D>("CorrelationSide", "Correlation Side", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        CorrelationHad     = fs->make<TH2D>("CorrelationHad", "CorrelationHad", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-    */
+        PepVect2_Xi_peak[i] = new vector< vector<TVector3> >;
+        PepVect2_Xi_side[i] = new vector< vector<TVector3> >;
     }
 
     // For Background calculations which must be done in the endJob function
     //
-    PepVect2_Xi        = new vector< vector<TVector3> >;
     PepVect2_ass       = new vector< vector<TVector3> >;
     xiMass2            = new vector< vector<double> >;
     zvtxVect           = new vector<double>;
@@ -429,7 +425,8 @@ XiCorrelation::endJob()
     {
         // Make background histograms
         // Xi paired with hadron
-        int PepVect2_Xi_size = (int)PepVect2_Xi->size();
+        int PepVect2_Xi_peak_size = (int)PepVect2_Xi_peak[i]->size();
+        int PepVect2_Xi_side_size = (int)PepVect2_Xi_side[i]->size();
         int PepVect2_ass_size = (int)PepVect2_ass->size();
 
         // PEAK REGION Background
@@ -456,8 +453,7 @@ XiCorrelation::endJob()
                     continue;
                 }
 
-                vector<double> xiMassTmp = (*xiMass2)[nevt_trg];
-                vector<TVector3> pepVectTmp_trg = (*PepVect2_Xi)[nevt_trg];
+                vector<TVector3> pepVectTmp_trg = (*PepVect2_Xi_peak)[nevt_trg];
                 vector<TVector3> pepVectTmp_ass = (*PepVect2_ass)[nevt_ass];
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
@@ -465,33 +461,26 @@ XiCorrelation::endJob()
 
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
                 {
-                    if(xiMassTmp[ntrg] >= (xiMassMean_[i] - peakFactor_*xiMassSigma_[i]) && xiMassTmp[ntrg] <= (xiMassMean_[i] + peakFactor_*xiMassSigma_[i]))
+                    TVector3 pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                    double eta_trg = pvectorTmp_trg.Eta();
+                    double phi_trg = pvectorTmp_trg.Phi();
+                    double pT = pvectorTmp_trg.Pt();
+                    for(int nass=0; nass<nMult_ass; nass++)
                     {
-                        TVector3 pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                        double eta_trg = pvectorTmp_trg.Eta();
-                        double phi_trg = pvectorTmp_trg.Phi();
-                        double pT = pvectorTmp_trg.Pt();
-                        if(pT >= ptBin_[i] && pT <= ptBin_[i+1])
-                        {
-                            for(int nass=0; nass<nMult_ass; nass++)
-                            {
-                                TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
-                                double eta_ass = pvectorTmp_ass.Eta();
-                                double phi_ass = pvectorTmp_ass.Phi();
+                        TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
+                        double eta_ass = pvectorTmp_ass.Eta();
+                        double phi_ass = pvectorTmp_ass.Phi();
 
-                                double dEta = eta_ass - eta_trg;
-                                double dPhi = phi_ass - phi_trg;
+                        double dEta = eta_ass - eta_trg;
+                        double dPhi = phi_ass - phi_trg;
 
-                                if(dPhi > PI)                    dPhi=dPhi-2*PI;
-                                if(dPhi < -PI)                   dPhi=dPhi+2*PI;
-                                if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
+                        if(dPhi > PI)                    dPhi=dPhi-2*PI;
+                        if(dPhi < -PI)                   dPhi=dPhi+2*PI;
+                        if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
 
-                                if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
+                        if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                                BackgroundXiPeak[i]->Fill(dEta, dPhi, 1.0/nMult_trg);
-
-                            }
-                        }
+                        BackgroundXiPeak[i]->Fill(dEta, dPhi, 1.0/nMult_trg);
                     }
                 }
             }
@@ -504,7 +493,7 @@ XiCorrelation::endJob()
             int ncount = 0;
             for(int nevt_ass=0; nevt_ass<PepVect2_ass_size; nevt_ass++)
             {
-                int nevt_trg = gRandom->Integer(PepVect2_Xi_size);
+                int nevt_trg = gRandom->Integer(PepVect2_Xi_side_size);
                 if(nevt_trg == nevt_ass)
                 {
                     nevt_ass--;
@@ -522,8 +511,7 @@ XiCorrelation::endJob()
                     continue;
                 }
 
-                vector<double> xiMassTmp = (*xiMass2)[nevt_trg];
-                vector<TVector3> pepVectTmp_trg = (*PepVect2_Xi)[nevt_trg];
+                vector<TVector3> pepVectTmp_trg = (*PepVect2_Xi_side)[nevt_trg];
                 vector<TVector3> pepVectTmp_ass = (*PepVect2_ass)[nevt_ass];
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
@@ -531,40 +519,33 @@ XiCorrelation::endJob()
 
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
                 {
-                    if((xiMassTmp[ntrg] <= (xiMassMean_[i] - sideFactor_*xiMassSigma_[i]) && xiMassTmp[ntrg] >= 1.25) || (xiMassTmp[ntrg] <= 1.40 && xiMassTmp[ntrg] >= (xiMassMean_[i] + sideFactor_*xiMassSigma_[i])))
+                    TVector3 pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                    double eta_trg = pvectorTmp_trg.Eta();
+                    double phi_trg = pvectorTmp_trg.Phi();
+                    double pT = pvectorTmp_trg.Pt();
+                    for(int nass=0; nass<nMult_ass; nass++)
                     {
-                        TVector3 pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                        double eta_trg = pvectorTmp_trg.Eta();
-                        double phi_trg = pvectorTmp_trg.Phi();
-                        double pT = pvectorTmp_trg.Pt();
-                        if(pT >= ptBin_[i] && pT <= ptBin_[i+1])
-                        {
-                            for(int nass=0; nass<nMult_ass; nass++)
-                            {
-                                TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
-                                double eta_ass = pvectorTmp_ass.Eta();
-                                double phi_ass = pvectorTmp_ass.Phi();
+                        TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
+                        double eta_ass = pvectorTmp_ass.Eta();
+                        double phi_ass = pvectorTmp_ass.Phi();
 
-                                double dEta = eta_ass - eta_trg;
-                                double dPhi = phi_ass - phi_trg;
+                        double dEta = eta_ass - eta_trg;
+                        double dPhi = phi_ass - phi_trg;
 
-                                if(dPhi > PI)                    dPhi=dPhi-2*PI;
-                                if(dPhi < -PI)                   dPhi=dPhi+2*PI;
-                                if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
+                        if(dPhi > PI)                    dPhi=dPhi-2*PI;
+                        if(dPhi < -PI)                   dPhi=dPhi+2*PI;
+                        if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
 
-                                if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
+                        if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                                BackgroundXiSide[i]->Fill(dEta, dPhi, 1.0/nMult_trg);
-                            }
-                        }
-
+                        BackgroundXiSide[i]->Fill(dEta, dPhi, 1.0/nMult_trg);
                     }
-
                 }
             }
         }
     }
 
+    /* BackgroundXiHad
     //
     // Make for 1 < pT < 3 GeV and no mass window
     //
@@ -632,7 +613,9 @@ XiCorrelation::endJob()
             }
         }
     }
+    */
 
+    /* BackgroundHad
     //
     // hadron paired with hadron
     //
@@ -673,12 +656,6 @@ XiCorrelation::endJob()
 
                 for(int nass=0; nass<nMult_ass; nass++)
                 {
-                    /*For avoiding correlation with the same particle although
-                    this would already be accounted for in the continue
-                    statement below*/
-                    /*
-                    if(ntrg == nass) continue;
-                    */
                     TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
                     double eta_ass = pvectorTmp_ass.Eta();
                     double phi_ass = pvectorTmp_ass.Phi();
@@ -698,6 +675,7 @@ XiCorrelation::endJob()
             }
         }
     }
+    */
 
     /*
     //int nEvent = XiPerEvt->Integral(3, 10000);
