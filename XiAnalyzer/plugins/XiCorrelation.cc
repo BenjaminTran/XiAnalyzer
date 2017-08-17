@@ -222,10 +222,9 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             // PEAK REGION signal
             for(int xi_trg = 0; xi_trg < pepVect_Xi_peak_size; xi_trg++)
             {
-                TVector3 pepVect_trg = (*pepVect_Xi_peak)[xi_trg];
+                TVector3 pepVect_trg = (*pepVect_Xi_peak[i])[xi_trg];
                 double eta_trg       = pepVect_trg.Eta();
                 double phi_trg       = pepVect_trg.Phi();
-                double pT            = pepVect_trg.Pt();
 
                 for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
                 {
@@ -252,10 +251,9 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             // SIDEBAND REGION signal
             for(int xi_trg = 0; xi_trg < pepVect_Xi_side_size; xi_trg++)
             {
-                TVector3 pepVect_trg = (*pepVect_Xi_side)[xi_trg];
+                TVector3 pepVect_trg = (*pepVect_Xi_side[i])[xi_trg];
                 double eta_trg       = pepVect_trg.Eta();
                 double phi_trg       = pepVect_trg.Phi();
-                double pT = pepVect_trg.Pt();
 
                 for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
                 {
@@ -435,7 +433,7 @@ XiCorrelation::endJob()
             int ncount = 0;
             for(int nevt_ass=0; nevt_ass<PepVect2_ass_size; nevt_ass++)
             {
-                int nevt_trg = gRandom->Integer(PepVect2_Xi_size);
+                int nevt_trg = gRandom->Integer(PepVect2_Xi_peak_size);
                 if(nevt_trg == nevt_ass)
                 {
                     nevt_ass--;
@@ -453,7 +451,7 @@ XiCorrelation::endJob()
                     continue;
                 }
 
-                vector<TVector3> pepVectTmp_trg = (*PepVect2_Xi_peak)[nevt_trg];
+                vector<TVector3> pepVectTmp_trg = (*PepVect2_Xi_peak[i])[nevt_trg];
                 vector<TVector3> pepVectTmp_ass = (*PepVect2_ass)[nevt_ass];
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
@@ -464,7 +462,7 @@ XiCorrelation::endJob()
                     TVector3 pvectorTmp_trg = pepVectTmp_trg[ntrg];
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
-                    double pT = pvectorTmp_trg.Pt();
+
                     for(int nass=0; nass<nMult_ass; nass++)
                     {
                         TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
@@ -511,7 +509,7 @@ XiCorrelation::endJob()
                     continue;
                 }
 
-                vector<TVector3> pepVectTmp_trg = (*PepVect2_Xi_side)[nevt_trg];
+                vector<TVector3> pepVectTmp_trg = (*PepVect2_Xi_side[i])[nevt_trg];
                 vector<TVector3> pepVectTmp_ass = (*PepVect2_ass)[nevt_ass];
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
@@ -522,7 +520,7 @@ XiCorrelation::endJob()
                     TVector3 pvectorTmp_trg = pepVectTmp_trg[ntrg];
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
-                    double pT = pvectorTmp_trg.Pt();
+
                     for(int nass=0; nass<nMult_ass; nass++)
                     {
                         TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
