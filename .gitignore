@@ -12,3 +12,4 @@
 *.pyc
 *.log
 XiAnalyzer/crab/HLT*
+*.dat

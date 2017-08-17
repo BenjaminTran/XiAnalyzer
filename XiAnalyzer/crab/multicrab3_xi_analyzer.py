@@ -4,7 +4,6 @@ config = Configuration()
 
 #collID = 'pPb'
 collID = 'Pbp'
-count = 28
 
 config.section_("General")
 #config.General.requestName = 'HLT185_250FlowCascadev2ppb2016PD1CorrelationJL22'
@@ -48,10 +47,10 @@ if __name__ == '__main__':
             print "Failed submitting task: %s" % (cle)
 
 
-    for num in range(1,6):
+    for num in range(0,1):
         try:
             with open( 'XiVarStore.dat', 'r' ) as fle:
-                counter = int( fle.readline() ) + 1
+                counter = int( fle.readline() )
         except FileNotFoundError:
             counter = 0
 
@@ -78,6 +77,7 @@ if __name__ == '__main__':
             config.General.workArea = 'HLT185_250FlowCascadev2pbp2016PD' + str(num+1) + 'Rap'
             config.General.requestName = 'HLT185_250FlowCascadev2pbp2016PD' + str(num+1) + 'CorrelationJL' + str(counter)
         with open( 'XiVarStore.dat', 'w' ) as fle:
+            counter = counter + 1
             fle.write( str(counter) )
         submit(config)
 
