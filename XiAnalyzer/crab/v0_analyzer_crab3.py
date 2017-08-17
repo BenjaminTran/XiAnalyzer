@@ -1,48 +1,50 @@
-import os
-from WMCore.Configuration import Configuration
-config = Configuration()
+import v0analyzerheader as v0
 
-config.section_("General")
-config.General.requestName = 'HLT185_250FlowV0v2ppb2016PD6CorrelationJL20'
-config.General.workArea = 'crab_dir/HLT185_250FlowV0v2ppb2016PD6Rap'
-#config.General.requestName = 'HLT185_250FlowV0v2pbp2016PD6CorrelationJL18'
-#config.General.workArea = 'HLT185_250FlowV0v2pbp2016PD6Rap'
+#To submit edit counter, CollID, inputDataset
 
-config.section_("JobType")
-config.JobType.pluginName = 'Analysis'
-#config.JobType.pluginName = 'PrivateMC'
-config.JobType.psetName = os.path.expandvars('/afs/cern.ch/user/b/btran/work/CMSSW_8_0_24/src/XiAnalyzer/XiAnalyzer/test/v0analysis_cfg.py')
+PDcounter = 1
+#collID = 'ppb'
+collID = 'ppb'
 
-config.section_("Data")
-#config.Data.inputDataset = '/PAHighMultiplicity1/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-#config.Data.inputDataset = '/PAHighMultiplicity2/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-#config.Data.inputDataset = '/PAHighMultiplicity3/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-#config.Data.inputDataset = '/PAHighMultiplicity4/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-#config.Data.inputDataset = '/PAHighMultiplicity5/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-config.Data.inputDataset = '/PAHighMultiplicity6/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-#
-#config.Data.inputDataset = '/PAHighMultiplicity1/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-#config.Data.inputDataset = '/PAHighMultiplicity2/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-#config.Data.inputDataset = '/PAHighMultiplicity3/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-#config.Data.inputDataset = '/PAHighMultiplicity4/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-#config.Data.inputDataset = '/PAHighMultiplicity5/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-#config.Data.inputDataset = '/PAHighMultiplicity6/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-#config.Data.userInputFiles = list(open('HMMC90.txt'))
-config.Data.inputDBS = 'phys03'
-config.Data.ignoreLocality = True
-#config.Data.primaryDataset = 'MinBias_TuneZ2star_7TeV_pythia6'
-#config.Data.splitting = 'FileBased'
-#config.Data.unitsPerJob = 1
-config.Data.splitting = 'EventAwareLumiBased'
-config.Data.unitsPerJob = 60000
-#config.Data.totalUnits = 300
-config.Data.outLFNDirBase = '/store/group/phys_heavyions/btran/'
-config.Data.useParent = True
-config.Data.publication = False
-config.Data.publishDBS = 'phys03'
-config.Data.outputDatasetTag = 'Pbp2016_V0_Rereco_HM185_250Flow'
+v0.config.General.workArea = 'crab_dir/HLT185_250FlowV0v2' + collID + '2016PD' + str(PDcounter) + 'Rap'
+v0.config.General.requestName = 'HLT185_250FlowV0v2' + collID + '2016PD' + str(PDcounter) + 'CorrelationJL' + str(counter)
 
-config.section_("Site")
-config.Site.storageSite = 'T2_CH_CERN'
-config.Site.whitelist = ['T2_US_MIT','T2_US_Vanderbilt']
+if __name__ == '__main__':
 
+    from CRABAPI.RawCommand import crabCommand
+    from CRABClient.ClientExceptions import ClientException
+    from httplib import HTTPException
+
+    def submit(config):
+        try:
+            crabCommand('submit', config = config)
+        except HTTPException as hte:
+            print "Failed submitting task: %s" % (hte.headers)
+        except ClientException as cle:
+            print "Failed submitting task: %s" % (cle)
+
+    try:
+        with open( 'V0VarStore.dat', 'r' ) as fle:
+            counter = int( fle.readline() )
+    except FileNotFoundError:
+        counter = 0
+
+    v0.config.Data.inputDataset = '/PAHighMultiplicity1/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #v0.config.Data.inputDataset = '/PAHighMultiplicity2/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #v0.config.Data.inputDataset = '/PAHighMultiplicity3/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #v0.config.Data.inputDataset = '/PAHighMultiplicity4/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #v0.config.Data.inputDataset = '/PAHighMultiplicity5/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #v0.config.Data.inputDataset = '/PAHighMultiplicity6/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #
+    #v0.config.Data.inputDataset = '/PAHighMultiplicity1/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #v0.config.Data.inputDataset = '/PAHighMultiplicity2/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #v0.config.Data.inputDataset = '/PAHighMultiplicity3/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #v0.config.Data.inputDataset = '/PAHighMultiplicity4/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #v0.config.Data.inputDataset = '/PAHighMultiplicity5/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #v0.config.Data.inputDataset = '/PAHighMultiplicity6/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #v0.config.Data.userInputFiles = list(open('HMMC90.txt'))
+
+    with open( 'V0VarStore.dat', 'w' ) as fle:
+        counter = counter + 1
+        fle.write( str(counter) )
+    submit(v0.config)

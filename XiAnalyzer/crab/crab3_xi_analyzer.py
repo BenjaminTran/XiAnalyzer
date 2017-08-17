@@ -1,4 +1,14 @@
 import xianalyzerheader as xi
+
+#To submit edit counter, CollID, inputDataset
+
+PDcounter = 2
+#collID = 'ppb'
+collID = 'ppb'
+
+xi.config.General.requestName = 'HLT185_250FlowCascadev2' + collID + '2016PD' + str(PDcounter) + 'CorrelationJL' + str(counter)
+xi.config.General.workArea = 'crab_dir/HLT185_250FlowCascadev2' + collID +'2016PD' + str(PDcounter) + 'Rap'
+
 if __name__ == '__main__':
 
     from CRABAPI.RawCommand import crabCommand
@@ -19,22 +29,16 @@ if __name__ == '__main__':
     except FileNotFoundError:
         counter = 0
 
-    PDcounter = 2
-    xi.config.Data.outputDatasetTag = 'Pbp2016_Cascade_Rereco_HM185_250Flow'
-    #xi.config.Data.outputDatasetTag = 'pPb2016_Cascade_Rereco_HM185_250Flow'
-
-    xi.config.General.requestName = 'HLT185_250FlowCascadev2ppb2016PD' + str(PDcounter) + 'CorrelationJL' + str(counter)
-    xi.config.General.workArea = 'crab_dir/HLT185_250FlowCascadev2ppb2016PD' + str(PDcounter) + 'Rap'
 
     #xi.config.Data.inputDataset = '/PAHighMultiplicity1/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-    xi.config.Data.inputDataset = '/PAHighMultiplicity2/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #xi.config.Data.inputDataset = '/PAHighMultiplicity2/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #xi.config.Data.inputDataset = '/PAHighMultiplicity3/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #xi.config.Data.inputDataset = '/PAHighMultiplicity4/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #xi.config.Data.inputDataset = '/PAHighMultiplicity5/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #xi.config.Data.inputDataset = '/PAHighMultiplicity6/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #
     #xi.config.Data.inputDataset = '/PAHighMultiplicity1/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-    #xi.config.Data.inputDataset = '/PAHighMultiplicity2/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    xi.config.Data.inputDataset = '/PAHighMultiplicity2/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #xi.config.Data.inputDataset = '/PAHighMultiplicity3/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #xi.config.Data.inputDataset = '/PAHighMultiplicity4/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #xi.config.Data.inputDataset = '/PAHighMultiplicity5/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
