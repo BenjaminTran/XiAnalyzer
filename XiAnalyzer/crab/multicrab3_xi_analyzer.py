@@ -2,9 +2,9 @@ import os
 from WMCore.Configuration import Configuration
 config = Configuration()
 
-collID = 'pPb'
-#collID = 'Pbp'
-count = 22
+#collID = 'pPb'
+collID = 'Pbp'
+count = 28
 
 config.section_("General")
 #config.General.requestName = 'HLT185_250FlowCascadev2ppb2016PD1CorrelationJL22'
@@ -49,7 +49,12 @@ if __name__ == '__main__':
 
 
     for num in range(1,6):
-        counter = count + num
+        try:
+            with open( 'XiVarStore.dat', 'r' ) as fle:
+                counter = int( fle.readline() ) + 1
+        except FileNotFoundError:
+            counter = 0
+
         if collID == 'pPb':
             DataSet = ['/PAHighMultiplicity1/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER',
                        '/PAHighMultiplicity2/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER',
@@ -57,8 +62,8 @@ if __name__ == '__main__':
                        '/PAHighMultiplicity4/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER',
                        '/PAHighMultiplicity5/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER',
                        '/PAHighMultiplicity6/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER']
-            print 'Input Dataset is %r ' % (Dataset[num])
-            config.Data.inputDataset = Dataset[num]
+            print 'Input Dataset is %r ' % (DataSet[num])
+            config.Data.inputDataset = DataSet[num]
             config.General.workArea = 'HLT185_250FlowCascadev2ppb2016PD' + str(num+1) + 'Rap'
             config.General.requestName = 'HLT185_250FlowCascadev2ppb2016PD' + str(num+1) + 'CorrelationJL' + str(counter)
         else:
@@ -68,10 +73,12 @@ if __name__ == '__main__':
                        '/PAHighMultiplicity4/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER',
                        '/PAHighMultiplicity5/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER',
                        '/PAHighMultiplicity6/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER']
-            print 'Input Dataset is %r ' % (Dataset[num])
-            config.Data.inputDataset = Dataset[num]
+            print 'Input Dataset is %r ' % (DataSet[num])
+            config.Data.inputDataset = DataSet[num]
             config.General.workArea = 'HLT185_250FlowCascadev2pbp2016PD' + str(num+1) + 'Rap'
             config.General.requestName = 'HLT185_250FlowCascadev2pbp2016PD' + str(num+1) + 'CorrelationJL' + str(counter)
+        with open( 'XiVarStore.dat', 'w' ) as fle:
+            fle.write( str(counter) )
         submit(config)
 
 
