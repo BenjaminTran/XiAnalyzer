@@ -1,5 +1,11 @@
 import xianalyzerheader as xi
 
+try:
+    with open( 'XiVarStore.dat', 'r' ) as fle:
+        counter = int( fle.readline() )
+except FileNotFoundError:
+    counter = 0
+
 #To submit edit counter, CollID, inputDataset
 
 PDcounter = 2
@@ -23,11 +29,6 @@ if __name__ == '__main__':
         except ClientException as cle:
             print "Failed submitting task: %s" % (cle)
 
-    try:
-        with open( 'XiVarStore.dat', 'r' ) as fle:
-            counter = int( fle.readline() )
-    except FileNotFoundError:
-        counter = 0
 
 
     #xi.config.Data.inputDataset = '/PAHighMultiplicity1/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
