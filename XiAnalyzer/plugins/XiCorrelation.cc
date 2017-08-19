@@ -95,7 +95,6 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         pepVect_Xi_peak[i]    = new vector<TVector3>;
         pepVect_Xi_side[i]    = new vector<TVector3>;
     }
-    xiMass         = new vector<double>;
 
     edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
     iEvent.getByToken(_xiCollection, xiCollection);
@@ -149,7 +148,6 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             // Make vector of Xi Candidate parameters
             TVector3 xiPEPvector;
             xiPEPvector.SetPtEtaPhi(xi_pT,xi_eta,xi_phi);
-            xiMass->push_back(mass);
             for(int i=0; i<PtBinNum_;i++)
             {
                 if(xi_pT <= ptBin_[i+1] && xi_pT >= ptBin_[i])
@@ -285,7 +283,6 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             delete pepVect_Xi_peak[i];
             delete pepVect_Xi_side[i];
         }
-        xiMass2->push_back(*xiMass);
         PepVect2_ass->push_back(*pepVect_trkass);
         zvtxVect->push_back(bestvz);
 
@@ -368,7 +365,6 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         */
 
         delete pepVect_trkass;
-        delete xiMass;
 
     }
 }
@@ -411,7 +407,6 @@ XiCorrelation::beginJob()
     // For Background calculations which must be done in the endJob function
     //
     PepVect2_ass       = new vector< vector<TVector3> >;
-    xiMass2            = new vector< vector<double> >;
     zvtxVect           = new vector<double>;
 }
 

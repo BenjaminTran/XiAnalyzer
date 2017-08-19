@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 process = cms.Process("XiAna")
 
-#process.SimpleMemoryCheck = cms.Service("SimpleMemoryCheck",ignoreTotal = cms.untracked.int32(1) )
+process.SimpleMemoryCheck = cms.Service("SimpleMemoryCheck",ignoreTotal = cms.untracked.int32(1) )
 
 ### standard includes
 process.load("Configuration.StandardSequences.Digi_cff")
@@ -37,7 +37,7 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(60000))
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -76,7 +76,7 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
                                     #'V0Correlation.root'
-                                    'XiCorrelationRapidityA.root'
+                                    'XiCorrelationRapidityB.root'
 				    )
                                   )
 # CORRELATION
@@ -87,9 +87,10 @@ process.TFileService = cms.Service("TFileService",
 #process.XiAnalysis = cms.Sequence(process.hltHM*process.selectV0CandidatesLowXi*process.xiCorrelation)
 process.XiCorrAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.xiCorrelation)
 process.XiCorrAnalysisRapidity = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.xiCorrelationRapidity)
+process.RapidityAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.v0CorrelationRapidity*process.xiCorrelationRapidity)
 process.OmCorrAnalysis = cms.Sequence(process.selectOmegaCandidatesNew)
 
-process.p = cms.Path(process.XiCorrAnalysisRapidity)
+process.p = cms.Path(process.RapidityAnalysis)
 
 process.schedule = cms.Schedule(process.p)
 
