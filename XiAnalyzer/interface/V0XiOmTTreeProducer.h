@@ -104,7 +104,7 @@ struct ParticleData{
                 int nhit1_;
                 int nhit2_;
                 int n_;
-        } xi, om, ks, la;
+        } XI, OM, KS, LA;
 
 
 class V0XiOmTTreeProducer : public edm::EDAnalyzer

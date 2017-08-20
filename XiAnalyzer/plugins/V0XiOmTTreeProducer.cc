@@ -384,17 +384,17 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 double distanceSigma    = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/distanceMag;
                 double distanceSigValue = distanceMag/distanceSigma;
 
-                xi.xi3DIpSigValue_     = xi3DIpSigValue;
-                xi.xiPi3DIpSigValue_   = xiPi3DIpSigValue;
-                xi.VTrkPi3DIpSigValue_ = VTrkPi3DIpSigValue;
-                xi.VTrkP3DIpSigValue_  = VTrkP3DIpSigValue;
-                xi.xiFlightSigValue_   = xiFlightSigValue;
-                xi.distanceSigValue_   = distanceSigValue;
-                xi.mass_               = mass_xi;
-                xi.pt_                 = pt_xi;
-                xi.n_                  = numCand_xi;
-                xi.rapidity_           = rapidity_xi;
-                xi.eta_                = eta_xi;
+                XI.xi3DIpSigValue_     = xi3DIpSigValue;
+                XI.xiPi3DIpSigValue_   = xiPi3DIpSigValue;
+                XI.VTrkPi3DIpSigValue_ = VTrkPi3DIpSigValue;
+                XI.VTrkP3DIpSigValue_  = VTrkP3DIpSigValue;
+                XI.xiFlightSigValue_   = xiFlightSigValue;
+                XI.distanceSigValue_   = distanceSigValue;
+                XI.mass_               = mass_xi;
+                XI.pt_                 = pt_xi;
+                XI.n_                  = numCand_xi;
+                XI.rapidity_           = rapidity_xi;
+                XI.eta_                = eta_xi;
 
                 /*
                 //Skim cuts
@@ -434,12 +434,12 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 double dl_la          = ROOT::Math::Mag(distanceVector_la);
                 double dlerror_la     = sqrt(ROOT::Math::Similarity(totalCov_la, distanceVector_la))/dl_la;
 
-                xi.dauTransImpactSig_    = lambda_dau2_dxy/lambda_dau2_dxyerror;
-                xi.dauLongImpactSig_     = lambda_dau2_dz/lambda_dau2_dzerror;
-                xi.batDauTransImpactSig_ = xi_dau2_dxy/xi_dau2_dxyerror;
-                xi.batDauLongImpactSig_  = xi_dau2_dz/xi_dau2_dzerror;
-                xi.xiVtxSignificance3D_  = dl_xi/dlerror_xi;
-                xi.vtxSignificance3D_    = dl_la/dlerror_la;
+                XI.dauTransImpactSig_    = lambda_dau2_dxy/lambda_dau2_dxyerror;
+                XI.dauLongImpactSig_     = lambda_dau2_dz/lambda_dau2_dzerror;
+                XI.batDauTransImpactSig_ = xi_dau2_dxy/xi_dau2_dxyerror;
+                XI.batDauLongImpactSig_  = xi_dau2_dz/xi_dau2_dzerror;
+                XI.xiVtxSignificance3D_  = dl_xi/dlerror_xi;
+                XI.vtxSignificance3D_    = dl_la/dlerror_la;
                 */
 
                 XiTree->Fill();
@@ -590,43 +590,43 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
                 if(doKs_)
                 {
-                    ks.eta_ =  eta_v0;
-                    ks.mass_ = mass_v0;
-                    ks.pt_ = pt_v0;
-                    ks.rapidity_ = rapidity_v0;
-                    ks.nhit1_ = nhit1;
-                    ks.nhit2_ = nhit2;
-                    ks.dzSig1_ = dzos1;
-                    ks.dzSig2_ = dzos2;
-                    ks.dxySig1_ = dxyos1;
-                    ks.dxySig2_ = dxyos2;
-                    ks.vtxChi2_ = vtxChi2;
-                    ks.cosTheta_ = agl;
-                    ks.decayLSig_ = dlos;
-                    ks.misIDMassEE_ = invmass_ee;
-                    ks.misIDMassForward_ = misIDMass_ks_pip;
-                    ks.misIDMassBackward_ = misIDMass_ks_ppi;
+                    KS.eta_ =  eta_v0;
+                    KS.mass_ = mass_v0;
+                    KS.pt_ = pt_v0;
+                    KS.rapidity_ = rapidity_v0;
+                    KS.nhit1_ = nhit1;
+                    KS.nhit2_ = nhit2;
+                    KS.dzSig1_ = dzos1;
+                    KS.dzSig2_ = dzos2;
+                    KS.dxySig1_ = dxyos1;
+                    KS.dxySig2_ = dxyos2;
+                    KS.vtxChi2_ = vtxChi2;
+                    KS.cosTheta_ = agl;
+                    KS.decayLSig_ = dlos;
+                    KS.misIDMassEE_ = invmass_ee;
+                    KS.misIDMassForward_ = misIDMass_ks_pip;
+                    KS.misIDMassBackward_ = misIDMass_ks_ppi;
 
                     KsTree->Fill();
                 }
 
                 if(doLa_)
                 {
-                    la.eta_ =  eta_v0;
-                    la.mass_ = mass_v0;
-                    la.pt_ = pt_v0;
-                    la.rapidity_ = rapidity_v0;
-                    la.nhit1_ = nhit1;
-                    la.nhit2_ = nhit2;
-                    la.dzSig1_ = dzos1;
-                    la.dzSig2_ = dzos2;
-                    la.dxySig1_ = dxyos1;
-                    la.dxySig2_ = dxyos2;
-                    la.vtxChi2_ = vtxChi2;
-                    la.cosTheta_ = agl;
-                    la.decayLSig_ = dlos;
-                    la.misIDMassEE_ = invmass_ee;
-                    la.misIDMassForward_ = misIDMass_la;
+                    LA.eta_ =  eta_v0;
+                    LA.mass_ = mass_v0;
+                    LA.pt_ = pt_v0;
+                    LA.rapidity_ = rapidity_v0;
+                    LA.nhit1_ = nhit1;
+                    LA.nhit2_ = nhit2;
+                    LA.dzSig1_ = dzos1;
+                    LA.dzSig2_ = dzos2;
+                    LA.dxySig1_ = dxyos1;
+                    LA.dxySig2_ = dxyos2;
+                    LA.vtxChi2_ = vtxChi2;
+                    LA.cosTheta_ = agl;
+                    LA.decayLSig_ = dlos;
+                    LA.misIDMassEE_ = invmass_ee;
+                    LA.misIDMassForward_ = misIDMass_la;
 
                     LaTree->Fill();
                 }
@@ -644,66 +644,66 @@ V0XiOmTTreeProducer::beginJob()
     if(doXi_)
     {
         XiTree = fs->make<TTree>("XiTree","CutParameters");
-        XiTree->Branch("xi3dipsig",&xi.xi3DIpSigValue_,"xi3dipsig/F");
-        XiTree->Branch("xipi3dipsig",&xi.xiPi3DIpSigValue_,"xipi3dipsig/F");
-        XiTree->Branch("vtrkpi3dipsig",&xi.VTrkPi3DIpSigValue_,"vtrkpi3dipsig/F");
-        XiTree->Branch("vtrkp3dipsig",&xi.VTrkP3DIpSigValue_,"vtrkp3dipsigpt/F");
-        XiTree->Branch("xiflightsig",&xi.xiFlightSigValue_,"xiflightsig/F");
-        XiTree->Branch("distancesig",&xi.distanceSigValue_,"distancesig/F");
-        XiTree->Branch("mass",&xi.mass_,"mass/F");
-        XiTree->Branch("rapidity",&xi.rapidity_,"rapidity/F");
-        XiTree->Branch("eta",&xi.eta_,"eta/F");
-        XiTree->Branch("pt",&xi.pt_,"pt/F");
-        XiTree->Branch("n",&xi.n_,"n/I");
+        XiTree->Branch("xi3dipsig",&XI.xi3DIpSigValue_,"xi3dipsig/F");
+        XiTree->Branch("xipi3dipsig",&XI.xiPi3DIpSigValue_,"xipi3dipsig/F");
+        XiTree->Branch("vtrkpi3dipsig",&XI.VTrkPi3DIpSigValue_,"vtrkpi3dipsig/F");
+        XiTree->Branch("vtrkp3dipsig",&XI.VTrkP3DIpSigValue_,"vtrkp3dipsigpt/F");
+        XiTree->Branch("xiflightsig",&XI.xiFlightSigValue_,"xiflightsig/F");
+        XiTree->Branch("distancesig",&XI.distanceSigValue_,"distancesig/F");
+        XiTree->Branch("mass",&XI.mass_,"mass/F");
+        XiTree->Branch("rapidity",&XI.rapidity_,"rapidity/F");
+        XiTree->Branch("eta",&XI.eta_,"eta/F");
+        XiTree->Branch("pt",&XI.pt_,"pt/F");
+        XiTree->Branch("n",&XI.n_,"n/I");
         /*
-           XiTree->Branch("dautransimpactsig",&xi.dauTransImpactSig_,"dautransimpactsig/F");
-           XiTree->Branch("daulongimpactsig",&xi.dauLongImpactSig_,"daulongimpactsig/F");
-           XiTree->Branch("batdautransimpactsig",&xi.batDauTransImpactSig_,"batdautransimpactsig/F");
-           XiTree->Branch("batdaulongimpactsig",&xi.batDauTransImpactSig_,"batdaulongimpactsig/F");
-           XiTree->Branch("xivtxsignificance3d",&xi.xiVtxSignificance3D_,"xivtxsignificance3d/F");
-           XiTree->Branch("vtxsignificance3d",&xi.vtxSignificance3D_,"vtxsignificance3d/F");
+           XiTree->Branch("dautransimpactsig",&XI.dauTransImpactSig_,"dautransimpactsig/F");
+           XiTree->Branch("daulongimpactsig",&XI.dauLongImpactSig_,"daulongimpactsig/F");
+           XiTree->Branch("batdautransimpactsig",&XI.batDauTransImpactSig_,"batdautransimpactsig/F");
+           XiTree->Branch("batdaulongimpactsig",&XI.batDauTransImpactSig_,"batdaulongimpactsig/F");
+           XiTree->Branch("xivtxsignificance3d",&XI.xiVtxSignificance3D_,"xivtxsignificance3d/F");
+           XiTree->Branch("vtxsignificance3d",&XI.vtxSignificance3D_,"vtxsignificance3d/F");
            */
     }
 
     if(doKs_)
     {
         KsTree = fs->make<TTree>("KsTree","CutParameters");
-        KsTree->Branch("eta",&ks.eta_,"eta/F");
-        KsTree->Branch("mass",&ks.mass_,"mass/F");
-        KsTree->Branch("pt",&ks.pt_,"pt/F");
-        KsTree->Branch("rapidity",&ks.rapidity_,"rapidity/F");
-        KsTree->Branch("dzSig1",&ks.dzSig1_,"dzSig1/F");
-        KsTree->Branch("dzSig2",&ks.dzSig2_,"dzSig2/F");
-        KsTree->Branch("dxySig1",&ks.dxySig1_,"dxySig1/F");
-        KsTree->Branch("dxySig2",&ks.dxySig2_,"dxySig2/F");
-        KsTree->Branch("vtxChi2",&ks.vtxChi2_,"vtxChi2/F");
-        KsTree->Branch("cosTheta",&ks.cosTheta_,"cosTheta/F");
-        KsTree->Branch("decayLSig",&ks.decayLSig_,"decayLSig/F");
-        KsTree->Branch("misIDMassEE",&ks.misIDMassEE_,"misIDMassEE/F");
-        KsTree->Branch("misIDMasspip",&ks.misIDMassForward_,"misIDMassForward/F");
-        KsTree->Branch("misIDMassppi",&ks.misIDMassBackward_,"misIDMassBackward/F");
-        KsTree->Branch("nhit1",&ks.nhit1_,"nhit1/I");
-        KsTree->Branch("nhit2",&ks.nhit2_,"nhit2/I");
+        KsTree->Branch("eta",&KS.eta_,"eta/F");
+        KsTree->Branch("mass",&KS.mass_,"mass/F");
+        KsTree->Branch("pt",&KS.pt_,"pt/F");
+        KsTree->Branch("rapidity",&KS.rapidity_,"rapidity/F");
+        KsTree->Branch("dzSig1",&KS.dzSig1_,"dzSig1/F");
+        KsTree->Branch("dzSig2",&KS.dzSig2_,"dzSig2/F");
+        KsTree->Branch("dxySig1",&KS.dxySig1_,"dxySig1/F");
+        KsTree->Branch("dxySig2",&KS.dxySig2_,"dxySig2/F");
+        KsTree->Branch("vtxChi2",&KS.vtxChi2_,"vtxChi2/F");
+        KsTree->Branch("cosTheta",&KS.cosTheta_,"cosTheta/F");
+        KsTree->Branch("decayLSig",&KS.decayLSig_,"decayLSig/F");
+        KsTree->Branch("misIDMassEE",&KS.misIDMassEE_,"misIDMassEE/F");
+        KsTree->Branch("misIDMasspip",&KS.misIDMassForward_,"misIDMassForward/F");
+        KsTree->Branch("misIDMassppi",&KS.misIDMassBackward_,"misIDMassBackward/F");
+        KsTree->Branch("nhit1",&KS.nhit1_,"nhit1/I");
+        KsTree->Branch("nhit2",&KS.nhit2_,"nhit2/I");
     }
 
     if(doLa_)
     {
         LaTree = fs->make<TTree>("LaTree","CutParameters");
-        LaTree->Branch("eta",&la.eta_,"eta/F");
-        LaTree->Branch("mass",&la.mass_,"mass/F");
-        LaTree->Branch("pt",&la.pt_,"pt/F");
-        LaTree->Branch("rapidity",&la.rapidity_,"rapidity/F");
-        LaTree->Branch("dzSig1",&la.dzSig1_,"dzSig1/F");
-        LaTree->Branch("dzSig2",&la.dzSig2_,"dzSig2/F");
-        LaTree->Branch("dxySig1",&la.dxySig1_,"dxySig1/F");
-        LaTree->Branch("dxySig2",&la.dxySig2_,"dxySig2/F");
-        LaTree->Branch("vtxChi2",&la.vtxChi2_,"vtxChi2/F");
-        LaTree->Branch("cosTheta",&la.cosTheta_,"cosTheta/F");
-        LaTree->Branch("decayLSig",&la.decayLSig_,"decayLSig/F");
-        LaTree->Branch("misIDMassEE",&la.misIDMassEE_,"misIDMassEE/F");
-        LaTree->Branch("misIDMass",&la.misIDMassForward_,"misIDMassForward/F");
-        LaTree->Branch("nhit1",&la.nhit1_,"nhit1/I");
-        LaTree->Branch("nhit2",&la.nhit2_,"nhit2/I");
+        LaTree->Branch("eta",&LA.eta_,"eta/F");
+        LaTree->Branch("mass",&LA.mass_,"mass/F");
+        LaTree->Branch("pt",&LA.pt_,"pt/F");
+        LaTree->Branch("rapidity",&LA.rapidity_,"rapidity/F");
+        LaTree->Branch("dzSig1",&LA.dzSig1_,"dzSig1/F");
+        LaTree->Branch("dzSig2",&LA.dzSig2_,"dzSig2/F");
+        LaTree->Branch("dxySig1",&LA.dxySig1_,"dxySig1/F");
+        LaTree->Branch("dxySig2",&LA.dxySig2_,"dxySig2/F");
+        LaTree->Branch("vtxChi2",&LA.vtxChi2_,"vtxChi2/F");
+        LaTree->Branch("cosTheta",&LA.cosTheta_,"cosTheta/F");
+        LaTree->Branch("decayLSig",&LA.decayLSig_,"decayLSig/F");
+        LaTree->Branch("misIDMassEE",&LA.misIDMassEE_,"misIDMassEE/F");
+        LaTree->Branch("misIDMass",&LA.misIDMassForward_,"misIDMassForward/F");
+        LaTree->Branch("nhit1",&LA.nhit1_,"nhit1/I");
+        LaTree->Branch("nhit2",&LA.nhit2_,"nhit2/I");
     }
 }
 
