@@ -69,6 +69,20 @@ using namespace std;
 using namespace reco;
 using std::vector;
 
+
+class V0XiOmTTreeProducer : public edm::EDAnalyzer
+{
+public:
+	explicit V0XiOmTTreeProducer(const edm::ParameterSet&);
+	~V0XiOmTTreeProducer();
+
+private:
+	virtual void beginJob();
+	virtual void analyze(const edm::Event&, const edm::EventSetup&);
+	virtual void endJob();
+
+  // ----------member data ---------------------------
+
 struct ParticleData{
     //Xi
                 //Skim Cuts
@@ -105,20 +119,6 @@ struct ParticleData{
                 int nhit2_;
                 int n_;
         } XI, OM, KS, LA;
-
-
-class V0XiOmTTreeProducer : public edm::EDAnalyzer
-{
-public:
-	explicit V0XiOmTTreeProducer(const edm::ParameterSet&);
-	~V0XiOmTTreeProducer();
-
-private:
-	virtual void beginJob();
-	virtual void analyze(const edm::Event&, const edm::EventSetup&);
-	virtual void endJob();
-
-  // ----------member data ---------------------------
 
     edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _xiCollection;
     edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _v0Collection;
