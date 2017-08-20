@@ -234,7 +234,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 double eta_xi      = xicand->eta();
                 double mass_xi     = xicand->mass();
                 double pt_xi       = xicand->pt();
-                double rapidity_xi = xicand->rapditiy();
+                double rapidity_xi = xicand->rapidity();
 
                 //if(eta_xi > 2.4 || eta_xi < -2.4){
                     //cout << "bad eta" << endl;
@@ -393,7 +393,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 xi.mass_               = mass_xi;
                 xi.pt_                 = pt_xi;
                 xi.n_                  = numCand_xi;
-                xi.rapidity            = rapidity_xi;
+                xi.rapidity_           = rapidity_xi;
                 xi.eta_                = eta_xi;
 
                 /*
@@ -534,7 +534,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 //Decay length
                 typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
                 typedef ROOT::Math::SVector<double, 3> SVector3;
-                SMatrixSym3D totalCov = vtx.covariance() + v0cand->vertexCovariance();
+                SMatrixSym3D totalCov = bestvtx.covariance() + v0cand->vertexCovariance();
                 SVector3 distanceVector(secvx-bestvx,secvy-bestvy,secvz-bestvz);
                 double dl = ROOT::Math::Mag(distanceVector);
                 double dlerror = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/dl;
@@ -597,7 +597,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     ks.nhit1_ = nhit1;
                     ks.nhit2_ = nhit2;
                     ks.dzSig1_ = dzos1;
-                    ks.dzSig2 = dzos2;
+                    ks.dzSig2_ = dzos2;
                     ks.dxySig1_ = dxyos1;
                     ks.dxySig2_ = dxyos2;
                     ks.vtxChi2_ = vtxChi2;
