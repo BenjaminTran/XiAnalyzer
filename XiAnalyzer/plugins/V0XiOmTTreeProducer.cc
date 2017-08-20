@@ -1,4 +1,4 @@
-#include "XiAnalyzer/XiAnalyzer/interface/V0V0XiOmTTreeProducerProducer.h"
+#include "XiAnalyzer/XiAnalyzer/interface/V0XiOmTTreeProducer.h"
 
 
 
@@ -52,6 +52,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     float electronMassSquared = electronMass*electronMass;
     float lambdaMass          = 1.115683;
     float lambdaMass_sigma    = 0.000006;
+    float kshortMass          = 0.497614;
 
     using namespace edm;
     using namespace reco;
@@ -456,7 +457,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
             for( reco::VertexCompositeCandidateCollection::const_iterator v0cand = v0candidates->begin();
                     v0cand != v0candidates->end();
-                    v0cand++) 
+                    v0cand++)
             {
                 double secvz=-999.9, secvx=-999.9, secvy=-999.9;
 
@@ -618,7 +619,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     la.nhit1_ = nhit1;
                     la.nhit2_ = nhit2;
                     la.dzSig1_ = dzos1;
-                    la.dzSig2 = dzos2;
+                    la.dzSig2_ = dzos2;
                     la.dxySig1_ = dxyos1;
                     la.dxySig2_ = dxyos2;
                     la.vtxChi2_ = vtxChi2;

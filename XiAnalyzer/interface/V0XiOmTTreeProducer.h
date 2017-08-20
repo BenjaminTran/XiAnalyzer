@@ -132,6 +132,10 @@ private:
 
     std::string v0CollName_;
     std::string v0IDName_;
+    double multmin_;
+    double multmax_;
+    double rapMin_;
+    double rapMax_;
     bool doXi_;
     bool doKs_;
     bool doLa_;
