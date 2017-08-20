@@ -86,23 +86,10 @@ process.TFileService = cms.Service("TFileService",
 # all particles
 process.MassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.selectV0CandidatesNewlambda*process.selectV0CandidatesNewkshort*process.MassPt)
 
-# Xi only
-process.XiMassPtAnalysis = cms.Sequence(process.selectV0CandidatesXiLoose*process.XiMassPt)
-
-# KsLa only
-process.V0MassPtAnalysis = cms.Sequence(process.selectV0CandidatesNewlambda*process.selectV0CandidatesNewkshort*process.KslaMassPt)
-
-# Ks only
-process.KsMassPtAnalysis = cms.Sequence(process.selectV0CandidatesNewkshort*process.KsMassPt)
-
-# La only
-process.LaMassPtAnalysis = cms.Sequence(process.selectV0CandidatesNewlambda*process.LaMassPt)
-
 #Tree producer
-process.XiOmTreeProd = cms.Sequence(process.xiTree)
+process.TreeProd = cms.Sequence(process.XiTreeProducerRapidity)
 
-#process.p = cms.Path(process.XiOmTreeProd)
-process.p = cms.Path(process.LaMassPtAnalysis)
+process.p = cms.Path(process.TreeProd)
 
 process.schedule = cms.Schedule(process.p)
 
