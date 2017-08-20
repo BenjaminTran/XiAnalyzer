@@ -136,6 +136,7 @@ private:
     double multmax_;
     double rapMin_;
     double rapMax_;
+    bool doRap_;
     bool doXi_;
     bool doKs_;
     bool doLa_;

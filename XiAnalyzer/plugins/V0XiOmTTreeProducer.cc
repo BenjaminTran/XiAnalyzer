@@ -61,15 +61,15 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     // Get primary vertex
     edm::Handle<reco::VertexCollection> vertices;
     iEvent.getByToken(_vertexCollName,vertices);
-    const reco::Vertex & bestvtx = (*vertices)[0];
+    const reco::Vertex & vtx = (*vertices)[0];
     double  bestvx=-999.9, bestvy=-999.9, bestvz=-999.9;
     double bestvzError=-999.9, bestvxError=-999.9, bestvyError=-999.9;
-    bestvx		 = bestvtx.x();
-    bestvy		 = bestvtx.y();
-    bestvz		 = bestvtx.z();
-    bestvxError	 = bestvtx.xError();
-    bestvyError	 = bestvtx.yError();
-    bestvzError	 = bestvtx.zError();
+    bestvx		 = vtx.x();
+    bestvy		 = vtx.y();
+    bestvz		 = vtx.z();
+    bestvxError	 = vtx.xError();
+    bestvyError	 = vtx.yError();
+    bestvzError	 = vtx.zError();
 
 
     // Track selection
@@ -141,10 +141,10 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 reco::TrackRef  lambda_dau2 = lambda_d2->get<reco::TrackRef>();
 
                 //pt,mass
-                double eta_xi      = xicand->eta();
-                double mass_xi     = xicand->mass();
-                double pt          = xicand->pt();
-                double rapidity_xi = xicand->rapidity();
+                //double eta_xi      = xicand->eta();
+                //double mass_xi     = xicand->mass();
+                //double pt          = xicand->pt();
+                //double rapidity_xi = xicand->rapidity();
 
                 /*
                 if(!doRap_)
@@ -302,7 +302,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 float xi3DIpSigValue = -1000;
                 if(xiTT.isValid())
                 {
-                    pair<bool,Measurement1D> xi3DIpPair = IPTools::absoluteImpactParameter3D(xiTT,bestvtx);
+                    pair<bool,Measurement1D> xi3DIpPair = IPTools::absoluteImpactParameter3D(xiTT,vtx);
                     if(xi3DIpPair.first)
                     {
                         xi3DIpSigValue = xi3DIpPair.second.significance();
@@ -313,7 +313,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 //3D impact parameter wrt to primary vertex for Lambda_pion,
                 //Lambda_proton, Xi_Pion
                 float VTrkP3DIpSigValue = -1000;
-                pair<bool,Measurement1D> proton3DIpPair = IPTools::absoluteImpactParameter3D(proton_lambdaTT,bestvtx);
+                pair<bool,Measurement1D> proton3DIpPair = IPTools::absoluteImpactParameter3D(proton_lambdaTT,vtx);
                 if(proton3DIpPair.first)
                 {
                     VTrkP3DIpSigValue = proton3DIpPair.second.significance();
@@ -321,7 +321,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 else cout << "bad proton3dippair" << endl;
 
                 float VTrkPi3DIpSigValue = -1000;
-                pair<bool,Measurement1D> pion3DIpPair = IPTools::absoluteImpactParameter3D(pion_lambdaTT,bestvtx);
+                pair<bool,Measurement1D> pion3DIpPair = IPTools::absoluteImpactParameter3D(pion_lambdaTT,vtx);
                 if(pion3DIpPair.first)
                 {
                     VTrkPi3DIpSigValue = pion3DIpPair.second.significance();
@@ -329,7 +329,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 else cout << "bad pionlambda" << endl;
 
                 float xiPi3DIpSigValue = -1000;
-                pair<bool,Measurement1D> pionXi3DIpPair = IPTools::absoluteImpactParameter3D(pion_XiTT,bestvtx);
+                pair<bool,Measurement1D> pionXi3DIpPair = IPTools::absoluteImpactParameter3D(pion_XiTT,vtx);
                 if(pionXi3DIpPair.first)
                 {
                     xiPi3DIpSigValue = pionXi3DIpPair.second.significance();
@@ -361,14 +361,14 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 SMatrixSym3D xiVtxCov(xiVtxEVec.begin(),xiVtxEVec.end() );
 
                 // Decay Lengths
-                SMatrixSym3D totalCov = vVtxCov  + bestvtx.covariance();
-                SMatrixSym3D xiCov    = xiVtxCov + bestvtx.covariance();
+                SMatrixSym3D totalCov = vVtxCov  + vtx.covariance();
+                SMatrixSym3D xiCov    = xiVtxCov + vtx.covariance();
 
                 //Xi dlos to primary vertex
                 SVector3 xiFlightVector(
-                        xiDecayVertex->position().x() - bestvtx.x(),
-                        xiDecayVertex->position().y() - bestvtx.y(),
-                        xiDecayVertex->position().z() - bestvtx.z()
+                        xiDecayVertex->position().x() - vtx.x(),
+                        xiDecayVertex->position().y() - vtx.y(),
+                        xiDecayVertex->position().z() - vtx.z()
                         );
                 double xiFlightMag      = ROOT::Math::Mag(xiFlightVector);
                 double xiFlightSigma    = sqrt(ROOT::Math::Similarity(xiCov, xiFlightVector))/xiFlightMag;
@@ -376,9 +376,9 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
                 //Lambda dlos between lam and primary vertex
                 SVector3 distanceVector(
-                        lamDecayVertex->position().x() - bestvtx.x(),
-                        lamDecayVertex->position().y() - bestvtx.y(),
-                        lamDecayVertex->position().z() - bestvtx.z()
+                        lamDecayVertex->position().x() - vtx.x(),
+                        lamDecayVertex->position().y() - vtx.y(),
+                        lamDecayVertex->position().z() - vtx.z()
                         );
                 double distanceMag      = ROOT::Math::Mag(distanceVector);
                 double distanceSigma    = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/distanceMag;
@@ -534,7 +534,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 //Decay length
                 typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
                 typedef ROOT::Math::SVector<double, 3> SVector3;
-                SMatrixSym3D totalCov = bestvtx.covariance() + v0cand->vertexCovariance();
+                SMatrixSym3D totalCov = vtx.covariance() + v0cand->vertexCovariance();
                 SVector3 distanceVector(secvx-bestvx,secvy-bestvy,secvz-bestvz);
                 double dl = ROOT::Math::Mag(distanceVector);
                 double dlerror = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/dl;
