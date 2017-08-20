@@ -87,7 +87,7 @@ process.TFileService = cms.Service("TFileService",
 process.MassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.selectV0CandidatesNewlambda*process.selectV0CandidatesNewkshort*process.MassPt)
 
 #Tree producer
-process.TreeProd = cms.Sequence(process.XiTreeProducerRapidity)
+process.TreeProd = cms.Sequence(process.XiTreeProducerRapidity*process.KsTreeProducerRapidity*process.LaTreeProducerRapidity)
 
 process.p = cms.Path(process.TreeProd)
 
