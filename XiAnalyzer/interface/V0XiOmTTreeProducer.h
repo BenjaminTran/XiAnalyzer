@@ -69,7 +69,8 @@ using namespace std;
 using namespace reco;
 using std::vector;
 
-struct XiData{
+struct ParticleData{
+    //Xi
                 //Skim Cuts
                 float trkchi2cut_;
                 float dauTransImpactSig_; //La_pion
@@ -85,17 +86,32 @@ struct XiData{
                 float VTrkP3DIpSigValue_;
                 float xiFlightSigValue_;
                 float distanceSigValue_; //lambda
-                //Candidate parameters
+    //General candidate parameters
+                float eta_;
+                float rapidity_;
+                float dxySig1_;
+                float dxySig2_;
+                float dzSig1_;
+                float dzSig2_;
+                float vtxChi2_;
+                float cosTheta_;
+                float decayLSig_;
+                float misIDMassForward_; // for Kshort  m1 = pion m2 = proton
+                float misIDMassBackward_; //only for kshort
+                float misIDMassEE_;
                 float mass_;
                 float pt_;
+                int nhit1_;
+                int nhit2_;
                 int n_;
-        };
+        } xi, om, ks, la;
 
-class XiOmTTree : public edm::EDAnalyzer
+
+class V0XiOmTTreeProducer : public edm::EDAnalyzer
 {
 public:
-	explicit XiOmTTree(const edm::ParameterSet&);
-	~XiOmTTree();
+	explicit V0XiOmTTreeProducer(const edm::ParameterSet&);
+	~V0XiOmTTreeProducer();
 
 private:
 	virtual void beginJob();
@@ -105,17 +121,22 @@ private:
   // ----------member data ---------------------------
 
     edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _xiCollection;
+    edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _v0Collection;
     edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
     edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
 
 	TTree* XiTree;
 	TTree* OmTree;
-
-	XiData xistruct_;
-	//OmData omstruct_;
+    TTree* KsTree;
+    TTree* LaTree;
 
     std::string v0CollName_;
     std::string v0IDName_;
+    bool doXi_;
+    bool doKs_;
+    bool doLa_;
+    bool doOm_;
+    //std::string treeName_;
 };
 
 #endif
