@@ -119,12 +119,10 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             //Determine number of Xi candidates with no cuts other than track selection
 
             int numCand_xi = 0;
-            cout << "Good multiplicity" << endl;
             for( reco::VertexCompositeCandidateCollection::const_iterator xicand =
                     xicandidates->begin(); xicand != xicandidates->end();
                     xicand++)
             {
-                cout << "Candidates exits" << endl;
                 //double secvz = -999.9, secvx = -999.9, secvy = -999.9;
 
                 // access daughters of Xi and Lambda
@@ -643,7 +641,7 @@ V0XiOmTTreeProducer::beginJob()
     edm::Service<TFileService> fs;
     if(doXi_)
     {
-        XiTree = fs->make<TTree>("XiTree","CutParameters");
+        XiTree = fs->make<TTree>("XiTree","XiCutParameters");
         XiTree->Branch("xi3dipsig",&XI.xi3DIpSigValue_,"xi3dipsig/F");
         XiTree->Branch("xipi3dipsig",&XI.xiPi3DIpSigValue_,"xipi3dipsig/F");
         XiTree->Branch("vtrkpi3dipsig",&XI.VTrkPi3DIpSigValue_,"vtrkpi3dipsig/F");
@@ -667,7 +665,7 @@ V0XiOmTTreeProducer::beginJob()
 
     if(doKs_)
     {
-        KsTree = fs->make<TTree>("KsTree","CutParameters");
+        KsTree = fs->make<TTree>("KsTree","KsCutParameters");
         KsTree->Branch("eta",&KS.eta_,"eta/F");
         KsTree->Branch("mass",&KS.mass_,"mass/F");
         KsTree->Branch("pt",&KS.pt_,"pt/F");
@@ -688,7 +686,7 @@ V0XiOmTTreeProducer::beginJob()
 
     if(doLa_)
     {
-        LaTree = fs->make<TTree>("LaTree","CutParameters");
+        LaTree = fs->make<TTree>("LaTree","LaCutParameters");
         LaTree->Branch("eta",&LA.eta_,"eta/F");
         LaTree->Branch("mass",&LA.mass_,"mass/F");
         LaTree->Branch("pt",&LA.pt_,"pt/F");
