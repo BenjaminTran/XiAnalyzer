@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 process = cms.Process("XiAna")
 
-#process.SimpleMemoryCheck = cms.Service("SimpleMemoryCheck",ignoreTotal = cms.untracked.int32(1) )
+process.SimpleMemoryCheck = cms.Service("SimpleMemoryCheck",ignoreTotal = cms.untracked.int32(1) )
 
 ### standard includes
 process.load("Configuration.StandardSequences.Digi_cff")
