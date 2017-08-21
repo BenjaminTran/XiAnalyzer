@@ -42,9 +42,10 @@ MassPtProducer::MassPtProducer(const edm::ParameterSet& iConfig)
     zVtxHigh_ = iConfig.getParameter<double>("zVtxHigh");
     zVtxLow_  = iConfig.getParameter<double>("zVtxLow");
 
-    ks_    = iConfig.getUntrackedParameter<bool>("ks",false);
-    la_    = iConfig.getUntrackedParameter<bool>("la",false);
-    xi_    = iConfig.getUntrackedParameter<bool>("xi",false);
+    ks_ = iConfig.getUntrackedParameter<bool>("ks",false);
+    la_ = iConfig.getUntrackedParameter<bool>("la",false);
+    xi_ = iConfig.getUntrackedParameter<bool>("xi",false);
+    MC_ = iConfig.getUntrackedParameter<bool>("MC",false);
 
 }
 
@@ -69,24 +70,55 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     nEvt->Fill(1);
     using namespace edm;
 
-    edm::Handle<reco::VertexCollection> vertices;
-    iEvent.getByToken(_vertexCollName, vertices);
+    if(!MC_)
+    {
+        edm::Handle<reco::VertexCollection> vertices;
+        iEvent.getByToken(_vertexCollName, vertices);
 
-    double bestvz      = -999, bestvx        = -999, bestvy        = -999;
-    double bestvzError = -999.9, bestvxError = -999.9, bestvyError = -999.9;
-    const reco::Vertex & vtx = (*vertices)[0];
-    bestvx = vtx.x();
-    bestvy = vtx.y();
-    bestvz = vtx.z();
-    bestvxError = vtx.xError();
-    bestvyError = vtx.yError();
-    bestvzError = vtx.zError();
 
-    if(bestvz > zVtxHigh_ || bestvz < zVtxLow_){
-        cout << "Bad zvtx" << endl;
-        return;
+        double bestvz      = -999, bestvx        = -999, bestvy        = -999;
+        double bestvzError = -999.9, bestvxError = -999.9, bestvyError = -999.9;
+        const reco::Vertex & vtx = (*vertices)[0];
+        bestvx = vtx.x();
+        bestvy = vtx.y();
+        bestvz = vtx.z();
+        bestvxError = vtx.xError();
+        bestvyError = vtx.yError();
+        bestvzError = vtx.zError();
+
+        if(bestvz > zVtxHigh_ || bestvz < zVtxLow_){
+            cout << "Bad zvtx" << endl;
+            return;
+        }
+
+
+        edm::Handle<reco::TrackCollection> tracks;
+        iEvent.getByToken(_trkSrc, tracks);
+
+        int nTracks         = 0;
+        int EtaPtCutnTracks = 0;
+
+        // Track selection
+        for(unsigned it = 0; it < tracks->size(); it++)
+        {
+            const reco::Track & trk = (*tracks)[it];
+            math::XYZPoint bestvtx(bestvx, bestvy, bestvz);
+
+            double dzvtx    = trk.dz(bestvtx);
+            double dxyvtx   = trk.dxy(bestvtx);
+            double dzerror  = sqrt(trk.dzError()*trk.dzError() + bestvzError*bestvzError);
+            double dxyerror = sqrt(trk.d0Error()*trk.d0Error() + bestvxError*bestvyError);
+
+            if(!trk.quality(reco::TrackBase::highPurity)) continue;
+            if(fabs(trk.ptError()/trk.pt() > 0.10))       continue;
+            if(fabs(dzvtx/dzerror) > 3)                   continue;
+            if(fabs(dxyvtx/dxyerror) > 3)                 continue;
+
+            nTracks++;
+            if(fabs(trk.eta()) > 2.4 || trk.pt() < 0.4) continue;
+            EtaPtCutnTracks++;
+        }
     }
-
 
     edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
     iEvent.getByToken(_xiCollection, xiCollection);
@@ -97,32 +129,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     edm::Handle<reco::VertexCompositeCandidateCollection> laCollection;
     iEvent.getByToken(_laCollection, laCollection);
 
-    edm::Handle<reco::TrackCollection> tracks;
-    iEvent.getByToken(_trkSrc, tracks);
-
-    int nTracks         = 0;
-    int EtaPtCutnTracks = 0;
-
-    // Track selection
-    for(unsigned it = 0; it < tracks->size(); it++)
-    {
-        const reco::Track & trk = (*tracks)[it];
-        math::XYZPoint bestvtx(bestvx, bestvy, bestvz);
-
-        double dzvtx    = trk.dz(bestvtx);
-        double dxyvtx   = trk.dxy(bestvtx);
-        double dzerror  = sqrt(trk.dzError()*trk.dzError() + bestvzError*bestvzError);
-        double dxyerror = sqrt(trk.d0Error()*trk.d0Error() + bestvxError*bestvyError);
-
-        if(!trk.quality(reco::TrackBase::highPurity)) continue;
-        if(fabs(trk.ptError()/trk.pt() > 0.10))       continue;
-        if(fabs(dzvtx/dzerror) > 3)                   continue;
-        if(fabs(dxyvtx/dxyerror) > 3)                 continue;
-
-        nTracks++;
-        if(fabs(trk.eta()) > 2.4 || trk.pt() < 0.4) continue;
-        EtaPtCutnTracks++;
-    }
 
     nTrk->Fill(nTracks); //number of acceptable tracks
 

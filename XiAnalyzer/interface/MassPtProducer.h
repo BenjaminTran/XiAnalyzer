@@ -180,6 +180,7 @@ class MassPtProducer : public edm::EDAnalyzer {
         bool ks_;
         bool la_;
         bool xi_;
+        bool MC_;
 
         double multHigh_;
         double multLow_;
