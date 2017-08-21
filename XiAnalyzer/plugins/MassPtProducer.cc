@@ -1,5 +1,4 @@
 // -*- C++ -*-
-//
 // Package:    MassPtProducer
 // Class:      MassPtProducer
 //
@@ -36,11 +35,14 @@ MassPtProducer::MassPtProducer(const edm::ParameterSet& iConfig)
     _trkSrc         = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("trkSrc"));
     _vertexCollName = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexCollName"));
     _xiCollection   = consumes<reco::VertexCompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("xiCollection"));
+    _gnCollection   = consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("gnCollection"));
 
     multHigh_ = iConfig.getParameter<double>("multHigh");
     multLow_  = iConfig.getParameter<double>("multLow");
     zVtxHigh_ = iConfig.getParameter<double>("zVtxHigh");
     zVtxLow_  = iConfig.getParameter<double>("zVtxLow");
+    rapMin_ = iConfig.getParameter<double>("rapMin");
+    rapMax_ = iConfig.getParameter<double>("rapMax");
 
     ks_ = iConfig.getUntrackedParameter<bool>("ks",false);
     la_ = iConfig.getUntrackedParameter<bool>("la",false);
@@ -127,6 +129,9 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     edm::Handle<reco::VertexCompositeCandidateCollection> laCollection;
     iEvent.getByToken(_laCollection, laCollection);
 
+    edm::Handle<reco::GenParticleCollection> gnCollection;
+    iEvent.getByToken(_gnCollection, gnCollection);
+
     if(EtaPtCutnTracks >= multLow_ && EtaPtCutnTracks < multHigh_){
         nEvtCut->Fill(1); //number of events that pass the multiplicity cut
         EtaPtCutnTrackHist->Fill(EtaPtCutnTracks); //number of tracks in the current event that passed multiplicity requirement. Should only be between multlow and multhigh
@@ -141,9 +146,9 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double pT_xi   = xiCand->pt();
                 double eta_xi  = xiCand->eta();
 
-                XiMassPt         ->Fill(mass_xi,pT_xi);
-                rapidity_xi      ->Fill(rap_xi);
-                pseudorapidity_xi->Fill(eta_xi);
+                XiMassPtRap       -> Fill(mass_xi,pT_xi,rap_xi);
+                rapidity_xi       -> Fill(rap_xi);
+                pseudorapidity_xi -> Fill(eta_xi);
 
                 cout<<"Fill Xi"<<endl;
             }
@@ -159,9 +164,9 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double pT_ks   = ksCand->pt();
                 double eta_ks  = ksCand->eta();
 
-                KsMassPt         -> Fill(mass_ks,pT_ks);
-                rapidity_ks      -> Fill(rap_ks);
-                pseudorapidity_ks-> Fill(eta_ks);
+                KsMassPtRap       -> Fill(mass_ks,pT_ks,rap_ks);
+                rapidity_ks       -> Fill(rap_ks);
+                pseudorapidity_ks -> Fill(eta_ks);
 
                 cout<<"Fill Ks"<<endl;
             }
@@ -177,15 +182,76 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double pT_la   = laCand->pt();
                 double eta_la  = laCand->eta();
 
-                LaMassPt         -> Fill(mass_la, pT_la);
-                rapidity_la      -> Fill(rap_la);
-                pseudorapidity_la-> Fill(eta_la);
+                LaMassPtRap       -> Fill(mass_la,pT_la,rap_la);
+                rapidity_la       -> Fill(rap_la);
+                pseudorapidity_la -> Fill(eta_la);
 
                 cout<<"Fill La"<<endl;
             }
         }
+
+        if(MC_)
+        {
+            for(reco::GenParticleCollection::const_iterator gnCand = gnCollection->begin(); gnCand != gnCollection->end(); gnCand++)
+            {
+                int id = gnCand->pdgId();
+                int st = gnCand->status();
+                double rapidity_gn = gnCand->rapidity();
+                double eta_gn = gnCand->eta();
+                double pt_gn = gnCand->pt();
+                double mass_gn gnCand->mass();
+
+                if(st != 1) continue;
+                if(rapidity_gn > rapMin_ && rapidity_gn < rapMax_)
+                {
+                    //Lambda and mother identification
+                    int mid = 0;
+                    if(TMath::Abs(id) == 3122)
+                    {
+                        if(gnCand.numberOfMothers() == 1)
+                        {
+                            const reco::Candidate* mom = gnCand.mother();
+                            mid = mom->pdgId();
+                            if(mom->numberOfMothers()==1)
+                            {
+                                const reco::Candidate* mom1 = mom->mother();
+                                mid = mom1->pdgId();
+                            }
+                        }
+                        //make sure lambda isnt from decay channel
+                        if(TMath::Abs(mid) != 3322 && TMath::Abs(mid) != 3312 && TMath::Abs(mid) != 3324 && TMath::Abs(mid) != 3314 && TMath::Abs(mid) != 3334)
+                            LaMassPtRapGen->Fill(mass_gn,pt_gn,rapidity_gn);
+                    }
+
+                    //KShort
+                    if(TMath::Abs(id) == 310)
+                    {
+                        KsMassPtRap_Gen->Fill(mass_gn,pt_gn,rapidity_gn);
+                    }
+
+                    //Cascade
+                    int midXi = 0;
+                    if(TMath::Abs(id) == 3312)
+                    {
+                        if(gnCand.numberOfMothers() == 1)
+                        {
+                            const reco::Candidate* mom = gnCand.mother();
+                            midXi = mom->pdgId();
+                            if(mom->numberOfMothers() == 1)
+                            {
+                                const reco::Candidate* mom1 = mom->mother();
+                                midXi = mom1->pdgId();
+                            }
+                        }
+                        if(TMath::Abs(midXi) != 3334)
+                            XiMassPtRapGen->Fill(mass_gn,pt_gn,rapidity_gn);
+                    }
+                }
+            }
+        }
     }
     else cout << "Bad Multiplicity" << endl;
+
 }
 
 
@@ -196,10 +262,11 @@ MassPtProducer::beginJob()
     if(xi_) cout << "Will Access Xi" << endl;
     if(ks_) cout << "Will Access Ks" << endl;
     if(la_) cout << "Will Access La" << endl;
+    if(MC_) cout << "Will Access MC" << endl;
 
-    XiMassPt           = fs->make<TH2D>("XiMassPt", "#Xi Mass and Pt", 150, 1.25, 1.40, 400, 0, 40);
-    LaMassPt           = fs->make<TH2D>("LaMassPt", "#Lambda Mass and Pt", 160, 1.08, 1.160, 400, 0, 40);
-    KsMassPt           = fs->make<TH2D>("KsMassPt", "Ks Mass and Pt", 270, 0.43, 0.565, 400, 0, 40);
+    XiMassPtRap        = fs->make<TH3D>("XiMassPtRap", "#Xi Mass, Pt, y", 150, 1.25, 1.40, 400, 0, 40,22,-1.1,1.1);
+    LaMassPtRap        = fs->make<TH3D>("LaMassPtRap", "#Lambda Mass, Pt, y", 160, 1.08, 1.160, 400, 0, 40,22,-1.1,1.1);
+    KsMassPtRap        = fs->make<TH3D>("KsMassPtRap", "Ks Mass, Pt, y", 270, 0.43, 0.565, 400, 0, 40,22,-1.1,1.1);
     nEvt               = fs->make<TH1D>("nEvt","nEvt",10,0,10);
     nTrk               = fs->make<TH1D>("nTrk", "nTrk", 400, 0, 400);
     nEvtCut            = fs->make<TH1D>("nEvtCut", "nEvtCut", 10,0,10);
@@ -210,6 +277,13 @@ MassPtProducer::beginJob()
     pseudorapidity_xi  = fs->make<TH1D>("XiEta","XiEta",200,-10,10);
     pseudorapidity_ks  = fs->make<TH1D>("KsEta","KsEta",200,-10,10);
     pseudorapidity_la  = fs->make<TH1D>("LaEta","LaEta",200,-10,10);
+
+    if(MC_)
+    {
+        XiMassPtRap_Gen = fs->make<TH3D>("XiMassPtRap_Gen", "#Xi Mass, Pt, y",150,1.25,1.40,400,0,40,22,-1.1,1.1);
+        LaMassPtRap_Gen = fs->make<TH3D>("LaMassPtRap_Gen", "#Lambda Mass, Pt, y",160,1.08,1.160,400,0,40,22,-1.1,1.1);
+        KsMassPtRap_Gen = fs->make<TH3D>("KsMassPtRap_Gen", "Ks Mass and Pt",270,0.43,0.565,400,0,40,22,-1.1,1.1);
+    }
 }
 
 // ------------ method called once each job just after ending the event loop  ------------

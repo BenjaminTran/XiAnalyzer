@@ -176,6 +176,7 @@ class MassPtProducer : public edm::EDAnalyzer {
         edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _ksCollection;
         edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _laCollection;
         edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _xiCollection;
+        edm::EDGetTokenT<reco::GenParticleCollection> _gnCollection;
 
         bool ks_;
         bool la_;
@@ -184,14 +185,19 @@ class MassPtProducer : public edm::EDAnalyzer {
 
         double multHigh_;
         double multLow_;
+        double rapMin_;
+        double rapMax_;
         double zVtxHigh_;
         double zVtxLow_;
 
         vector<double> *zvtxVect;
 
-        TH2D* XiMassPt;
-        TH2D* KsMassPt;
-        TH2D* LaMassPt;
+        TH3D* XiMassPtRap;
+        TH3D* KsMassPtRap;
+        TH3D* LaMassPtRap;
+        TH3D* XiMassPtRap;
+        TH3D* KsMassPtRap;
+        TH3D* LaMassPtRap;
         TH1D* nEvt;
         TH1D* nTrk;
         TH1D* nEvtCut;
