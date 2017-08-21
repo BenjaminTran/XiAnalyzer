@@ -37,6 +37,32 @@ selectV0CandidatesNewlambdaloose = selectV0CandidatesNewlambda.clone(
   decayLSigCut    = cms.double(3.0),
 )
 
+selectV0CandidatesNewlambdalooseRapidity = selectV0CandidatesNewlambdaloose.clone(
+        dorap        = cms.bool(True),
+        decayLSigCut = cms.double(2.5),
+        cosThetaCut  = cms.double(0.99)
+        )
+
+selectV0CandidatesNewlambdatightRapidity = selectV0CandidatesNewlambdatight.clone(
+        dorap        = cms.bool(True),
+        decayLSigCut = cms.double(7.5),
+        cosThetaCut  = cms.double(0.9999)
+        )
+
+selectV0CandidatesNewkshorttightRapidity = selectV0CandidatesNewkshortRapidity.clone(
+        dxySigCut1      = cms.double(1.25),
+        dxySigCut2      = cms.double(1.25),
+        dzSigCut1       = cms.double(1.25),
+        dzSigCut2       = cms.double(1.25),
+        decayLSigCut = cms.double(7.5),
+        cosThetaCut  = cms.double(0.9999)
+        )
+
+selectV0CandidatesNewkshortlooseRapidity = selectV0CandidatesNewkshortRapidity.clone(
+        decayLSigCut = cms.double(2.5),
+        cosThetaCut  = cms.double(0.99)
+        )
+
 selectV0CandidatesNewd0 = selectV0CandidatesNew.clone(
   v0IDName = cms.string("D0"),
   ptCut1          = cms.double(0.5),
