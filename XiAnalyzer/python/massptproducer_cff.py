@@ -20,4 +20,8 @@ LaMassPt = MassPt.clone(
     xi = cms.untracked.bool(False),
     ks = cms.untracked.bool(False)
 )
+
+MCMassPt = MassPt.clone(
+    MC = cms.untracked.bool(True)
+)
 #hltHM = hltHM.clone();
