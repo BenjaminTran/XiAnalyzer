@@ -71,8 +71,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     using namespace edm;
     int EtaPtCutnTracks = 0;
 
-    if(!MC_)
-    {
         edm::Handle<reco::VertexCollection> vertices;
         iEvent.getByToken(_vertexCollName, vertices);
 
@@ -119,7 +117,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             EtaPtCutnTracks++;
         }
         nTrk->Fill(nTracks); //number of acceptable tracks
-    }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
     iEvent.getByToken(_xiCollection, xiCollection);
@@ -129,10 +126,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
     edm::Handle<reco::VertexCompositeCandidateCollection> laCollection;
     iEvent.getByToken(_laCollection, laCollection);
-
-    if(MC_)
-        EtaPtCutnTracks = 200; //So it will always pass the if statement below
-
 
     if(EtaPtCutnTracks >= multLow_ && EtaPtCutnTracks < multHigh_){
         nEvtCut->Fill(1); //number of events that pass the multiplicity cut
