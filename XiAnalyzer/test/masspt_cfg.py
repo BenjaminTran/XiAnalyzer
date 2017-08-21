@@ -36,7 +36,7 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -72,7 +72,7 @@ process.TFileService = cms.Service("TFileService",
 # all particles
 process.MassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.MassPtRapidity)
 
-process.MCMassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.selectV0CandidatesNewlambda*process.selectV0CandidatesNewkshort*process.MCMassPt)
+#process.MCMassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.selectV0CandidatesNewlambda*process.selectV0CandidatesNewkshort*process.MCMassPt)
 
 # Xi only
 process.XiMassPtAnalysis = cms.Sequence(process.selectV0CandidatesXiLoose*process.XiMassPt)
