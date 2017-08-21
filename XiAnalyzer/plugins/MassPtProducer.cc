@@ -69,6 +69,7 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
     nEvt->Fill(1);
     using namespace edm;
+    int EtaPtCutnTracks = 0;
 
     if(!MC_)
     {
@@ -96,7 +97,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         iEvent.getByToken(_trkSrc, tracks);
 
         int nTracks         = 0;
-        int EtaPtCutnTracks = 0;
 
         // Track selection
         for(unsigned it = 0; it < tracks->size(); it++)
