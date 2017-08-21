@@ -6,9 +6,11 @@ selectV0CandidatesNewlambda = selectV0CandidatesNew.clone(
   v0IDName = cms.string("Lambda"),
   misIDMassCut   = cms.double(0.020)
 )
+
 selectV0CandidatesNewkshortRapidity = selectV0CandidatesNew.clone(
         dorap = cms.bool(True)
 )
+
 selectV0CandidatesNewlambdaRapidity = selectV0CandidatesNew.clone(
   v0IDName     = cms.string("Lambda"),
   misIDMassCut = cms.double(0.020),
