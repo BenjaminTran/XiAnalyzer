@@ -70,7 +70,7 @@ process.TFileService = cms.Service("TFileService",
 
 # 2D Mass Pt hist
 # all particles
-process.MassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.MassPt)
+process.MassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.MassPtRapidity)
 
 process.MCMassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.selectV0CandidatesNewlambda*process.selectV0CandidatesNewkshort*process.MCMassPt)
 

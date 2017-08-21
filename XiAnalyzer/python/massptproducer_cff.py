@@ -21,7 +21,10 @@ LaMassPt = MassPt.clone(
     ks = cms.untracked.bool(False)
 )
 
-MCMassPt = MassPt.clone(
-    MC = cms.untracked.bool(True)
+MassPtRapidity = MassPt.clone(
+        multHigh = cms.double(250),
+        ksCollection = cms.InputTag('selectV0CandidatesNewkshortRapidity:Kshort'),
+        laCollection = cms.InputTag('selectV0CandidatesNewlambdaRapidity:Lambda'),
+        xiCollection = cms.InputTag('selectV0CandidatesLowXiRapidity:Xi')
 )
 #hltHM = hltHM.clone();
