@@ -67,15 +67,15 @@ process.source = cms.Source("PoolSource",
     #'/store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_Pbp_V0Cascade_FullSkim_v1/170301_205443/0000/pPb_HM_100.root'
     #'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_Pbp_V0Cascade_FullSkim_v1/170301_205443/0000/pPb_HM_90.root'
     #'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_pPb_V0Cascade_FullSkim_v1/170301_205416/0000/pPb_HM_100.root'
-   'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_pPb_V0Cascade_FullSkim_v4/170803_222621/0000/pPb_HM_101.root'
+   #'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_pPb_V0Cascade_FullSkim_v4/170803_222621/0000/pPb_HM_101.root'
+   '/store/user/davidlw/ReggeGribovPartonMC_EposLHC_pPb_4080_4080_DataBS/RecoSkim2016_pPb_V0_v1/170817_174330/0000/pPb_HM_1.root'
    )
 )
 
 # Additional output definition
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
-                                        #'CasCutLooseTester.root'
-                                        'LaMassPt.root'
+                                        'MCMassPt.root'
                                         )
                                   )
 # CORRELATION
@@ -98,11 +98,9 @@ process.KsMassPtAnalysis = cms.Sequence(process.selectV0CandidatesNewkshort*proc
 # La only
 process.LaMassPtAnalysis = cms.Sequence(process.selectV0CandidatesNewlambda*process.LaMassPt)
 
-#Tree producer
-process.XiOmTreeProd = cms.Sequence(process.xiTree)
 
 #process.p = cms.Path(process.XiOmTreeProd)
-process.p = cms.Path(process.LaMassPtAnalysis)
+process.p = cms.Path(process.MassPtAnalysis)
 
 process.schedule = cms.Schedule(process.p)
 
