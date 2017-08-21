@@ -185,7 +185,7 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             }
         }
     }
-    else cout "Bad Multiplicity" << endl;
+    else cout << "Bad Multiplicity" << endl;
 }
 
 
