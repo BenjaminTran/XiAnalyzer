@@ -71,52 +71,52 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     using namespace edm;
     int EtaPtCutnTracks = 0;
 
-        edm::Handle<reco::VertexCollection> vertices;
-        iEvent.getByToken(_vertexCollName, vertices);
+    edm::Handle<reco::VertexCollection> vertices;
+    iEvent.getByToken(_vertexCollName, vertices);
 
 
-        double bestvz      = -999, bestvx        = -999, bestvy        = -999;
-        double bestvzError = -999.9, bestvxError = -999.9, bestvyError = -999.9;
-        const reco::Vertex & vtx = (*vertices)[0];
-        bestvx = vtx.x();
-        bestvy = vtx.y();
-        bestvz = vtx.z();
-        bestvxError = vtx.xError();
-        bestvyError = vtx.yError();
-        bestvzError = vtx.zError();
+    double bestvz      = -999, bestvx        = -999, bestvy        = -999;
+    double bestvzError = -999.9, bestvxError = -999.9, bestvyError = -999.9;
+    const reco::Vertex & vtx = (*vertices)[0];
+    bestvx = vtx.x();
+    bestvy = vtx.y();
+    bestvz = vtx.z();
+    bestvxError = vtx.xError();
+    bestvyError = vtx.yError();
+    bestvzError = vtx.zError();
 
-        if(bestvz > zVtxHigh_ || bestvz < zVtxLow_){
-            cout << "Bad zvtx" << endl;
-            return;
-        }
+    if(bestvz > zVtxHigh_ || bestvz < zVtxLow_){
+        cout << "Bad zvtx" << endl;
+        return;
+    }
 
 
-        edm::Handle<reco::TrackCollection> tracks;
-        iEvent.getByToken(_trkSrc, tracks);
+    edm::Handle<reco::TrackCollection> tracks;
+    iEvent.getByToken(_trkSrc, tracks);
 
-        int nTracks         = 0;
+    int nTracks         = 0;
 
-        // Track selection
-        for(unsigned it = 0; it < tracks->size(); it++)
-        {
-            const reco::Track & trk = (*tracks)[it];
-            math::XYZPoint bestvtx(bestvx, bestvy, bestvz);
+    // Track selection
+    for(unsigned it = 0; it < tracks->size(); it++)
+    {
+        const reco::Track & trk = (*tracks)[it];
+        math::XYZPoint bestvtx(bestvx, bestvy, bestvz);
 
-            double dzvtx    = trk.dz(bestvtx);
-            double dxyvtx   = trk.dxy(bestvtx);
-            double dzerror  = sqrt(trk.dzError()*trk.dzError() + bestvzError*bestvzError);
-            double dxyerror = sqrt(trk.d0Error()*trk.d0Error() + bestvxError*bestvyError);
+        double dzvtx    = trk.dz(bestvtx);
+        double dxyvtx   = trk.dxy(bestvtx);
+        double dzerror  = sqrt(trk.dzError()*trk.dzError() + bestvzError*bestvzError);
+        double dxyerror = sqrt(trk.d0Error()*trk.d0Error() + bestvxError*bestvyError);
 
-            if(!trk.quality(reco::TrackBase::highPurity)) continue;
-            if(fabs(trk.ptError()/trk.pt() > 0.10))       continue;
-            if(fabs(dzvtx/dzerror) > 3)                   continue;
-            if(fabs(dxyvtx/dxyerror) > 3)                 continue;
+        if(!trk.quality(reco::TrackBase::highPurity)) continue;
+        if(fabs(trk.ptError()/trk.pt() > 0.10))       continue;
+        if(fabs(dzvtx/dzerror) > 3)                   continue;
+        if(fabs(dxyvtx/dxyerror) > 3)                 continue;
 
-            nTracks++;
-            if(fabs(trk.eta()) > 2.4 || trk.pt() < 0.4) continue;
-            EtaPtCutnTracks++;
-        }
-        nTrk->Fill(nTracks); //number of acceptable tracks
+        nTracks++;
+        if(fabs(trk.eta()) > 2.4 || trk.pt() < 0.4) continue;
+        EtaPtCutnTracks++;
+    }
+    nTrk->Fill(nTracks); //number of acceptable tracks
 
     edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
     iEvent.getByToken(_xiCollection, xiCollection);
@@ -185,6 +185,7 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             }
         }
     }
+    else cout "Bad Multiplicity" << endl;
 }
 
 
