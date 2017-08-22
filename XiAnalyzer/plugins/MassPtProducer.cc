@@ -279,18 +279,16 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     int midOm = 0;
                     if(TMath::Abs(id) == 3334)
                     {
-                        if(gnCand->numberOfMothers() == 1)
-                        {
-                            const reco::Candidate* mom = gnCand->mother();
-                            midOm = mom->pdgId();
-                            cout << "MIDOM1" <<  midOm << endl;
-                            if(mom->numberOfMothers() == 1)
-                            {
-                                const reco::Candidate* mom1 = mom->mother();
-                                midOm = mom1->pdgId();
-                                cout << "MIDOM2" <<  midOm << endl;
-                            }
-                        }
+                        //if(gnCand->numberOfMothers() == 1)
+                        //{
+                            //const reco::Candidate* mom = gnCand->mother();
+                            //midOm = mom->pdgId();
+                            //if(mom->numberOfMothers() == 1)
+                            //{
+                                //const reco::Candidate* mom1 = mom->mother();
+                                //midOm = mom1->pdgId();
+                            //}
+                        //}
                         OmMassPtRap_Gen->Fill(mass_gn,pt_gn,rapidity_gn);
                     }
                 }
