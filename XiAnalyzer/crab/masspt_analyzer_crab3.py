@@ -3,8 +3,8 @@ from WMCore.Configuration import Configuration
 config = Configuration()
 
 config.section_("General")
-config.General.requestName = 'HLT185_250FlowMassPtpbp2016MCPD2JL24'
-config.General.workArea = 'HLT185_250FlowMassPtv2pbp2016MCPD2'
+config.General.requestName = 'HLT185_250FlowMassPtppb2016MCJL26'
+config.General.workArea = 'crab_dir/HLT185_250FlowMassPtv2ppb2016MCPD2'
 
 config.section_("JobType")
 config.JobType.pluginName = 'Analysis'
@@ -24,7 +24,7 @@ config.Data.inputDataset = '/ReggeGribovPartonMC_EposLHC_PbP_4080_4080_DataBS/da
 config.Data.inputDBS = 'phys03'
 #config.Data.primaryDataset = 'MinBias_TuneZ2star_7TeV_pythia6'
 config.Data.splitting = 'FileBased'
-config.Data.unitsPerJob = 10
+config.Data.unitsPerJob = 4
 #config.Data.splitting = 'EventAwareLumiBased'
 #config.Data.unitsPerJob = 60000
 #config.Data.totalUnits = 120000
