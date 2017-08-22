@@ -166,20 +166,13 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             for(reco::VertexCompositeCandidateCollection::const_iterator omCand =
                     omCollection->begin(); omCand != omCollection->end(); omCand++) {
 
-                cout << "Loop" << endl;
                 double rap_om  = omCand->rapidity();
-                cout << "1" << endl;
                 double mass_om = omCand->mass();
-                cout << "2" << endl;
                 double pT_om   = omCand->pt();
-                cout << "3" << endl;
                 double eta_om  = omCand->eta();
-                cout << "4" << endl;
 
-                OmMassPt       -> Fill(mass_om,pT_om);
-                cout << "5" << endl;
+                OmMassPtRap       -> Fill(mass_om,pT_om,rap_om);
                 rapidity_om       -> Fill(rap_om);
-                cout << "6" << endl;
                 pseudorapidity_om -> Fill(eta_om);
 
                 cout<<"Fill Om"<<endl;
@@ -281,6 +274,25 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                         if(TMath::Abs(midXi) != 3334)
                             XiMassPtRap_Gen->Fill(mass_gn,pt_gn,rapidity_gn);
                     }
+
+                    //Omega
+                    int midOm = 0;
+                    if(TMath::Abs(id) == 3334)
+                    {
+                        if(gnCand->numberOfMothers() == 1)
+                        {
+                            const reco::Candidate* mom = gnCand->mother();
+                            midOm = mom->pdgId();
+                            cout << "MIDOM1" <<  midOm << endl;
+                            if(mom->numberOfMothers() == 1)
+                            {
+                                const reco::Candidate* mom1 = mom->mother();
+                                midOm = mom1->pdgId();
+                                cout << "MIDOM2" <<  midOm << endl;
+                            }
+                        }
+                        OmMassPtRap_Gen->Fill(mass_gn,pt_gn,rapidity_gn);
+                    }
                 }
             }
         }
@@ -300,10 +312,10 @@ MassPtProducer::beginJob()
     if(om_) cout << "Will Access Om" << endl;
     if(MC_) cout << "Will Access MC" << endl;
 
-    XiMassPtRap        = fs->make<TH3D>("XiMassPtRap", "#Xi Mass, Pt, y", 150, 1.25, 1.40, 400, 0, 40,22,-1.1,1.1);
-    LaMassPtRap        = fs->make<TH3D>("LaMassPtRap", "#Lambda Mass, Pt, y", 160, 1.08, 1.160, 400, 0, 40,22,-1.1,1.1);
-    KsMassPtRap        = fs->make<TH3D>("KsMassPtRap", "Ks Mass, Pt, y", 270, 0.43, 0.565, 400, 0, 40,22,-1.1,1.1);
-    OmMassPt = fs->make<TH2D>("OmMassPt", "Om Mass, Pt",150,1.60,1.75,400,0,40);
+    XiMassPtRap        = fs->make<TH3D>("XiMassPtRap", "#Xi Mass, Pt, y",";Invariant Mass;p_{T};y", 150, 1.25, 1.40, 400, 0, 40,22,-1.1,1.1);
+    LaMassPtRap        = fs->make<TH3D>("LaMassPtRap", "#Lambda Mass, Pt, y",";Invariant Mass;p_{T};y", 160, 1.08, 1.160, 400, 0, 40,22,-1.1,1.1);
+    KsMassPtRap        = fs->make<TH3D>("KsMassPtRap", "Ks Mass, Pt, y",";Invariant Mass;p_{T};y", 270, 0.43, 0.565, 400, 0, 40,22,-1.1,1.1);
+    OmMassPtRap = fs->make<TH3D>("OmMassPt", "Om Mass, Pt, y",";Invariant Mass;p_{T};y",150,1.60,1.75,400,0,40,22,-1.1,1.1);
     nEvt               = fs->make<TH1D>("nEvt","nEvt",10,0,10);
     nTrk               = fs->make<TH1D>("nTrk", "nTrk", 400, 0, 400);
     nEvtCut            = fs->make<TH1D>("nEvtCut", "nEvtCut", 10,0,10);
@@ -319,9 +331,10 @@ MassPtProducer::beginJob()
 
     if(MC_)
     {
-        XiMassPtRap_Gen = fs->make<TH3D>("XiMassPtRap_Gen", "#Xi Mass, Pt, y",150,1.25,1.40,400,0,40,22,-1.1,1.1);
-        LaMassPtRap_Gen = fs->make<TH3D>("LaMassPtRap_Gen", "#Lambda Mass, Pt, y",160,1.08,1.160,400,0,40,22,-1.1,1.1);
-        KsMassPtRap_Gen = fs->make<TH3D>("KsMassPtRap_Gen", "Ks Mass and Pt",270,0.43,0.565,400,0,40,22,-1.1,1.1);
+        XiMassPtRap_Gen = fs->make<TH3D>("XiMassPtRap_Gen", "#Xi Mass, Pt, y",";Invariant Mass;p_{T};y",150,1.25,1.40,400,0,40,22,-1.1,1.1);
+        LaMassPtRap_Gen = fs->make<TH3D>("LaMassPtRap_Gen", "#Lambda Mass, Pt, y",";Invariant Mass;p_{T};y",160,1.08,1.160,400,0,40,22,-1.1,1.1);
+        KsMassPtRap_Gen = fs->make<TH3D>("KsMassPtRap_Gen", "Ks Mass and Pt",";Invariant Mass;p_{T};y",270,0.43,0.565,400,0,40,22,-1.1,1.1);
+        OmMassPtRap_Gen = fs->make<TH3D>("OmMassPtRap_Gen", "Omega Mass and Pt",";Invariant Mass;p_{T};y",150,1.60,1.75,400,0,40);
     }
 }
 

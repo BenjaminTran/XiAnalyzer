@@ -197,10 +197,11 @@ class MassPtProducer : public edm::EDAnalyzer {
         TH3D* XiMassPtRap;
         TH3D* KsMassPtRap;
         TH3D* LaMassPtRap;
-        TH2D* OmMassPt;
+        TH3D* OmMassPtRap;
         TH3D* XiMassPtRap_Gen;
         TH3D* KsMassPtRap_Gen;
         TH3D* LaMassPtRap_Gen;
+        TH3D* OmMassPtRap_Gen;
         TH1D* nEvt;
         TH1D* nTrk;
         TH1D* nEvtCut;
