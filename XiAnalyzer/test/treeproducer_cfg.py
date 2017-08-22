@@ -36,7 +36,7 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
+#process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -81,14 +81,12 @@ process.TFileService = cms.Service("TFileService",
 # MinBias
 #process.XiAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.xiCorrelation)
 
-# 2D Mass Pt hist
-# all particles
-process.MassPtAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.selectV0CandidatesNewlambda*process.selectV0CandidatesNewkshort*process.MassPt)
-
 #Tree producer
 process.TreeProd = cms.Sequence(process.XiTreeProducerRapidity*process.KsTreeProducerRapidity*process.LaTreeProducerRapidity)
 
-process.p = cms.Path(process.TreeProd)
+process.OmTreeProd = cms.Sequence(process.OmTreeProducer)
+
+process.p = cms.Path(process.OmTreeProd)
 
 process.schedule = cms.Schedule(process.p)
 

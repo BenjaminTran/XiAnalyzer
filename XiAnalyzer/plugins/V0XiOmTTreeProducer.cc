@@ -471,7 +471,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             //if(bestvz > zVertexHigh_ || bestvz < zVertexLow_ ) return;
 
             edm::Handle< reco::VertexCompositeCandidateCollection > v0candidates;
-            iEvent.getByToken(_OmCollection, v0candidates);
+            iEvent.getByToken(_omCollection, v0candidates);
             if(!v0candidates.isValid()) return;
 
             // Create auto_ptr for each collection to be stored in the Event
@@ -503,7 +503,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
                 //pt,mass
                 double eta_xi = v0cand->eta();
-                double rap_xi = v0cand->rapidity();
+                double rapidity_xi = v0cand->rapidity();
                 double mass_xi = v0cand->mass();
                 double pt_xi = v0cand->pt();
                 //double px_xi   = v0cand->px();
