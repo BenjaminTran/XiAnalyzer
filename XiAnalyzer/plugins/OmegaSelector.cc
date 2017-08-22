@@ -303,7 +303,7 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         if(xiFlightSigValue   < xiFlightSigValue_)   continue;
         if(distanceSigValue   < distanceSigValue_)   continue;
 
-        theNewXiCands->push_back( *v0cand );
+        theNewOmCands->push_back( *v0cand );
 
         cout<<"Successful"<<endl;
     }
