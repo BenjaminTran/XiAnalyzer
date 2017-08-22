@@ -35,4 +35,14 @@ MassPtRapidity = MassPt.clone(
         laCollection = cms.InputTag('selectV0CandidatesNewlambdaRapidity:Lambda'),
         xiCollection = cms.InputTag('selectV0CandidatesLowXiRapidity:Xi')
 )
+
+MassPtRapidityMC = MassPt.clone(
+        MC = cms.untracked.bool(True),
+        multLow = cms.double(0),
+        multHigh = cms.double(999999),
+        gnCollection = cms.InputTag('genParticles'),
+        ksCollection = cms.InputTag('selectV0CandidatesNewkshortRapidity:Kshort'),
+        laCollection = cms.InputTag('selectV0CandidatesNewlambdaRapidity:Lambda'),
+        xiCollection = cms.InputTag('selectV0CandidatesLowXiRapidity:Xi')
+)
 #hltHM = hltHM.clone();
