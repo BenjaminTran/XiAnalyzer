@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-selectOmCandidatesNew  = cms.EDProducer('OmSelector',
+selectOmCandidatesNew  = cms.EDProducer('OmegaSelector',
     vertexCollName     = cms.InputTag('offlinePrimaryVertices'),
     v0CollName         = cms.string("generalCascadeCandidatesNew"),
     v0IDName           = cms.string("Omega"),

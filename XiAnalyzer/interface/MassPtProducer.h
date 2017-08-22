@@ -176,11 +176,13 @@ class MassPtProducer : public edm::EDAnalyzer {
         edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _ksCollection;
         edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _laCollection;
         edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _xiCollection;
+        edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _omCollection;
         edm::EDGetTokenT<reco::GenParticleCollection> _gnCollection;
 
         bool ks_;
         bool la_;
         bool xi_;
+        bool om_;
         bool MC_;
 
         double multHigh_;
@@ -195,6 +197,7 @@ class MassPtProducer : public edm::EDAnalyzer {
         TH3D* XiMassPtRap;
         TH3D* KsMassPtRap;
         TH3D* LaMassPtRap;
+        TH2D* OmMassPt;
         TH3D* XiMassPtRap_Gen;
         TH3D* KsMassPtRap_Gen;
         TH3D* LaMassPtRap_Gen;
@@ -203,9 +206,11 @@ class MassPtProducer : public edm::EDAnalyzer {
         TH1D* nEvtCut;
         TH1D* EtaPtCutnTrackHist;
         TH1D* rapidity_xi;
+        TH1D* rapidity_om;
         TH1D* rapidity_ks;
         TH1D* rapidity_la;
         TH1D* pseudorapidity_xi;
+        TH1D* pseudorapidity_om;
         TH1D* pseudorapidity_ks;
         TH1D* pseudorapidity_la;
 };

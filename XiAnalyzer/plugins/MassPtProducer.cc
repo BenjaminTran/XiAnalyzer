@@ -35,6 +35,7 @@ MassPtProducer::MassPtProducer(const edm::ParameterSet& iConfig)
     _trkSrc         = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("trkSrc"));
     _vertexCollName = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexCollName"));
     _xiCollection   = consumes<reco::VertexCompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("xiCollection"));
+    _omCollection = consumes<reco::VertexCompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("omCollection"));
     _gnCollection   = consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("gnCollection"));
 
     multHigh_ = iConfig.getParameter<double>("multHigh");
@@ -47,6 +48,7 @@ MassPtProducer::MassPtProducer(const edm::ParameterSet& iConfig)
     ks_ = iConfig.getUntrackedParameter<bool>("ks",false);
     la_ = iConfig.getUntrackedParameter<bool>("la",false);
     xi_ = iConfig.getUntrackedParameter<bool>("xi",false);
+    om_ = iConfig.getUntrackedParameter<bool>("om",false);
     MC_ = iConfig.getUntrackedParameter<bool>("MC",false);
 
 }
@@ -123,6 +125,9 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
     iEvent.getByToken(_xiCollection, xiCollection);
 
+    edm::Handle<reco::VertexCompositeCandidateCollection> omCollection;
+    iEvent.getByToken(_omCollection, omCollection);
+
     edm::Handle<reco::VertexCompositeCandidateCollection> ksCollection;
     iEvent.getByToken(_ksCollection, ksCollection);
 
@@ -151,6 +156,24 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 pseudorapidity_xi -> Fill(eta_xi);
 
                 cout<<"Fill Xi"<<endl;
+            }
+        }
+        //OM
+        if(om_ && omCollection.isValid())
+        {
+            for(reco::VertexCompositeCandidateCollection::const_iterator omCand =
+                    omCollection->begin(); omCand != omCollection->end(); omCand++) {
+
+                double rap_om  = omCand->rapidity();
+                double mass_om = omCand->mass();
+                double pT_om   = omCand->pt();
+                double eta_om  = omCand->eta();
+
+                OmMassPt       -> Fill(mass_om,pT_om);
+                rapidity_om       -> Fill(rap_om);
+                pseudorapidity_om -> Fill(eta_om);
+
+                cout<<"Fill Om"<<endl;
             }
         }
         //KS
@@ -262,11 +285,13 @@ MassPtProducer::beginJob()
     if(xi_) cout << "Will Access Xi" << endl;
     if(ks_) cout << "Will Access Ks" << endl;
     if(la_) cout << "Will Access La" << endl;
+    if(om_) cout << "Will Access Om" << endl;
     if(MC_) cout << "Will Access MC" << endl;
 
     XiMassPtRap        = fs->make<TH3D>("XiMassPtRap", "#Xi Mass, Pt, y", 150, 1.25, 1.40, 400, 0, 40,22,-1.1,1.1);
     LaMassPtRap        = fs->make<TH3D>("LaMassPtRap", "#Lambda Mass, Pt, y", 160, 1.08, 1.160, 400, 0, 40,22,-1.1,1.1);
     KsMassPtRap        = fs->make<TH3D>("KsMassPtRap", "Ks Mass, Pt, y", 270, 0.43, 0.565, 400, 0, 40,22,-1.1,1.1);
+    OmMassPt = fs->make<TH2D>("OmMassPt", "Om Mass, Pt",150,1.60,1.75,400,0,40);
     nEvt               = fs->make<TH1D>("nEvt","nEvt",10,0,10);
     nTrk               = fs->make<TH1D>("nTrk", "nTrk", 400, 0, 400);
     nEvtCut            = fs->make<TH1D>("nEvtCut", "nEvtCut", 10,0,10);
