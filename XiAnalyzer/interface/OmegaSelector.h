@@ -15,8 +15,8 @@
 //
 //
 
-#ifndef XIANALYZER__OMEGA_SELECTOR_H
-#define XIANALYZER__OMEGA_SELECTOR_H
+#ifndef XIANALYZER__XI_SELECTOR_H
+#define XIANALYZER__XI_SELECTOR_H
 
 // system include files
 #include <memory>
@@ -90,11 +90,14 @@ private:
   virtual void produce(edm::Event&, const edm::EventSetup&);
   virtual void endJob();
 
+  edm::InputTag vertexCollName_;
   edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
-  edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _OmegaCollection;
+  edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _OmCollection;
   std::string v0CollName_;
   std::string v0IDName_;
-  double etaCutMin_,etaCutMax_;
+  double ptCut1_, ptCut2_;
+  int nHitCut1_;
+  double etaCutMin_, etaCutMax_;
   double zVertexLow_, zVertexHigh_;
   double xi3DIpSigValue_;
   double xiPi3DIpSigValue_;
@@ -102,10 +105,9 @@ private:
   double VTrkP3DIpSigValue_;
   double xiFlightSigValue_;
   double distanceSigValue_;
-  double vtxChi2Cut_;
-  double cosThetaCut_;
-  double misIDMassCut_;
-  double misIDMassCutEE_;
+  bool dorap_;
+  double rapMax_;
+  double rapMin_;
 };
 
 #endif

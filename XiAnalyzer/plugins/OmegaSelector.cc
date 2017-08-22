@@ -1,31 +1,79 @@
+// -*- C++ -*-
+//
+// Package:    OmegaSelector
+// Class:      OmegaSelector
+//
+/**\class OmegaSelector OmegaSelector.cc RiceHIG/V0Analysis/src/OmegaSelector.cc
+
+ Description: <one line class summary>
+
+ Implementation:
+     <Notes on implementation>
+*/
+//
+// Original Author: Benjamin Tran
+//
+//
+
+
+// system include files
 #include <memory>
 
-#include "XiAnalyzer/XiAnalyzer/interface/OmegaSelector.h"
+//#include "RiceHIG/V0Analysis/interface/OmegaSelector.h"
+#include "../interface/OmegaSelector.h" // For interactive run on lxplus
 
 using namespace std;
 using namespace edm;
 using namespace reco;
 
+float piMass              = 0.13957018;
+float piMass_sigma        = piMass*1e-6;
+float piMassSquared       = piMass*piMass;
+float protonMass          = 0.938272013;
+float protonMass_sigma    = protonMass*1e-6;
+float xiMass              = 1.31486;
+float electronMass        = 0.000511;
+float electronMassSquared = electronMass*electronMass;
+float lambdaMass          = 1.115683;
+float lambdaMass_sigma    = 0.000006;
+float kaonMass            = 0.493677;
+float kaonMass_sigma      = kaonMass*1.e-6;
 
+// Constructor
 OmegaSelector::OmegaSelector(const edm::ParameterSet& iConfig)
 {
     using std::string;
+/*  The following are the cut variables for Impact parameter and decay length
+ *  used for Transient Track Method
+ *  Impact Parameters
+ *  Xi          : xi3DIpSigValue
+ *  Lambda_pion : VTrkPi3DIpSigValue
+ *  Lambda_prot : VTrkP3DIpSigValue
+ *  Xi_pion     : xiPi3DIpSigValue
+ *
+ *  Decay lengths
+ *  Xi     : xiFlightSigValue
+ *  Lambda : distanceSigValue
+*/
 
+    VTrkP3DIpSigValue_  = iConfig.getParameter<double>("VTrkP3DIpSigValue");
+    VTrkPi3DIpSigValue_ = iConfig.getParameter<double>("VTrkPi3DIpSigValue");
+    distanceSigValue_   = iConfig.getParameter<double>("distanceSigValue");
+    etaCutMax_          = iConfig.getParameter<double>("etaCutMax");
+    etaCutMin_          = iConfig.getParameter<double>("etaCutMin");
+    nHitCut1_           = iConfig.getParameter<int>("nHitCut1");
     v0CollName_         = iConfig.getParameter<string>("v0CollName");
     v0IDName_           = iConfig.getParameter<string>("v0IDName");
-    etaCutMin_          = iConfig.getParameter<double>("etaCutMin");
-    etaCutMax_          = iConfig.getParameter<double>("etaCutMax");
-    //zVertexLow_         = iConfig.getParameter<double>("zVertexLow"),
-    //zVertexHigh_        = iConfig.getParameter<double>("zVertexHigh"),
-    //nHitCut1_           = iConfig.getParameter<int>("nHitCut1");
-    //xi3DIpSigValue_     = iConfig.getParameter<double>("xi3DIpSigValue");
-    //xiPi3DIpSigValue_   = iConfig.getParameter<double>("xiPi3DIpSigValue");
-    //VTrkPi3DIpSigValue_ = iConfig.getParameter<double>("VTrkPi3DIpSigValue");
-    //VTrkP3DIpSigValue_  = iConfig.getParameter<double>("VTrkP3DIpSigValue");
-    //xiFlightSigValue_   = iConfig.getParameter<double>("xi3DIpSigValue");
-    //distanceSigValue_   = iConfig.getParameter<double>("distanceSigValue");
-    _vertexCollName = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName"));
-    _OmegaCollection = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag(v0CollName_,v0IDName_,"ANASKIM"));
+    xi3DIpSigValue_     = iConfig.getParameter<double>("xi3DIpSigValue");
+    xiFlightSigValue_   = iConfig.getParameter<double>("xi3DIpSigValue");
+    xiPi3DIpSigValue_   = iConfig.getParameter<double>("xiPi3DIpSigValue");
+    zVertexHigh_        = iConfig.getParameter<double>("zVertexHigh");
+    zVertexLow_         = iConfig.getParameter<double>("zVertexLow");
+    dorap_              = iConfig.getParameter<bool>("dorap");
+    rapMax_             = iConfig.getParameter<double>("rapMax");
+    rapMin_             = iConfig.getParameter<double>("rapMin");
+    _OmCollection       = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag(v0CollName_,v0IDName_,"ANASKIM"));
+    _vertexCollName     = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName"));
 
     // The argument gives the instance name of the collection
     produces< reco::VertexCompositeCandidateCollection >(v0IDName_);
@@ -57,34 +105,35 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     // get vertex
     edm::Handle<reco::VertexCollection> vertices;
     iEvent.getByToken(_vertexCollName,vertices);
+    //double bestvz = -999.9, bestvx = -999.9, bestvy = -999.9;
+    //double bestvzError = -999.9, bestvxError = -999.9, bestvyError = -999.9;
     const reco::Vertex & bestvtx = (*vertices)[0];
+    //bestvz = bestvtx.z(); bestvx = bestvtx.x(); bestvy = bestvtx.y();
+    //bestvzError = bestvtx.zError(); bestvxError = bestvtx.xError(); bestvyError = bestvtx.yError();
 
     // Z Vertex cut
     //if(bestvz > zVertexHigh_ || bestvz < zVertexLow_ ) return;
 
-    edm::Handle< reco::VertexCompositeCandidateCollection > OmegaCandidates;
-    iEvent.getByToken(_OmegaCollection, OmegaCandidates);
-    if(!OmegaCandidates.isValid()) return;
+    edm::Handle< reco::VertexCompositeCandidateCollection > v0candidates;
+    iEvent.getByToken(_OmCollection, v0candidates);
+    if(!v0candidates.isValid()) return;
 
     // Create auto_ptr for each collection to be stored in the Event
     std::auto_ptr< reco::VertexCompositeCandidateCollection >
         theNewXiCands( new reco::VertexCompositeCandidateCollection() );
 
 
-    cout << "Before Loop" << endl;
-	for( reco::VertexCompositeCandidateCollection::const_iterator v0cand =
-					OmegaCandidates->begin(); v0cand != OmegaCandidates->end();
-					v0cand++)
-	{
-        cout <<"In Loop" << endl;
+    for( reco::VertexCompositeCandidateCollection::const_iterator v0cand =
+            v0candidates->begin(); v0cand != v0candidates->end();
+            v0cand++)
+    {
 
-        /*
-		//double secvz = -999.9, secvx = -999.9, secvy = -999.9;
+        //double secvz = -999.9, secvx = -999.9, secvy = -999.9;
 
         // access daughters of Xi and Lambda
 
-        const reco::Candidate * d1 = v0cand->daughter(0); // Xi_Lambda
-        const reco::Candidate * d2 = v0cand->daughter(1); // Xi_Pion
+        const reco::Candidate * d1 = v0cand->daughter(0); // Om_Lambda
+        const reco::Candidate * d2 = v0cand->daughter(1); // Om_Kaon
 
         const reco::Candidate * lambda_d1 = d1->daughter(0); // Lambda_Proton
         const reco::Candidate * lambda_d2 = d1->daughter(1); // Lambda_Pion
@@ -97,12 +146,15 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
 
         //pt,mass
-        double eta_xi  = v0cand->eta();
+        double eta_xi = v0cand->eta();
+        double rap_xi = v0cand->rapidity();
         //double px_xi   = v0cand->px();
         //double py_xi   = v0cand->py();
         //double pz_xi   = v0cand->pz();
 
-        if(eta_xi > etaCutMax_ || eta_xi < etaCutMin_) continue;
+        if(dorap_ && (rap_xi > rapMax_ || rap_xi < rapMin_)) continue;
+        else
+            if(eta_xi > etaCutMax_ || eta_xi < etaCutMin_) continue;
 
         //secvz  = v0cand->vz();
         //secvx  = v0cand->vx();
@@ -111,7 +163,7 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         // Xi Impact Parameter Significance
         // Build Transient Tracks of Xi_pion, Lambda_Proton, Lambda_pion
         TransientTrack pion_lambdaTT(lambda_dau2, &(*bFieldHandle));
-        TransientTrack pion_XiTT(dau2, &(*bFieldHandle));
+        TransientTrack kaon_OmTT(dau2, &(*bFieldHandle));
         TransientTrack proton_lambdaTT(lambda_dau1, &(*bFieldHandle));
 
         // Create a kinematicParticleFactory
@@ -138,7 +190,7 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         RefCountedKinematicVertex lamDecayVertex = v0FitTree->currentDecayVertex();
 
         vector<RefCountedKinematicParticle> xiParticles;
-        xiParticles.push_back(pFactory.particle(pion_XiTT,piMass,chi,ndf,piMass_sigma));
+        xiParticles.push_back(pFactory.particle(kaon_OmTT,kaonMass,chi,ndf,kaonMass_sigma));
         xiParticles.push_back(lamCand);
 
         RefCountedKinematicTree xiFitTree = fitter.fit(xiParticles);
@@ -188,10 +240,10 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         }
 
         float xiPi3DIpSigValue = -1000;
-        pair<bool,Measurement1D> pionXi3DIpPair = IPTools::absoluteImpactParameter3D(pion_XiTT,bestvtx);
+        pair<bool,Measurement1D> kaonOm3DIpPair = IPTools::absoluteImpactParameter3D(kaon_OmTT,bestvtx);
         if(pionXi3DIpPair.first)
         {
-            xiPi3DIpSigValue = pionXi3DIpPair.second.significance();
+            xiPi3DIpSigValue = kaonOm3DIpPair.second.significance();
         }
 
         // Decay length
@@ -251,39 +303,15 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         if(xiFlightSigValue   < xiFlightSigValue_)   continue;
         if(distanceSigValue   < distanceSigValue_)   continue;
 
-        //trkNHits
-        //int nhit1 = dau2->numberOfValidHits();
-
-        //if(nhit1 <= nHitCut1_) continue;
-
-        //double pt1 = dau1->pt();
-        //double pt2 = dau2->pt();
-
-        //if(pt1 <= ptCut1_ || pt2 <= ptCut2_) continue;
-
-
-        //vtxChi2
-        //double vtxChi2 = v0cand->vertexChi2();
-        //if(vtxChi2 > vtxChi2Cut_) continue;
-
-
-        //PAngle
-        //TVector3 ptosecvec(secvx - bestvx, secvy - bestvy, secvz - bestvz);
-        //TVector3 secvec(px_xi,py_xi,pz_xi);
-        //double agl = cos(secvec.Angle(ptosecvec));
-        //if(agl < cosThetaCut_) continue;
-
-
         theNewXiCands->push_back( *v0cand );
 
         cout<<"Successful"<<endl;
-        */
     }
 
     // Write the collections to the Event
     // Collection is stored as module label : instance
     // e.g. for this the InputTag should be selectV0CandidatesLowXi:Xi
-    iEvent.put( theNewXiCands, std::string(v0IDName_) );
+    iEvent.put( theNewOmCands, std::string(v0IDName_) );
 }
 
 void OmegaSelector::beginJob() {
