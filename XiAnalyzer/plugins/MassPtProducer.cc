@@ -334,7 +334,7 @@ MassPtProducer::beginJob()
         XiMassPtRap_Gen = fs->make<TH3D>("XiMassPtRap_Gen", "#Xi Mass, Pt, y",";Invariant Mass;p_{T};y",150,1.25,1.40,400,0,40,22,-1.1,1.1);
         LaMassPtRap_Gen = fs->make<TH3D>("LaMassPtRap_Gen", "#Lambda Mass, Pt, y",";Invariant Mass;p_{T};y",160,1.08,1.160,400,0,40,22,-1.1,1.1);
         KsMassPtRap_Gen = fs->make<TH3D>("KsMassPtRap_Gen", "Ks Mass and Pt",";Invariant Mass;p_{T};y",270,0.43,0.565,400,0,40,22,-1.1,1.1);
-        OmMassPtRap_Gen = fs->make<TH3D>("OmMassPtRap_Gen", "Omega Mass and Pt",";Invariant Mass;p_{T};y",150,1.60,1.75,400,0,40);
+        OmMassPtRap_Gen = fs->make<TH3D>("OmMassPtRap_Gen", "Omega Mass and Pt",";Invariant Mass;p_{T};y",150,1.60,1.75,400,0,40,22,-1.1,1.1);
     }
 }
 
