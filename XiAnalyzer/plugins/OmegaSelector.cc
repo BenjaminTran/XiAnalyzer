@@ -66,18 +66,6 @@ OmegaSelector::OmegaSelector(const edm::ParameterSet& iConfig)
     // The argument gives the instance name of the collection
     produces< reco::VertexCompositeCandidateCollection >(v0IDName_);
 
-    float piMass              = 0.13957018;
-    float piMass_sigma        = piMass*1e-6;
-    float piMassSquared       = piMass*piMass;
-    float protonMass          = 0.938272013;
-    float protonMass_sigma    = protonMass*1e-6;
-    float xiMass              = 1.31486;
-    float electronMass        = 0.000511;
-    float electronMassSquared = electronMass*electronMass;
-    float lambdaMass          = 1.115683;
-    float lambdaMass_sigma    = 0.000006;
-    float kaonMass            = 0.493677;
-    float kaonMass_sigma      = kaonMass*1.e-6;
 
 }
 
@@ -96,6 +84,19 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     using namespace edm;
     using namespace reco;
     using std::vector;
+
+    float piMass              = 0.13957018;
+    float piMass_sigma        = piMass*1e-6;
+    float piMassSquared       = piMass*piMass;
+    float protonMass          = 0.938272013;
+    float protonMass_sigma    = protonMass*1e-6;
+    float xiMass              = 1.31486;
+    float electronMass        = 0.000511;
+    float electronMassSquared = electronMass*electronMass;
+    float lambdaMass          = 1.115683;
+    float lambdaMass_sigma    = 0.000006;
+    float kaonMass            = 0.493677;
+    float kaonMass_sigma      = kaonMass*1.e-6;
 
     ESHandle<MagneticField> bFieldHandle;
     iSetup.get<IdealMagneticFieldRecord>().get(bFieldHandle);
