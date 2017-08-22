@@ -22,7 +22,7 @@ LaMassPt = MassPt.clone(
 )
 
 MassPtRapidity = MassPt.clone(
-        MC = cms.bool(True),
+        MC = cms.untracked.bool(True),
         multHigh = cms.double(250),
         gnCollection = cms.InputTag('genParticles'),
         ksCollection = cms.InputTag('selectV0CandidatesNewkshortRapidity:Kshort'),
