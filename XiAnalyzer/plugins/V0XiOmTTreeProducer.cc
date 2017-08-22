@@ -474,11 +474,6 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             iEvent.getByToken(_omCollection, v0candidates);
             if(!v0candidates.isValid()) return;
 
-            // Create auto_ptr for each collection to be stored in the Event
-            std::auto_ptr< reco::VertexCompositeCandidateCollection >
-                theNewOmCands( new reco::VertexCompositeCandidateCollection() );
-
-
             for( reco::VertexCompositeCandidateCollection::const_iterator v0cand =
                     v0candidates->begin(); v0cand != v0candidates->end();
                     v0cand++)
@@ -663,6 +658,9 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 OM.pt_                 = pt_xi;
                 OM.eta_                = eta_xi;
                 OM.rapidity_           = rapidity_xi;
+
+                OmTree->Fill();
+                cout << "Fill Omega" << endl;
             }
         }
 
@@ -860,6 +858,11 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 void
 V0XiOmTTreeProducer::beginJob()
 {
+    if(doXi_) cout << "Will Access Xi" << endl;
+    if(doOm_) cout << "Will Access Om" << endl;
+    if(doKs_) cout << "Will Access Ks" << endl;
+    if(doLa_) cout << "Will Access La" << endl;
+
     edm::Service<TFileService> fs;
     if(doXi_)
     {
@@ -889,7 +892,7 @@ V0XiOmTTreeProducer::beginJob()
     {
         OmTree = fs->make<TTree>("OmTree","OmCutParameters");
         OmTree->Branch("om3dipsig",&OM.xi3DIpSigValue_,"om3dipsig/F");
-        OmTree->Branch("omKaon3dipsig",&OM.xiPi3DIpSigValue_,"ompi3dipsig/F");
+        OmTree->Branch("omKaon3dipsig",&OM.xiPi3DIpSigValue_,"omKaon3dipsig/F");
         OmTree->Branch("vtrkpi3dipsig",&OM.VTrkPi3DIpSigValue_,"vtrkpi3dipsig/F");
         OmTree->Branch("vtrkp3dipsig",&OM.VTrkP3DIpSigValue_,"vtrkp3dipsigpt/F");
         OmTree->Branch("omflightsig",&OM.xiFlightSigValue_,"omflightsig/F");
