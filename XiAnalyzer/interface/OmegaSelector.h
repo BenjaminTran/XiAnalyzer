@@ -15,8 +15,8 @@
 //
 //
 
-#ifndef XIANALYZER__XI_SELECTOR_H
-#define XIANALYZER__XI_SELECTOR_H
+#ifndef XIANALYZER__OM_SELECTOR_H
+#define XIANALYZER__OM_SELECTOR_H
 
 // system include files
 #include <memory>

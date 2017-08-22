@@ -120,7 +120,7 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
     // Create auto_ptr for each collection to be stored in the Event
     std::auto_ptr< reco::VertexCompositeCandidateCollection >
-        theNewXiCands( new reco::VertexCompositeCandidateCollection() );
+        theNewOmCands( new reco::VertexCompositeCandidateCollection() );
 
 
     for( reco::VertexCompositeCandidateCollection::const_iterator v0cand =
@@ -241,7 +241,7 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
         float xiPi3DIpSigValue = -1000;
         pair<bool,Measurement1D> kaonOm3DIpPair = IPTools::absoluteImpactParameter3D(kaon_OmTT,bestvtx);
-        if(pionXi3DIpPair.first)
+        if(kaonOm3DIpPair.first)
         {
             xiPi3DIpSigValue = kaonOm3DIpPair.second.significance();
         }
