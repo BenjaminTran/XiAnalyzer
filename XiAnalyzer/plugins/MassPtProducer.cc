@@ -199,7 +199,7 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double rapidity_gn = gnCand->rapidity();
                 double eta_gn = gnCand->eta();
                 double pt_gn = gnCand->pt();
-                double mass_gn gnCand->mass();
+                double mass_gn = gnCand->mass();
 
                 if(st != 1) continue;
                 if(rapidity_gn > rapMin_ && rapidity_gn < rapMax_)
@@ -208,9 +208,9 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     int mid = 0;
                     if(TMath::Abs(id) == 3122)
                     {
-                        if(gnCand.numberOfMothers() == 1)
+                        if(gnCand->numberOfMothers() == 1)
                         {
-                            const reco::Candidate* mom = gnCand.mother();
+                            const reco::Candidate* mom = gnCand->mother();
                             mid = mom->pdgId();
                             if(mom->numberOfMothers()==1)
                             {
@@ -233,9 +233,9 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     int midXi = 0;
                     if(TMath::Abs(id) == 3312)
                     {
-                        if(gnCand.numberOfMothers() == 1)
+                        if(gnCand->numberOfMothers() == 1)
                         {
-                            const reco::Candidate* mom = gnCand.mother();
+                            const reco::Candidate* mom = gnCand->mother();
                             midXi = mom->pdgId();
                             if(mom->numberOfMothers() == 1)
                             {
