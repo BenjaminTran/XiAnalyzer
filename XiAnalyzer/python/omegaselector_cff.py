@@ -1,13 +1,13 @@
 import FWCore.ParameterSet.Config as cms
 
-from XiAnalyzer.XiAnalyzer.xiselector_cfi import *
-#selectOmCandidatesLow = selectOmCandidatesLow.clone()
+from XiAnalyzer.XiAnalyzer.omegaselector_cfi import *
+selectOmCandidatesNew = selectOmCandidates.clone()
 
-selectOmCandidatesLowRapidity = selectOmCandidatesNew.clone(
+selectOmCandidatesLowRapidity = selectOmCandidates.clone(
     dorap = cms.bool(True)
         )
 
-selectOmCandidatesLoose = selectOmCandidatesNew.clone(
+selectOmCandidatesLoose = selectOmCandidates.clone(
     xi3DIpSigValue        = cms.double(2.5),
     xiPi3DIpSigValue      = cms.double(5.0),
     VTrkPi3DIpSigValue    = cms.double(4.0),

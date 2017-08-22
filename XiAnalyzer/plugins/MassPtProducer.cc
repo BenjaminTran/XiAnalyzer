@@ -36,7 +36,6 @@ MassPtProducer::MassPtProducer(const edm::ParameterSet& iConfig)
     _vertexCollName = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexCollName"));
     _xiCollection   = consumes<reco::VertexCompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("xiCollection"));
     _omCollection = consumes<reco::VertexCompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("omCollection"));
-    _gnCollection   = consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("gnCollection"));
 
     multHigh_ = iConfig.getParameter<double>("multHigh");
     multLow_  = iConfig.getParameter<double>("multLow");
@@ -51,6 +50,10 @@ MassPtProducer::MassPtProducer(const edm::ParameterSet& iConfig)
     om_ = iConfig.getUntrackedParameter<bool>("om",false);
     MC_ = iConfig.getUntrackedParameter<bool>("MC",false);
 
+    if(MC_)
+    {
+        _gnCollection   = consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("gnCollection"));
+    }
 }
 
 
@@ -134,8 +137,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     edm::Handle<reco::VertexCompositeCandidateCollection> laCollection;
     iEvent.getByToken(_laCollection, laCollection);
 
-    edm::Handle<reco::GenParticleCollection> gnCollection;
-    iEvent.getByToken(_gnCollection, gnCollection);
 
     if(EtaPtCutnTracks >= multLow_ && EtaPtCutnTracks < multHigh_){
         nEvtCut->Fill(1); //number of events that pass the multiplicity cut
@@ -161,16 +162,24 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         //OM
         if(om_ && omCollection.isValid())
         {
+            cout << "omCollection is valid" << endl;
             for(reco::VertexCompositeCandidateCollection::const_iterator omCand =
                     omCollection->begin(); omCand != omCollection->end(); omCand++) {
 
+                cout << "Loop" << endl;
                 double rap_om  = omCand->rapidity();
+                cout << "1" << endl;
                 double mass_om = omCand->mass();
+                cout << "2" << endl;
                 double pT_om   = omCand->pt();
+                cout << "3" << endl;
                 double eta_om  = omCand->eta();
+                cout << "4" << endl;
 
                 OmMassPt       -> Fill(mass_om,pT_om);
+                cout << "5" << endl;
                 rapidity_om       -> Fill(rap_om);
+                cout << "6" << endl;
                 pseudorapidity_om -> Fill(eta_om);
 
                 cout<<"Fill Om"<<endl;
@@ -215,6 +224,9 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
         if(MC_)
         {
+            edm::Handle<reco::GenParticleCollection> gnCollection;
+            iEvent.getByToken(_gnCollection, gnCollection);
+
             for(reco::GenParticleCollection::const_iterator gnCand = gnCollection->begin(); gnCand != gnCollection->end(); gnCand++)
             {
                 int id = gnCand->pdgId();
@@ -297,9 +309,11 @@ MassPtProducer::beginJob()
     nEvtCut            = fs->make<TH1D>("nEvtCut", "nEvtCut", 10,0,10);
     EtaPtCutnTrackHist = fs->make<TH1D>("EtaPtCutnTrackHist", "EtaPtCutnTrack",250,0,250);
     rapidity_xi        = fs->make<TH1D>("XiRapidity","XiRapidity",200,-10,10);
+    rapidity_om        = fs->make<TH1D>("OmRapidity","OmRapidity",200,-10,10);
     rapidity_ks        = fs->make<TH1D>("KsRapidity","KsRapidity",200,-10,10);
     rapidity_la        = fs->make<TH1D>("LaRapidity","LaRapidity",200,-10,10);
     pseudorapidity_xi  = fs->make<TH1D>("XiEta","XiEta",200,-10,10);
+    pseudorapidity_om  = fs->make<TH1D>("OmEta","OmEta",200,-10,10);
     pseudorapidity_ks  = fs->make<TH1D>("KsEta","KsEta",200,-10,10);
     pseudorapidity_la  = fs->make<TH1D>("LaEta","LaEta",200,-10,10);
 

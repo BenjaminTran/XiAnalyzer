@@ -7,6 +7,12 @@ XiMassPt = MassPt.clone(
     la = cms.untracked.bool(False)
 )
 
+OmMassPt = MassPt.clone(
+        ks = cms.untracked.bool(False),
+        la = cms.untracked.bool(False),
+        xi = cms.untracked.bool(False)
+        )
+
 KslaMassPt = MassPt.clone(
     xi = cms.untracked.bool(False)
 )

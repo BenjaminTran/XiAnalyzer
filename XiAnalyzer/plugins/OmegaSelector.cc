@@ -124,11 +124,13 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     std::auto_ptr< reco::VertexCompositeCandidateCollection >
         theNewOmCands( new reco::VertexCompositeCandidateCollection() );
 
+    int count = 0;
 
     for( reco::VertexCompositeCandidateCollection::const_iterator v0cand =
             v0candidates->begin(); v0cand != v0candidates->end();
             v0cand++)
     {
+        cout << count << endl;
 
         //double secvz = -999.9, secvx = -999.9, secvy = -999.9;
 
@@ -307,13 +309,16 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
         theNewOmCands->push_back( *v0cand );
 
-        cout<<"Successful"<<endl;
+        cout<<"Successful Omega"<<endl;
+        count++;
     }
 
     // Write the collections to the Event
     // Collection is stored as module label : instance
     // e.g. for this the InputTag should be selectV0CandidatesLowXi:Xi
+    cout << "still alive" << endl;
     iEvent.put( theNewOmCands, std::string(v0IDName_) );
+    cout << "did I make it?" << endl;
 }
 
 void OmegaSelector::beginJob() {
