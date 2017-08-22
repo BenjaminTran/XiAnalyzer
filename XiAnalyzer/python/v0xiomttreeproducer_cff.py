@@ -25,3 +25,9 @@ LaTreeProducerRapidity = TreeProducer.clone(
         doLa = cms.bool(True),
         multmax = cms.double(250)
         )
+
+OmTreeProducer = TreeProducer.clone(
+        v0CollName = cms.string('generalCascadeCandidatesNew'),
+        v0IDName = cms.string('Omega'),
+        doOm = cms.bool(True),
+        )

@@ -122,6 +122,7 @@ struct ParticleData{
 
     edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _xiCollection;
     edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _v0Collection;
+    edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _omCollection;
     edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
     edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
 

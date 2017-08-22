@@ -11,6 +11,7 @@ V0XiOmTTreeProducer::V0XiOmTTreeProducer(const edm::ParameterSet& iConfig)
     v0IDName_       = iConfig.getParameter<string>( "v0IDName" );
     _vertexCollName = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName"));
     _xiCollection   = consumes<reco::VertexCompositeCandidateCollection>(edm::InputTag(v0CollName_,v0IDName_,"ANASKIM"));
+    _omCollection   = consumes<reco::VertexCompositeCandidateCollection>(edm::InputTag(v0CollName_,v0IDName_,"ANASKIM"));
     _v0Collection   = consumes<reco::VertexCompositeCandidateCollection>(edm::InputTag(v0CollName_,v0IDName_,"ANASKIM"));
     _trkSrc         = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("trkSrc"));
     multmin_        = iConfig.getParameter<double>("multmin");
@@ -53,6 +54,8 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     float lambdaMass          = 1.115683;
     float lambdaMass_sigma    = 0.000006;
     float kshortMass          = 0.497614;
+    float kaonMass            = 0.493677;
+    float kaonMass_sigma      = kaonMass*1.e-6;
 
     using namespace edm;
     using namespace reco;
@@ -445,188 +448,407 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         }
     }
 
-    if(doKs_ || doLa_)
+    if(doOm_)
     {
         if(EtaPtCutnTracks >= multmin_ && EtaPtCutnTracks < multmax_)
         {
-            edm::Handle<reco::VertexCompositeCandidateCollection> v0candidates;
-            iEvent.getByToken(_v0Collection, v0candidates);
+            ESHandle<MagneticField> bFieldHandle;
+            iSetup.get<IdealMagneticFieldRecord>().get(bFieldHandle);
+
+            ESHandle<TransientTrackBuilder> theTTB;
+            iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder",theTTB);
+
+            // get vertex
+            edm::Handle<reco::VertexCollection> vertices;
+            iEvent.getByToken(_vertexCollName,vertices);
+            //double bestvz = -999.9, bestvx = -999.9, bestvy = -999.9;
+            //double bestvzError = -999.9, bestvxError = -999.9, bestvyError = -999.9;
+            const reco::Vertex & bestvtx = (*vertices)[0];
+            //bestvz = bestvtx.z(); bestvx = bestvtx.x(); bestvy = bestvtx.y();
+            //bestvzError = bestvtx.zError(); bestvxError = bestvtx.xError(); bestvyError = bestvtx.yError();
+
+            // Z Vertex cut
+            //if(bestvz > zVertexHigh_ || bestvz < zVertexLow_ ) return;
+
+            edm::Handle< reco::VertexCompositeCandidateCollection > v0candidates;
+            iEvent.getByToken(_OmCollection, v0candidates);
             if(!v0candidates.isValid()) return;
 
-            for( reco::VertexCompositeCandidateCollection::const_iterator v0cand = v0candidates->begin();
-                    v0cand != v0candidates->end();
+            // Create auto_ptr for each collection to be stored in the Event
+            std::auto_ptr< reco::VertexCompositeCandidateCollection >
+                theNewOmCands( new reco::VertexCompositeCandidateCollection() );
+
+
+            for( reco::VertexCompositeCandidateCollection::const_iterator v0cand =
+                    v0candidates->begin(); v0cand != v0candidates->end();
                     v0cand++)
             {
-                double secvz=-999.9, secvx=-999.9, secvy=-999.9;
 
-                const reco::Candidate * d1 = v0cand->daughter(0);
-                const reco::Candidate * d2 = v0cand->daughter(1);
+                //double secvz = -999.9, secvx = -999.9, secvy = -999.9;
 
-                reco::TrackRef dau1 = d1->get<reco::TrackRef>();
-                reco::TrackRef dau2 = d2->get<reco::TrackRef>();
+                // access daughters of Xi and Lambda
+
+                const reco::Candidate * d1 = v0cand->daughter(0); // Om_Lambda
+                const reco::Candidate * d2 = v0cand->daughter(1); // Om_Kaon
+
+                const reco::Candidate * lambda_d1 = d1->daughter(0); // Lambda_Proton
+                const reco::Candidate * lambda_d2 = d1->daughter(1); // Lambda_Pion
+
+                reco::TrackRef  dau1 = d1->get<reco::TrackRef>();
+                reco::TrackRef  dau2 = d2->get<reco::TrackRef>();
+                reco::TrackRef  lambda_dau1 = lambda_d1->get<reco::TrackRef>();
+                reco::TrackRef  lambda_dau2 = lambda_d2->get<reco::TrackRef>();
+
+
 
                 //pt,mass
-                double eta_v0 = v0cand->eta();
-                double pt_v0 = v0cand->pt();
-                double px_v0 = v0cand->px();
-                double py_v0 = v0cand->py();
-                double pz_v0 = v0cand->pz();
-                double rapidity_v0 = v0cand->rapidity();
-                double mass_v0 = v0cand->mass();
+                double eta_xi = v0cand->eta();
+                double rap_xi = v0cand->rapidity();
+                double mass_xi = v0cand->mass();
+                double pt_xi = v0cand->pt();
+                //double px_xi   = v0cand->px();
+                //double py_xi   = v0cand->py();
+                //double pz_xi   = v0cand->pz();
 
-                /*
-                if(dorap_ && (rapidity_v0 > rapMax_ || rapidity_v0 < rapMin_)) continue;
-                else
-                    if(eta_v0 > 2.4 || eta_v0 < -2.4 ) continue;
-                    */
+                //if(dorap_ && (rap_xi > rapMax_ || rap_xi < rapMin_)) continue;
+                //else
+                //if(eta_xi > etaCutMax_ || eta_xi < etaCutMin_) continue;
 
-                secvz = v0cand->vz(); secvx = v0cand->vx(); secvy = v0cand->vy();
+                //secvz  = v0cand->vz();
+                //secvx  = v0cand->vx();
+                //secvy  = v0cand->vy();
 
-                //trkNHits
-                int nhit1 = dau1->numberOfValidHits();
-                int nhit2 = dau2->numberOfValidHits();
+                // Xi Impact Parameter Significance
+                // Build Transient Tracks of Xi_pion, Lambda_Proton, Lambda_pion
+                TransientTrack pion_lambdaTT(lambda_dau2, &(*bFieldHandle));
+                TransientTrack kaon_OmTT(dau2, &(*bFieldHandle));
+                TransientTrack proton_lambdaTT(lambda_dau1, &(*bFieldHandle));
 
-                //if(nhit1 <= nHitCut1_ || nhit2 <= nHitCut2_) continue;
+                // Create a kinematicParticleFactory
+                KinematicParticleFactoryFromTransientTrack pFactory;
 
-                double pt1 = dau1->pt();
-                double pt2 = dau2->pt();
+                // Initialize chi2 and ndf before kinematic fits
+                float chi = 0.0;
+                float ndf = 0.0;
 
-                //if(pt1 <= ptCut1_ || pt2 <= ptCut2_) continue;
+                vector<RefCountedKinematicParticle> lamParticles;
+                lamParticles.push_back(pFactory.particle(pion_lambdaTT,piMass,chi,ndf,piMass_sigma));
+                lamParticles.push_back(pFactory.particle(proton_lambdaTT,protonMass,chi,ndf,protonMass_sigma));
 
-                //algo
-                //       double algo1 = dau1->algo();
-                //       double algo2 = dau2->algo();
+                KinematicParticleVertexFitter fitter;
+                RefCountedKinematicTree v0FitTree;
+                v0FitTree = fitter.fit(lamParticles);
+                if(!v0FitTree->isValid())
+                {
+                    cout<<"invalid v0 kinematic vertex fitting"<<endl;
+                    continue;
+                }
+                v0FitTree->movePointerToTheTop();
+                RefCountedKinematicParticle lamCand      = v0FitTree->currentParticle();
+                RefCountedKinematicVertex lamDecayVertex = v0FitTree->currentDecayVertex();
 
-                //dau eta
-                //       double eta2 = dau2->eta();
+                vector<RefCountedKinematicParticle> xiParticles;
+                xiParticles.push_back(pFactory.particle(kaon_OmTT,kaonMass,chi,ndf,kaonMass_sigma));
+                xiParticles.push_back(lamCand);
 
-                //DCA
-                math::XYZPoint bestvtx(bestvx,bestvy,bestvz);
+                RefCountedKinematicTree xiFitTree = fitter.fit(xiParticles);
+                if(!xiFitTree->isValid())
+                {
+                    cout<<"invalid xi kinematic vertex fitting"<<endl;
+                    continue;
+                }
+                xiFitTree->movePointerToTheTop();
+                RefCountedKinematicParticle xiCand      = xiFitTree->currentParticle();
+                RefCountedKinematicVertex xiDecayVertex = xiFitTree->currentDecayVertex();
 
-                double dzbest1 = dau1->dz(bestvtx);
-                double dxybest1 = dau1->dxy(bestvtx);
-                double dzerror1 = sqrt(dau1->dzError()*dau1->dzError()+bestvzError*bestvzError);
-                double dxyerror1 = sqrt(dau1->d0Error()*dau1->d0Error()+bestvxError*bestvyError);
-                double dzos1 = dzbest1/dzerror1;
-                double dxyos1 = dxybest1/dxyerror1;
-                //if(fabs(dzos1) < dzSigCut1_ || fabs(dxyos1) < dxySigCut1_) continue;
+                if(!xiCand->currentState().isValid())
+                {
+                    cout<<"invalid state from xi cand"<<endl;
+                }
 
-                double dzbest2 = dau2->dz(bestvtx);
-                double dxybest2 = dau2->dxy(bestvtx);
-                double dzerror2 = sqrt(dau2->dzError()*dau2->dzError()+bestvzError*bestvzError);
-                double dxyerror2 = sqrt(dau2->d0Error()*dau2->d0Error()+bestvxError*bestvyError);
-                double dzos2 = dzbest2/dzerror2;
-                double dxyos2 = dxybest2/dxyerror2;
-                //if(fabs(dzos2) < dzSigCut2_ || fabs(dxyos2) < dxySigCut2_) continue;
+                KinematicState theCurrentXiCandKinematicState = xiCand->currentState();
+                FreeTrajectoryState theXiFTS = theCurrentXiCandKinematicState.freeTrajectoryState();
+                TransientTrack xiTT = (*theTTB).build(theXiFTS);
 
-                //vtxChi2
-                double vtxChi2 = v0cand->vertexChi2();
-                //if(vtxChi2 > vtxChi2Cut_ ) continue;
+                //3D impact parameter of Xi wrt primary vertex
+                float xi3DIpSigValue = -1000;
+                if(xiTT.isValid())
+                {
+                    pair<bool,Measurement1D> xi3DIpPair = IPTools::absoluteImpactParameter3D(xiTT,bestvtx);
+                    if(xi3DIpPair.first)
+                    {
+                        xi3DIpSigValue = xi3DIpPair.second.significance();
+                    }
+                }
 
-                //PAngle
-                TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
-                TVector3 secvec(px_v0,py_v0,pz_v0);
-                double agl = cos(secvec.Angle(ptosvec));
-                //if(agl < cosThetaCut_) continue;
+                //3D impact parameter wrt to primary vertex for Lambda_pion,
+                //Lambda_proton, Xi_Pion
+                float VTrkP3DIpSigValue = -1000;
+                pair<bool,Measurement1D> proton3DIpPair = IPTools::absoluteImpactParameter3D(proton_lambdaTT,bestvtx);
+                if(proton3DIpPair.first)
+                {
+                    VTrkP3DIpSigValue = proton3DIpPair.second.significance();
+                }
 
-                //Decay length
-                typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
+                float VTrkPi3DIpSigValue = -1000;
+                pair<bool,Measurement1D> pion3DIpPair = IPTools::absoluteImpactParameter3D(pion_lambdaTT,bestvtx);
+                if(pion3DIpPair.first)
+                {
+                    VTrkPi3DIpSigValue = pion3DIpPair.second.significance();
+                }
+
+                float xiPi3DIpSigValue = -1000;
+                pair<bool,Measurement1D> kaonOm3DIpPair = IPTools::absoluteImpactParameter3D(kaon_OmTT,bestvtx);
+                if(kaonOm3DIpPair.first)
+                {
+                    xiPi3DIpSigValue = kaonOm3DIpPair.second.significance();
+                }
+
+                // Decay length
+
+                typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3>> SMatrixSym3D;
                 typedef ROOT::Math::SVector<double, 3> SVector3;
-                SMatrixSym3D totalCov = vtx.covariance() + v0cand->vertexCovariance();
-                SVector3 distanceVector(secvx-bestvx,secvy-bestvy,secvz-bestvz);
-                double dl = ROOT::Math::Mag(distanceVector);
-                double dlerror = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/dl;
-                double dlos = dl/dlerror;
-                //if(dlos < decayLSigCut_) continue;
 
-                double pd1 = d1->p();
-                //       double charged1 = dau1->charge();
-                double pd2 = d2->p();
-                //       double charged2 = dau2->charge();
+                // Getting CovMatrix
+                std::vector<double> vVtxEVec;
+                vVtxEVec.push_back(lamDecayVertex->error().cxx());
+                vVtxEVec.push_back(lamDecayVertex->error().cyx());
+                vVtxEVec.push_back(lamDecayVertex->error().cyy());
+                vVtxEVec.push_back(lamDecayVertex->error().czx());
+                vVtxEVec.push_back(lamDecayVertex->error().czy());
+                vVtxEVec.push_back(lamDecayVertex->error().czz());
+                SMatrixSym3D vVtxCov(vVtxEVec.begin(),vVtxEVec.end() );
 
-                TVector3 dauvec1(d1->px(),d1->py(),d1->pz());
-                TVector3 dauvec2(d2->px(),d2->py(),d2->pz());
-                TVector3 dauvecsum(dauvec1+dauvec2);
+                std::vector<double> xiVtxEVec;
+                xiVtxEVec.push_back(xiDecayVertex->error().cxx());
+                xiVtxEVec.push_back(xiDecayVertex->error().cyx());
+                xiVtxEVec.push_back(xiDecayVertex->error().cyy());
+                xiVtxEVec.push_back(xiDecayVertex->error().czx());
+                xiVtxEVec.push_back(xiDecayVertex->error().czy());
+                xiVtxEVec.push_back(xiDecayVertex->error().czz());
+                SMatrixSym3D xiVtxCov(xiVtxEVec.begin(),xiVtxEVec.end() );
 
-                double energyd1e = sqrt(electronMassSquared+pd1*pd1);
-                double energyd2e = sqrt(electronMassSquared+pd2*pd2);
-                double invmass_ee = sqrt((energyd1e+energyd2e)*(energyd1e+energyd2e)-dauvecsum.Mag2());
-                //if(invmass_ee<misIDMassCutEE_) continue;
+                // Decay Lengths
+                SMatrixSym3D totalCov = vVtxCov  + bestvtx.covariance();
+                SMatrixSym3D xiCov    = xiVtxCov + bestvtx.covariance();
 
-                double misIDMass_la = -999;
-                double misIDMass_ks_pip = -999;
-                double misIDMass_ks_ppi = -999;
-                if(v0IDName_ == "Lambda")
+                //Xi dlos to primary vertex
+                SVector3 xiFlightVector(
+                        xiDecayVertex->position().x() - bestvtx.x(),
+                        xiDecayVertex->position().y() - bestvtx.y(),
+                        xiDecayVertex->position().z() - bestvtx.z()
+                        );
+                double xiFlightMag      = ROOT::Math::Mag(xiFlightVector);
+                double xiFlightSigma    = sqrt(ROOT::Math::Similarity(xiCov, xiFlightVector))/xiFlightMag;
+                double xiFlightSigValue = xiFlightMag/xiFlightSigma;
+
+                //Lambda dlos between lam and primary vertex
+                SVector3 distanceVector(
+                        lamDecayVertex->position().x() - bestvtx.x(),
+                        lamDecayVertex->position().y() - bestvtx.y(),
+                        lamDecayVertex->position().z() - bestvtx.z()
+                        );
+                double distanceMag      = ROOT::Math::Mag(distanceVector);
+                double distanceSigma    = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/distanceMag;
+                double distanceSigValue = distanceMag/distanceSigma;
+
+
+                OM.xi3DIpSigValue_     = xi3DIpSigValue;
+                OM.xiPi3DIpSigValue_   = xiPi3DIpSigValue;
+                OM.VTrkPi3DIpSigValue_ = VTrkPi3DIpSigValue;
+                OM.VTrkP3DIpSigValue_  = VTrkP3DIpSigValue;
+                OM.xiFlightSigValue_   = xiFlightSigValue;
+                OM.distanceSigValue_   = distanceSigValue;
+                OM.mass_               = mass_xi;
+                OM.pt_                 = pt_xi;
+                OM.eta_                = eta_xi;
+                OM.rapidity_           = rapidity_xi;
+            }
+        }
+
+        if(doKs_ || doLa_)
+        {
+            if(EtaPtCutnTracks >= multmin_ && EtaPtCutnTracks < multmax_)
+            {
+                edm::Handle<reco::VertexCompositeCandidateCollection> v0candidates;
+                iEvent.getByToken(_v0Collection, v0candidates);
+                if(!v0candidates.isValid()) return;
+
+                for( reco::VertexCompositeCandidateCollection::const_iterator v0cand = v0candidates->begin();
+                        v0cand != v0candidates->end();
+                        v0cand++)
                 {
-                    double massd1=piMass;
-                    double massd2=piMass;
-                    double energyd1 = sqrt(massd1*massd1+pd1*pd1);
-                    double energyd2 = sqrt(massd2*massd2+pd2*pd2);
-                    double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
-                    misIDMass_la = invmass - kshortMass;
-                    //if(fabs(invmass-kshortMass)<misIDMassCut_) continue;
-                }
+                    double secvz=-999.9, secvx=-999.9, secvy=-999.9;
 
-                if(v0IDName_ == "Kshort")
-                {
-                    double massd1=piMass;
-                    double massd2=protonMass;
-                    double energyd1 = sqrt(massd1*massd1+pd1*pd1);
-                    double energyd2 = sqrt(massd2*massd2+pd2*pd2);
-                    double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
-                    misIDMass_ks_pip = invmass - lambdaMass;
-                    //if(fabs(invmass-lambdaMass)<misIDMassCut_) continue;
+                    const reco::Candidate * d1 = v0cand->daughter(0);
+                    const reco::Candidate * d2 = v0cand->daughter(1);
 
-                    massd2=piMass;
-                    massd1=protonMass;
-                    energyd1 = sqrt(massd1*massd1+pd1*pd1);
-                    energyd2 = sqrt(massd2*massd2+pd2*pd2);
-                    invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
-                    misIDMass_ks_ppi = invmass - lambdaMass;
-                    //if(fabs(invmass-lambdaMass)<misIDMassCut_) continue;
-                }
+                    reco::TrackRef dau1 = d1->get<reco::TrackRef>();
+                    reco::TrackRef dau2 = d2->get<reco::TrackRef>();
 
-                if(doKs_)
-                {
-                    KS.eta_ =  eta_v0;
-                    KS.mass_ = mass_v0;
-                    KS.pt_ = pt_v0;
-                    KS.rapidity_ = rapidity_v0;
-                    KS.nhit1_ = nhit1;
-                    KS.nhit2_ = nhit2;
-                    KS.dzSig1_ = dzos1;
-                    KS.dzSig2_ = dzos2;
-                    KS.dxySig1_ = dxyos1;
-                    KS.dxySig2_ = dxyos2;
-                    KS.vtxChi2_ = vtxChi2;
-                    KS.cosTheta_ = agl;
-                    KS.decayLSig_ = dlos;
-                    KS.misIDMassEE_ = invmass_ee;
-                    KS.misIDMassForward_ = misIDMass_ks_pip;
-                    KS.misIDMassBackward_ = misIDMass_ks_ppi;
+                    //pt,mass
+                    double eta_v0 = v0cand->eta();
+                    double pt_v0 = v0cand->pt();
+                    double px_v0 = v0cand->px();
+                    double py_v0 = v0cand->py();
+                    double pz_v0 = v0cand->pz();
+                    double rapidity_v0 = v0cand->rapidity();
+                    double mass_v0 = v0cand->mass();
 
-                    KsTree->Fill();
-                }
+                    /*
+                       if(dorap_ && (rapidity_v0 > rapMax_ || rapidity_v0 < rapMin_)) continue;
+                       else
+                       if(eta_v0 > 2.4 || eta_v0 < -2.4 ) continue;
+                       */
 
-                if(doLa_)
-                {
-                    LA.eta_ =  eta_v0;
-                    LA.mass_ = mass_v0;
-                    LA.pt_ = pt_v0;
-                    LA.rapidity_ = rapidity_v0;
-                    LA.nhit1_ = nhit1;
-                    LA.nhit2_ = nhit2;
-                    LA.dzSig1_ = dzos1;
-                    LA.dzSig2_ = dzos2;
-                    LA.dxySig1_ = dxyos1;
-                    LA.dxySig2_ = dxyos2;
-                    LA.vtxChi2_ = vtxChi2;
-                    LA.cosTheta_ = agl;
-                    LA.decayLSig_ = dlos;
-                    LA.misIDMassEE_ = invmass_ee;
-                    LA.misIDMassForward_ = misIDMass_la;
+                    secvz = v0cand->vz(); secvx = v0cand->vx(); secvy = v0cand->vy();
 
-                    LaTree->Fill();
+                    //trkNHits
+                    int nhit1 = dau1->numberOfValidHits();
+                    int nhit2 = dau2->numberOfValidHits();
+
+                    //if(nhit1 <= nHitCut1_ || nhit2 <= nHitCut2_) continue;
+
+                    double pt1 = dau1->pt();
+                    double pt2 = dau2->pt();
+
+                    //if(pt1 <= ptCut1_ || pt2 <= ptCut2_) continue;
+
+                    //algo
+                    //       double algo1 = dau1->algo();
+                    //       double algo2 = dau2->algo();
+
+                    //dau eta
+                    //       double eta2 = dau2->eta();
+
+                    //DCA
+                    math::XYZPoint bestvtx(bestvx,bestvy,bestvz);
+
+                    double dzbest1 = dau1->dz(bestvtx);
+                    double dxybest1 = dau1->dxy(bestvtx);
+                    double dzerror1 = sqrt(dau1->dzError()*dau1->dzError()+bestvzError*bestvzError);
+                    double dxyerror1 = sqrt(dau1->d0Error()*dau1->d0Error()+bestvxError*bestvyError);
+                    double dzos1 = dzbest1/dzerror1;
+                    double dxyos1 = dxybest1/dxyerror1;
+                    //if(fabs(dzos1) < dzSigCut1_ || fabs(dxyos1) < dxySigCut1_) continue;
+
+                    double dzbest2 = dau2->dz(bestvtx);
+                    double dxybest2 = dau2->dxy(bestvtx);
+                    double dzerror2 = sqrt(dau2->dzError()*dau2->dzError()+bestvzError*bestvzError);
+                    double dxyerror2 = sqrt(dau2->d0Error()*dau2->d0Error()+bestvxError*bestvyError);
+                    double dzos2 = dzbest2/dzerror2;
+                    double dxyos2 = dxybest2/dxyerror2;
+                    //if(fabs(dzos2) < dzSigCut2_ || fabs(dxyos2) < dxySigCut2_) continue;
+
+                    //vtxChi2
+                    double vtxChi2 = v0cand->vertexChi2();
+                    //if(vtxChi2 > vtxChi2Cut_ ) continue;
+
+                    //PAngle
+                    TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
+                    TVector3 secvec(px_v0,py_v0,pz_v0);
+                    double agl = cos(secvec.Angle(ptosvec));
+                    //if(agl < cosThetaCut_) continue;
+
+                    //Decay length
+                    typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
+                    typedef ROOT::Math::SVector<double, 3> SVector3;
+                    SMatrixSym3D totalCov = vtx.covariance() + v0cand->vertexCovariance();
+                    SVector3 distanceVector(secvx-bestvx,secvy-bestvy,secvz-bestvz);
+                    double dl = ROOT::Math::Mag(distanceVector);
+                    double dlerror = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/dl;
+                    double dlos = dl/dlerror;
+                    //if(dlos < decayLSigCut_) continue;
+
+                    double pd1 = d1->p();
+                    //       double charged1 = dau1->charge();
+                    double pd2 = d2->p();
+                    //       double charged2 = dau2->charge();
+
+                    TVector3 dauvec1(d1->px(),d1->py(),d1->pz());
+                    TVector3 dauvec2(d2->px(),d2->py(),d2->pz());
+                    TVector3 dauvecsum(dauvec1+dauvec2);
+
+                    double energyd1e = sqrt(electronMassSquared+pd1*pd1);
+                    double energyd2e = sqrt(electronMassSquared+pd2*pd2);
+                    double invmass_ee = sqrt((energyd1e+energyd2e)*(energyd1e+energyd2e)-dauvecsum.Mag2());
+                    //if(invmass_ee<misIDMassCutEE_) continue;
+
+                    double misIDMass_la = -999;
+                    double misIDMass_ks_pip = -999;
+                    double misIDMass_ks_ppi = -999;
+                    if(v0IDName_ == "Lambda")
+                    {
+                        double massd1=piMass;
+                        double massd2=piMass;
+                        double energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                        double energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                        double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                        misIDMass_la = invmass - kshortMass;
+                        //if(fabs(invmass-kshortMass)<misIDMassCut_) continue;
+                    }
+
+                    if(v0IDName_ == "Kshort")
+                    {
+                        double massd1=piMass;
+                        double massd2=protonMass;
+                        double energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                        double energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                        double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                        misIDMass_ks_pip = invmass - lambdaMass;
+                        //if(fabs(invmass-lambdaMass)<misIDMassCut_) continue;
+
+                        massd2=piMass;
+                        massd1=protonMass;
+                        energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                        energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                        invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                        misIDMass_ks_ppi = invmass - lambdaMass;
+                        //if(fabs(invmass-lambdaMass)<misIDMassCut_) continue;
+                    }
+
+                    if(doKs_)
+                    {
+                        KS.eta_ =  eta_v0;
+                        KS.mass_ = mass_v0;
+                        KS.pt_ = pt_v0;
+                        KS.rapidity_ = rapidity_v0;
+                        KS.nhit1_ = nhit1;
+                        KS.nhit2_ = nhit2;
+                        KS.dzSig1_ = dzos1;
+                        KS.dzSig2_ = dzos2;
+                        KS.dxySig1_ = dxyos1;
+                        KS.dxySig2_ = dxyos2;
+                        KS.vtxChi2_ = vtxChi2;
+                        KS.cosTheta_ = agl;
+                        KS.decayLSig_ = dlos;
+                        KS.misIDMassEE_ = invmass_ee;
+                        KS.misIDMassForward_ = misIDMass_ks_pip;
+                        KS.misIDMassBackward_ = misIDMass_ks_ppi;
+
+                        KsTree->Fill();
+                    }
+
+                    if(doLa_)
+                    {
+                        LA.eta_ =  eta_v0;
+                        LA.mass_ = mass_v0;
+                        LA.pt_ = pt_v0;
+                        LA.rapidity_ = rapidity_v0;
+                        LA.nhit1_ = nhit1;
+                        LA.nhit2_ = nhit2;
+                        LA.dzSig1_ = dzos1;
+                        LA.dzSig2_ = dzos2;
+                        LA.dxySig1_ = dxyos1;
+                        LA.dxySig2_ = dxyos2;
+                        LA.vtxChi2_ = vtxChi2;
+                        LA.cosTheta_ = agl;
+                        LA.decayLSig_ = dlos;
+                        LA.misIDMassEE_ = invmass_ee;
+                        LA.misIDMassForward_ = misIDMass_la;
+
+                        LaTree->Fill();
+                    }
                 }
             }
         }
@@ -662,6 +884,22 @@ V0XiOmTTreeProducer::beginJob()
            XiTree->Branch("vtxsignificance3d",&XI.vtxSignificance3D_,"vtxsignificance3d/F");
            */
     }
+
+    if(doOm_)
+    {
+        OmTree = fs->make<TTree>("OmTree","OmCutParameters");
+        OmTree->Branch("om3dipsig",&OM.xi3DIpSigValue_,"om3dipsig/F");
+        OmTree->Branch("omKaon3dipsig",&OM.xiPi3DIpSigValue_,"ompi3dipsig/F");
+        OmTree->Branch("vtrkpi3dipsig",&OM.VTrkPi3DIpSigValue_,"vtrkpi3dipsig/F");
+        OmTree->Branch("vtrkp3dipsig",&OM.VTrkP3DIpSigValue_,"vtrkp3dipsigpt/F");
+        OmTree->Branch("omflightsig",&OM.xiFlightSigValue_,"omflightsig/F");
+        OmTree->Branch("distancesig",&OM.distanceSigValue_,"distancesig/F");
+        OmTree->Branch("mass",&OM.mass_,"mass/F");
+        OmTree->Branch("rapidity",&OM.rapidity_,"rapidity/F");
+        OmTree->Branch("eta",&OM.eta_,"eta/F");
+        OmTree->Branch("pt",&OM.pt_,"pt/F");
+    }
+
 
     if(doKs_)
     {
