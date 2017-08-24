@@ -189,7 +189,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             if((v0masspiproton1>=(1.115683-mis_la_range_) && v0masspiproton1<=(1.115683+mis_la_range_)) || (v0masspiproton2>=(1.115683-mis_la_range_) && v0masspiproton2<=(1.115683+mis_la_range_)) ) continue;
             
             //efficiency
-            //double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta,pt));
+            double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta,pt));
 
             double eta_dau1 = dau1->eta();
             double phi_dau1 = dau1->phi();
@@ -216,21 +216,21 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         pVect_trg_ks[i]->push_back(pvector);
                         pVect_dau_ks[i]->push_back(pvector_dau1);
                         pVect_dau_ks[i]->push_back(pvector_dau2);
-                        hPt_ks[i]->Fill(pt);//,1.0/effks);
-						hEta_ks[i]->Fill(eta);//,1.0/effks);
+                        hPt_ks[i]->Fill(pt,1.0/effks);
+						hEta_ks[i]->Fill(eta,1.0/effks);
                         hRap_ks[i]->Fill(rapidity);
                         double KET = sqrt(mass*mass + pt*pt) - mass;
-                        hKET_ks[i]->Fill(KET);//,1.0/effks);
+                        hKET_ks[i]->Fill(KET,1.0/effks);
                     }
                     if((mass<=(mean_ks_[i]-sideFactor_*sigma_ks_[i]) && mass>=0.425) || (mass<=0.57 && mass>=(mean_ks_[i]+sideFactor_*sigma_ks_[i]))){
                         pVect_trg_ks_bkg[i]->push_back(pvector);
                         pVect_dau_ks_bkg[i]->push_back(pvector_dau1);
                         pVect_dau_ks_bkg[i]->push_back(pvector_dau2);
-                        hPt_ks_bkg[i]->Fill(pt);//,1.0/effks);
-						hEta_ks_bkg[i]->Fill(eta);//,1.0/effks);
+                        hPt_ks_bkg[i]->Fill(pt,1.0/effks);
+						hEta_ks_bkg[i]->Fill(eta,1.0/effks);
                         hRap_ks_bkg[i]->Fill(rapidity);
                         double KET = sqrt(mass*mass + pt*pt) - mass;
-                        hKET_ks_bkg[i]->Fill(KET);//,1.0/effks);
+                        hKET_ks_bkg[i]->Fill(KET,1.0/effks);
                     }
                 }
             }
@@ -297,7 +297,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             if( (v0masspipi>=(0.497614-mis_ks_range_) && v0masspipi<=(0.497614+mis_ks_range_)) || v0massee <= mis_ph_range_ ) continue;
             
             //efficiency
-            //double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(eta,pt));
+            double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(eta,pt));
 
             double eta_dau1 = dau1->eta();
             double phi_dau1 = dau1->phi();
@@ -325,21 +325,21 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         pVect_trg_la[i]->push_back(pvector);
                         pVect_dau_la[i]->push_back(pvector_dau1);
                         pVect_dau_la[i]->push_back(pvector_dau2);
-                        hPt_la[i]->Fill(pt);//,1.0/effla);
-                        hEta_la[i]->Fill(eta);//,1.0/effla);
+                        hPt_la[i]->Fill(pt,1.0/effla);
+                        hEta_la[i]->Fill(eta,1.0/effla);
                         hRap_la[i]->Fill(rapidity);
                         double KET = sqrt(mass*mass + pt*pt) - mass;
-                        hKET_la[i]->Fill(KET);//,1.0/effla);
+                        hKET_la[i]->Fill(KET,1.0/effla);
                     }
                     if((mass<=1.165 && mass>=(mean_la_[i]+sideFactor_*sigma_la_[i])) || (mass<=(mean_la_[i]-sideFactor_*sigma_la_[i]) && mass>=1.075)){
                         pVect_trg_la_bkg[i]->push_back(pvector);
                         pVect_dau_la_bkg[i]->push_back(pvector_dau1);
                         pVect_dau_la_bkg[i]->push_back(pvector_dau2);
-                        hPt_la_bkg[i]->Fill(pt);//,1.0/effla);
-                        hEta_la_bkg[i]->Fill(eta);//,1.0/effla);
+                        hPt_la_bkg[i]->Fill(pt,1.0/effla);
+                        hEta_la_bkg[i]->Fill(eta,1.0/effla);
                         hRap_la_bkg[i]->Fill(rapidity);
                         double KET = sqrt(mass*mass + pt*pt) - mass;
-                        hKET_la_bkg[i]->Fill(KET);//,1.0/effla);
+                        hKET_la_bkg[i]->Fill(KET,1.0/effla);
                     }
                 }
             }
@@ -381,19 +381,18 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             int nMult_trg_ks = (int)pVect_trg_ks[i]->size();
             int nMult_trg_la = (int)pVect_trg_la[i]->size();
             
-            //double nMult_trg_eff_ks=0;
-            //double nMult_trg_eff_la=0;
+            double nMult_trg_eff_ks=0;
+            double nMult_trg_eff_la=0;
             
-			/*
             for(int ntrg=0;ntrg<nMult_trg_ks;ntrg++)
             {
                 TVector3 pvector_trg = (*pVect_trg_ks[i])[ntrg];
                 double pt_trg = pvector_trg.Pt();
                 double eta_trg = pvector_trg.Eta();
                 
-                //double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta_trg,pt_trg));
+                double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta_trg,pt_trg));
 
-                //nMult_trg_eff_ks = nMult_trg_eff_ks + 1.0/effks;
+                nMult_trg_eff_ks = nMult_trg_eff_ks + 1.0/effks;
             }
             
 			for(int ntrg=0;ntrg<nMult_trg_la;ntrg++)
@@ -406,7 +405,6 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
 			nMult_trg_eff_la = nMult_trg_eff_la + 1.0/effla;
 			}
-			*/
 
             hMult_ks[i]->Fill(nMult_trg_ks);
             hMult_la[i]->Fill(nMult_trg_la);
@@ -416,9 +414,9 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 TVector3 pvector_trg = (*pVect_trg_ks[i])[ntrg];
                 double eta_trg = pvector_trg.Eta();
                 double phi_trg = pvector_trg.Phi();
-                //double pt_trg = pvector_trg.Pt();
+                double pt_trg = pvector_trg.Pt();
                 
-                //double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta_trg,pt_trg));
+                double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta_trg,pt_trg));
 
                 TVector3 pvector_trg_dau1 = (*pVect_dau_ks[i])[2*ntrg];
                 double eta_trg_dau1 = pvector_trg_dau1.Eta();
@@ -433,7 +431,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     TVector3 pvector_ass = (*pVect_ass)[nass];
                     double eta_ass = pvector_ass.Eta();
                     double phi_ass = pvector_ass.Phi();
-                    //double pt_ass = pvector_ass.Pt();
+                    double pt_ass = pvector_ass.Pt();
 
                     //double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
                     
@@ -453,7 +451,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         deltaPhi=deltaPhi+2*PI;
                     
                     //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_ks[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_ks/effks/effweight_ass);
+                    hSignal_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks);///effweight_ass);
                 }
             }
             
@@ -462,9 +460,9 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 TVector3 pvector_trg = (*pVect_trg_la[i])[ntrg];
                 double eta_trg = pvector_trg.Eta();
                 double phi_trg = pvector_trg.Phi();
-                //double pt_trg = pvector_trg.Pt();
+                double pt_trg = pvector_trg.Pt();
                 
-                //double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(eta_trg,pt_trg));
+                double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(eta_trg,pt_trg));
 
                 TVector3 pvector_trg_dau1 = (*pVect_dau_la[i])[2*ntrg];
                 double eta_trg_dau1 = pvector_trg_dau1.Eta();
@@ -499,7 +497,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         deltaPhi=deltaPhi+2*PI;
                     
                     //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_la[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_la/effla/effweight_ass);
+                    hSignal_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla);///effweight_ass);
                 }
             }
 
@@ -510,21 +508,20 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             int nMult_trg_ks = (int)pVect_trg_ks_bkg[i]->size();
             int nMult_trg_la = (int)pVect_trg_la_bkg[i]->size();
             
-            //double nMult_trg_eff_ks=0;
-            //double nMult_trg_eff_la=0;
+            double nMult_trg_eff_ks=0;
+            double nMult_trg_eff_la=0;
             
             for(int ntrg=0;ntrg<nMult_trg_ks;ntrg++)
             {
                 TVector3 pvector_trg = (*pVect_trg_ks_bkg[i])[ntrg];
-                //double pt_trg = pvector_trg.Pt();
-                //double eta_trg = pvector_trg.Eta();
+                double pt_trg = pvector_trg.Pt();
+                double eta_trg = pvector_trg.Eta();
                 
-                //double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta_trg,pt_trg));
+                double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta_trg,pt_trg));
 
-                //nMult_trg_eff_ks = nMult_trg_eff_ks + 1.0/effks;
+                nMult_trg_eff_ks = nMult_trg_eff_ks + 1.0/effks;
             }
             
-			/*
 					for(int ntrg=0;ntrg<nMult_trg_la;ntrg++)
 					{
 							TVector3 pvector_trg = (*pVect_trg_la_bkg[i])[ntrg];
@@ -535,7 +532,6 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
 							nMult_trg_eff_la = nMult_trg_eff_la + 1.0/effla;
 					}
-			*/
             
             hMult_ks_bkg[i]->Fill(nMult_trg_ks);
             hMult_la_bkg[i]->Fill(nMult_trg_la);
@@ -545,9 +541,9 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 TVector3 pvector_trg = (*pVect_trg_ks_bkg[i])[ntrg];
                 double eta_trg = pvector_trg.Eta();
                 double phi_trg = pvector_trg.Phi();
-                //double pt_trg = pvector_trg.Pt();
+                double pt_trg = pvector_trg.Pt();
                 
-                //double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta_trg,pt_trg));
+                double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta_trg,pt_trg));
 
                 TVector3 pvector_trg_dau1 = (*pVect_dau_ks_bkg[i])[2*ntrg];
                 double eta_trg_dau1 = pvector_trg_dau1.Eta();
@@ -582,7 +578,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         deltaPhi=deltaPhi+2*PI;
                     
                     //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_ks_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_ks/effks/effweight_ass);
+                    hSignal_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks);///effweight_ass);
                 }
             }
             
@@ -591,9 +587,9 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 TVector3 pvector_trg = (*pVect_trg_la_bkg[i])[ntrg];
                 double eta_trg = pvector_trg.Eta();
                 double phi_trg = pvector_trg.Phi();
-                //double pt_trg = pvector_trg.Pt();
+                double pt_trg = pvector_trg.Pt();
                 
-                //double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(eta_trg,pt_trg));
+                double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(eta_trg,pt_trg));
 
                 TVector3 pvector_trg_dau1 = (*pVect_dau_la_bkg[i])[2*ntrg];
                 double eta_trg_dau1 = pvector_trg_dau1.Eta();
@@ -628,7 +624,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         deltaPhi=deltaPhi+2*PI;
                     
                     //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_la_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_la/effla/effweight_ass);
+                    hSignal_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla);///effweight_ass);
                 }
             }
             
@@ -682,6 +678,11 @@ V0Correlation::beginJob()
     effhisto_ks = (TH2D*)f1.Get("ks_eff_1");
     effhisto_la = (TH2D*)f1.Get("la_eff_1");
 	*/
+
+    edm::FileInPath fip("XiAnalyzer/XiAnalyzer/data/Effhisto.root");
+    TFile f(fip.fullPath().c_str(),"READ");
+    effhisto_ks = (TH2D*)f.Get("EffHistoKs");
+    effhisto_la = (TH2D*)f.Get("EffHistoLa");
     
     hMult = fs->make<TH1D>("mult",";N",600,0,600);
     hMult_ass = fs->make<TH1D>("mult_ass",";N",600,0,600);
@@ -768,9 +769,8 @@ V0Correlation::endJob() {
                 int nMult_trg = pVectTmp_trg.size();
                 int nMult_ass = pVectTmp_ass.size();
                 
-                //double nMult_trg_eff=0;
+                double nMult_trg_eff=0;
                 
-				/*
 				for(int ntrg=0;ntrg<nMult_trg;ntrg++)
 				{
 						TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
@@ -781,16 +781,15 @@ V0Correlation::endJob() {
 
 						nMult_trg_eff = nMult_trg_eff + 1.0/effks;
 				}
-				*/
                 
                 for(int ntrg=0;ntrg<nMult_trg;ntrg++)
                 {
                     TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
-                    //double pt_trg = pvectorTmp_trg.Pt();
+                    double pt_trg = pvectorTmp_trg.Pt();
                     
-                    //double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta_trg,pt_trg));
+                    double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta_trg,pt_trg));
 
                     TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
                     double eta_trg_dau1 = pvector_trg_dau1.Eta();
@@ -825,7 +824,7 @@ V0Correlation::endJob() {
                             deltaPhi=deltaPhi+2*PI;
                         
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_ks[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff/effks/effweight_ass);
+                        hBackground_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks);///effweight_ass);
                     }
                 }
             }
@@ -850,9 +849,8 @@ V0Correlation::endJob() {
                 int nMult_trg = pVectTmp_trg.size();
                 int nMult_ass = pVectTmp_ass.size();
                 
-                //double nMult_trg_eff=0;
+                double nMult_trg_eff=0;
                 
-				/*
 						for(int ntrg=0;ntrg<nMult_trg;ntrg++)
 						{
 								TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
@@ -863,16 +861,15 @@ V0Correlation::endJob() {
 
 								nMult_trg_eff = nMult_trg_eff + 1.0/effla;
 						}
-				*/
                 
                 for(int ntrg=0;ntrg<nMult_trg;ntrg++)
                 {
                     TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
-                    //double pt_trg = pvectorTmp_trg.Pt();
+                    double pt_trg = pvectorTmp_trg.Pt();
                     
-                    //double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(eta_trg,pt_trg));
+                    double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(eta_trg,pt_trg));
 
                     TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
                     double eta_trg_dau1 = pvector_trg_dau1.Eta();
@@ -907,7 +904,7 @@ V0Correlation::endJob() {
                             deltaPhi=deltaPhi+2*PI;
                         
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_la[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff/effla/effweight_ass);
+                        hBackground_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla);///effweight_ass);
                     }
                 }
             }
@@ -939,9 +936,8 @@ V0Correlation::endJob() {
                 int nMult_trg = pVectTmp_trg.size();
                 int nMult_ass = pVectTmp_ass.size();
                 
-                //double nMult_trg_eff=0;
+                double nMult_trg_eff=0;
                 
-				/*
 						for(int ntrg=0;ntrg<nMult_trg;ntrg++)
 						{
 								TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
@@ -951,16 +947,15 @@ V0Correlation::endJob() {
 								double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta_trg,pt_trg));
 								nMult_trg_eff = nMult_trg_eff + 1.0/effks;
 						}
-				*/
                 
                 for(int ntrg=0;ntrg<nMult_trg;ntrg++)
                 {
                     TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
-                    //double pt_trg = pvectorTmp_trg.Pt();
+                    double pt_trg = pvectorTmp_trg.Pt();
                     
-                    //double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta_trg,pt_trg));
+                    double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(eta_trg,pt_trg));
 
                     TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
                     double eta_trg_dau1 = pvector_trg_dau1.Eta();
@@ -995,7 +990,7 @@ V0Correlation::endJob() {
                             deltaPhi=deltaPhi+2*PI;
                         
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_ks_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff/effks/effweight_ass);
+                        hBackground_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks);///effweight_ass);
                     }
                 }
             }
@@ -1020,9 +1015,8 @@ V0Correlation::endJob() {
                 int nMult_trg = pVectTmp_trg.size();
                 int nMult_ass = pVectTmp_ass.size();
                 
-                //double nMult_trg_eff=0;
+                double nMult_trg_eff=0;
                 
-				/*
 						for(int ntrg=0;ntrg<nMult_trg;ntrg++)
 						{
 								TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
@@ -1033,16 +1027,15 @@ V0Correlation::endJob() {
 
 								nMult_trg_eff = nMult_trg_eff + 1.0/effla;
 						}
-				*/
                 
                 for(int ntrg=0;ntrg<nMult_trg;ntrg++)
                 {
                     TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
-                    //double pt_trg = pvectorTmp_trg.Pt();
+                    double pt_trg = pvectorTmp_trg.Pt();
                     
-                    //double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(eta_trg,pt_trg));
+                    double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(eta_trg,pt_trg));
 
                     TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
                     double eta_trg_dau1 = pvector_trg_dau1.Eta();
@@ -1077,7 +1070,7 @@ V0Correlation::endJob() {
                             deltaPhi=deltaPhi+2*PI;
                         
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff/effla/effweight_ass);
+                        hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla);///effweight_ass);
                     }
                 }
             }
