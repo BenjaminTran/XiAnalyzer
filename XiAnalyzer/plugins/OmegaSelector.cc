@@ -316,9 +316,7 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     // Write the collections to the Event
     // Collection is stored as module label : instance
     // e.g. for this the InputTag should be selectV0CandidatesLowXi:Xi
-    cout << "still alive" << endl;
     iEvent.put( theNewOmCands, std::string(v0IDName_) );
-    cout << "did I make it?" << endl;
 }
 
 void OmegaSelector::beginJob() {
