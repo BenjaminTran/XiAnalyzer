@@ -15,8 +15,8 @@ V0Correlation::V0Correlation(const edm::ParameterSet& iConfig)
     etaMax_ass_ = iConfig.getUntrackedParameter<double>("etaMax_ass", 2.4);
     ptMin_ass_ = iConfig.getUntrackedParameter<double>("ptMin_ass", 0.3);
     ptMax_ass_ = iConfig.getUntrackedParameter<double>("ptMax_ass", 3.0);
-    multMax_ = iConfig.getUntrackedParameter<double>("multMax", 220);
-    multMin_ = iConfig.getUntrackedParameter<double>("multMin", 185);
+    multMax_ = iConfig.getUntrackedParameter<double>("multHigh", 220);
+    multMin_ = iConfig.getUntrackedParameter<double>("multLow", 185);
     bkgnum_ = iConfig.getUntrackedParameter<int>("bkgnum", 20);
     ptbin_n_ = iConfig.getUntrackedParameter<int>("ptbin_n", 13);
     peakFactor_ = iConfig.getUntrackedParameter<double>("peakFactor", 2.0);
