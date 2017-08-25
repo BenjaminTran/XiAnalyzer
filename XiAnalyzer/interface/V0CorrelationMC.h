@@ -79,6 +79,8 @@ private:
     // ----------member data ---------------------------
 
     edm::EDGetTokenT<reco::GenParticleCollection> _gnCollection;
+    edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
+    edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
 
     TH1D* hMult;
 

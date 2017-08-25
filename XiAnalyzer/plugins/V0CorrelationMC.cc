@@ -7,6 +7,8 @@ V0CorrelationMC::V0CorrelationMC(const edm::ParameterSet& iConfig)
 
     //now do what ever initialization is needed
     _gnCollection = consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("gnCollection"));
+    _trkSrc         = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("trkSrc"));
+    _vertexCollName = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexCollName"));
     etaMin_trg_   = iConfig.getUntrackedParameter<double>("etaMin_trg", -2.4);
     etaMax_trg_   = iConfig.getUntrackedParameter<double>("etaMax_trg", 2.4);
     etaMin_ass_   = iConfig.getUntrackedParameter<double>("etaMin_ass", -2.4);
@@ -46,7 +48,7 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 
     // select on requirement of valid vertex
     edm::Handle<reco::VertexCollection> vertices;
-    iEvent.getByLabel("offlinePrimaryVertices",vertices);
+    iEvent.getByToken(_vertexCollName,vertices);
     double bestvz=-999.9, bestvx=-999.9, bestvy=-999.9;
     double bestvzError=-999.9, bestvxError=-999.9, bestvyError=-999.9;
     const reco::Vertex & vtx = (*vertices)[0];
@@ -56,10 +58,10 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
     if(bestvz < -15.0 || bestvz>15.0) return;
 
     edm::Handle<reco::GenParticleCollection> genpars;
-    iEvent.getByToken("genParticles",genpars);
+    iEvent.getByToken(_gnCollection,genpars);
 
     edm::Handle<reco::TrackCollection> tracks;
-    iEvent.getByToken("generalTracks", tracks);
+    iEvent.getByToken(_trkSrc, tracks);
 
     for(int i=0;i<18;i++)
     {

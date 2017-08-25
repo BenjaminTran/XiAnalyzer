@@ -3,6 +3,9 @@ import FWCore.ParameterSet.Config as cms
 from XiAnalyzer.XiAnalyzer.v0correlationmc_cfi import *
 
 v0CorrelationMCRapidity = v0CorrelationMC.clone(
+        gnCollection = cms.InputTag('genParticles'),
+        trkSrc         = cms.InputTag('generalTracks'),
+        vertexCollName = cms.InputTag('offlinePrimaryVertices'),
         doRap  = cms.untracked.bool(True),
         rapMin = cms.untracked.double(-1.0),
         rapMax = cms.untracked.double(1.0),
