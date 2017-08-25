@@ -109,7 +109,6 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 
 
         double eta = trk.eta();
-        double rap = trk.rapidity();
         double phi = trk.phi();
         double pt  = trk.pt();
         double mass = trk.mass();
@@ -130,6 +129,7 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                 nm = 1;
             }
         }
+        double nom = nm;
 
 
         if(fabs(id)==310){
