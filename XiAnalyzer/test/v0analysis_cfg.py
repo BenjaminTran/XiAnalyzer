@@ -63,7 +63,8 @@ process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
                                     #'kslaMassPt.root'
 				    #'CasCutLoose.root'
-                                    'V0CorrelationClosureNyes.root'
+                                    #'V0CorrelationClosureNyes.root'
+                                    'V0CorrelationClosure.root'
 				    )
                                   )
 # CORRELATION
@@ -78,7 +79,7 @@ process.V0CorrAnalysisRapidityMC = cms.Sequence(process.selectV0CandidatesNewlam
 process.V0CorrAnalysisRapidityLoose = cms.Sequence(process.selectV0CandidatesNewlambdalooseRapidity*process.selectV0CandidatesNewkshortlooseRapidity*process.v0CorrelationlooseRapidity)
 process.V0CorrAnalysisRapidityTight = cms.Sequence(process.selectV0CandidatesNewlambdatightRapidity*process.selectV0CandidatesNewkshorttightRapidity*process.v0CorrelationtightRapidity)
 
-process.p = cms.Path(process.V0CorrAnalysisRapidity)
+process.p = cms.Path(process.V0CorrAnalysisRapidityMC)
 
 process.schedule = cms.Schedule(process.p)
 
