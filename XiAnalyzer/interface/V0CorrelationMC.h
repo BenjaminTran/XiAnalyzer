@@ -82,6 +82,9 @@ private:
 
     TH1D* hMult;
 
+    TH1D* hRap_ks[18];
+    TH1D* hRap_la[18];
+
     TH1D* hKET_ks[18];
     TH1D* hKET_la[18];
 
@@ -109,8 +112,8 @@ private:
     vector<TVector3> *pVect_ass;
     vector< vector<TVector3> > *pVectVect_ass;
     vector<double> *zvtxVect;
-    vector<double> ptcut_ks;
-    vector<double> ptcut_la;
+    vector<double> ptcut_ks_;
+    vector<double> ptcut_la_;
 
     double etaMin_trg_;
     double etaMax_trg_;

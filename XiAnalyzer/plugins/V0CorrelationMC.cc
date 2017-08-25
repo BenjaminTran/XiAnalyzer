@@ -256,7 +256,7 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                         pVect_trg_la[i]->push_back(pvector);
                         pVect_dau_la[i]->push_back(pvector_dau1);
                         pVect_dau_la[i]->push_back(pvector_dau2);
-                        hRap_la[i]->push_back(track.rapidity());
+                        hRap_la[i]->push_back(trk.rapidity());
                         hPt_la[i]->Fill(pt);
                         double KET = sqrt(mass*mass + pt*pt) - mass;
                         hKET_la[i]->Fill(KET);
@@ -553,12 +553,5 @@ V0CorrelationMC::endJob() {
                 }
             }
         }
-
     }
-
 }
-
-//define this as a plug-in
-DEFINE_FWK_MODULE(V0CorrelationMC);
-
-
