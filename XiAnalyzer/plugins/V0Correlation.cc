@@ -34,6 +34,7 @@ V0Correlation::V0Correlation(const edm::ParameterSet& iConfig)
     ptcut_la_ = iConfig.getUntrackedParameter<std::vector<double> >("ptcut_la");
 
     rejectDaughter_ = iConfig.getUntrackedParameter<bool>("rejectDaughter");
+    doRap_ = iConfig.getUntrackedParameter<bool>("doRap");
     
     _vertexCollName = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexCollName"));
     _trkSrc = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("trkSrc"));
