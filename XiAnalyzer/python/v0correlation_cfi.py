@@ -43,5 +43,6 @@ v0Correlation          = cms.EDAnalyzer('V0Correlation',
         mean_la        = cms.untracked.vdouble(1.11636 ,1.11605 ,1.11598 ,1.116 ,1.11597 ,1.1159 ,1.11585 ,1.11581 ,1.11582 ,1.11584),
         ptcut_ks       = cms.untracked.vdouble(0.2,0.4,0.6,0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,9.0,12.0),
         ptcut_la       = cms.untracked.vdouble(0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,9.0,12.0),
-        rejectDaughter = cms.untracked.bool(True)
+        rejectDaughter = cms.untracked.bool(True),
+        doRap = cms.untracked.bool(False)
         )

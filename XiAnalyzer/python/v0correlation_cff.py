@@ -14,21 +14,25 @@ v0CorrelationRapidity = v0Correlation.clone(
         sigma_la       = cms.untracked.vdouble(0.00228409 ,0.00191783 ,0.00181896 ,0.00188397 ,0.00194954 ,0.00200742 ,0.00207498 ,0.0021983 ,0.00212885 ,0.00236541 ,0.00269782 ,0.00289265 ,0.0057154 ,0.00261388 ,0.00728782),
         mean_la        = cms.untracked.vdouble(1.11668 ,1.11618 ,1.11597 ,1.11593 ,1.1159 ,1.11584 ,1.11582 ,1.11582 ,1.11583 ,1.11585 ,1.11586 ,1.11593 ,1.11587 ,1.11616 ,1.11543),
         ptcut_ks       = cms.untracked.vdouble(0.2,0.4,0.6,0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5,10.0,15.0,20.0,25.0,30.0),
-        ptcut_la       = cms.untracked.vdouble(0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5,10.0,15.0,20.0,25.0,30.0)
+        ptcut_la       = cms.untracked.vdouble(0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5,10.0,15.0,20.0,25.0,30.0),
+        doRap = cms.untracked.bool(True)
         )
 
 v0CorrelationlooseRapidity = v0CorrelationRapidity.clone(
         laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdalooseRapidity:Lambda'),
         ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshortlooseRapidity:Kshort'),
+        doRap = cms.untracked.bool(True)
         )
 
 v0CorrelationtightRapidity = v0CorrelationRapidity.clone(
         laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdatightRapidity:Lambda'),
         ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshorttightRapidity:Kshort'),
+        doRap = cms.untracked.bool(True)
         )
 
 v0CorrelationRapidityMC = v0CorrelationRapidity.clone(
         multHigh = cms.untracked.double(99999999),
-        multLow = cms.untracked.double(-1)
+        multLow = cms.untracked.double(-1),
+        doRap = cms.untracked.bool(True)
         )
 #hltHM = hltHM.clone()
