@@ -17,6 +17,7 @@
 #include <TString.h>
 #include <TCanvas.h>
 #include <TVector3.h>
+#include <TLorentzVector.h>
 #include <TRandom.h>
 
 // user include files
@@ -86,6 +87,7 @@ private:
     TH1D* hEta_la[18];
     TH1D* hRap_ks[18];
     TH1D* hRap_la[18];
+    TH1D* hRap_ks_Lorentz[18];
     
     TH1D* hMult_ks[18];
     TH2D* hSignal_ks[18];
@@ -112,10 +114,10 @@ private:
     TH2D* hSignal_la[18];
     TH2D* hBackground_la[18];
     
-    vector<TVector3> *pVect_trg_ks[18];
-    vector< vector<TVector3> > *pVectVect_trg_ks[18];
-    vector<TVector3> *pVect_trg_la[18];
-    vector< vector<TVector3> > *pVectVect_trg_la[18];
+    vector<TLorentzVector> *pVect_trg_ks[18];
+    vector< vector<TLorentzVector> > *pVectVect_trg_ks[18];
+    vector<TLorentzVector> *pVect_trg_la[18];
+    vector< vector<TLorentzVector> > *pVectVect_trg_la[18];
     
     vector<TVector3> *pVect_dau_ks[18];
     vector< vector<TVector3> > *pVectVect_dau_ks[18];
@@ -126,10 +128,10 @@ private:
     TH2D* hSignal_la_bkg[18];
     TH2D* hBackground_la_bkg[18];
     
-    vector<TVector3> *pVect_trg_ks_bkg[18];
-    vector< vector<TVector3> > *pVectVect_trg_ks_bkg[18];
-    vector<TVector3> *pVect_trg_la_bkg[18];
-    vector< vector<TVector3> > *pVectVect_trg_la_bkg[18];
+    vector<TLorentzVector> *pVect_trg_ks_bkg[18];
+    vector< vector<TLorentzVector> > *pVectVect_trg_ks_bkg[18];
+    vector<TLorentzVector> *pVect_trg_la_bkg[18];
+    vector< vector<TLorentzVector> > *pVectVect_trg_la_bkg[18];
     
     vector<TVector3> *pVect_dau_ks_bkg[18];
     vector< vector<TVector3> > *pVectVect_dau_ks_bkg[18];

@@ -75,9 +75,13 @@ process.TFileService = cms.Service("TFileService",
 # HM
 #process.XiAnalysis = cms.Sequence(process.hltHM*process.selectV0CandidatesLowXi*process.xiCorrelation)
 process.V0CorrAnalysis = cms.Sequence(process.selectV0CandidatesNewlambda*process.selectV0CandidatesNewkshort*process.v0Correlation)
+
 process.V0CorrAnalysisRapidity = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.v0CorrelationRapidity)
+
 process.V0CorrAnalysisRapidityMC = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.v0CorrelationRapidityMC)
+
 process.V0CorrAnalysisRapidityLoose = cms.Sequence(process.selectV0CandidatesNewlambdalooseRapidity*process.selectV0CandidatesNewkshortlooseRapidity*process.v0CorrelationlooseRapidity)
+
 process.V0CorrAnalysisRapidityTight = cms.Sequence(process.selectV0CandidatesNewlambdatightRapidity*process.selectV0CandidatesNewkshorttightRapidity*process.v0CorrelationtightRapidity)
 
 process.V0CorrAnalysisRapidityMCGen = cms.Sequence(process.v0CorrelationMCRapidity)
