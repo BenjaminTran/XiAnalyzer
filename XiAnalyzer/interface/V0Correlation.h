@@ -165,6 +165,7 @@ private:
     double mis_la_range_;
     double mis_ph_range_;
     bool rejectDaughter_;
+    bool doRap_;
     
     edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
     edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
