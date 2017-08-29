@@ -105,7 +105,7 @@ private:
   double VTrkP3DIpSigValue_;
   double xiFlightSigValue_;
   double distanceSigValue_;
-  bool dorap_;
+  bool doRap_;
   double rapMax_;
   double rapMin_;
 };

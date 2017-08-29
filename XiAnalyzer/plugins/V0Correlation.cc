@@ -217,7 +217,17 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             
             for(int i=0;i<ptbin_n_;i++)
             {
-                if(eta<=etaMax_trg_ && eta>=etaMin_trg_ && pt<=ptcut_ks_[i+1] && pt>=ptcut_ks_[i]){
+                double rapOrEtaMaxCut = etaMax_trg_;
+                double rapOrEtaMinCut = etaMin_trg_;
+                double rapOrEta = eta;
+
+                if(doRap_) 
+                {
+                    rapOrEtaMaxCut = 1.0;
+                    rapOrEtaMinCut = -1.0;
+                    rapOrEta = rapidity;
+                }
+                if(rapOrEta<=rapOrEtaMaxCut && rapOrEta>=rapOrEtaMinCut && pt<=ptcut_ks_[i+1] && pt>=ptcut_ks_[i]){
                     hMass_ks[i]->Fill(mass);
                     if(mass<=(mean_ks_[i]+peakFactor_*sigma_ks_[i]) && mass>=(mean_ks_[i]-peakFactor_*sigma_ks_[i])){
                         pVect_trg_ks[i]->push_back(pvector);
@@ -333,7 +343,17 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             
             for(int i=0;i<ptbin_n_;i++)
             {
-                if(eta<=etaMax_trg_ && eta>=etaMin_trg_ && pt<=ptcut_la_[i+1] && pt>=ptcut_la_[i]){
+                double rapOrEtaMaxCut = etaMax_trg_;
+                double rapOrEtaMinCut = etaMin_trg_;
+                double rapOrEta = eta;
+
+                if(doRap_)
+                {
+                    rapOrEtaMaxCut = 1.0;
+                    rapOrEtaMinCut = -1.0;
+                    rapOrEta = rapidity;
+                }
+                if(rapOrEta<=rapOrEtaMaxCut && rapOrEta>=rapOrEtaMinCut && pt<=ptcut_la_[i+1] && pt>=ptcut_la_[i]){
                     hMass_la[i]->Fill(mass);
                     if(mass<=(mean_la_[i]+peakFactor_*sigma_la_[i]) && mass>=(mean_la_[i]-peakFactor_*sigma_la_[i])){
                         pVect_trg_la[i]->push_back(pvector);

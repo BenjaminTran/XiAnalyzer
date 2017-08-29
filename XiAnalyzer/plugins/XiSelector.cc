@@ -67,7 +67,7 @@ XiSelector::XiSelector(const edm::ParameterSet& iConfig)
     xiPi3DIpSigValue_   = iConfig.getParameter<double>("xiPi3DIpSigValue");
     zVertexHigh_        = iConfig.getParameter<double>("zVertexHigh");
     zVertexLow_         = iConfig.getParameter<double>("zVertexLow");
-    dorap_              = iConfig.getParameter<bool>("dorap");
+    doRap_              = iConfig.getParameter<bool>("doRap");
     rapMax_             = iConfig.getParameter<double>("rapMax");
     rapMin_             = iConfig.getParameter<double>("rapMin");
     _XiCollection       = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag(v0CollName_,v0IDName_,"ANASKIM"));
@@ -150,9 +150,14 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         //double py_xi   = v0cand->py();
         //double pz_xi   = v0cand->pz();
 
-        if(dorap_ && (rap_xi > rapMax_ || rap_xi < rapMin_)) continue;
+        if(doRap_)
+        {
+            if(rap_xi > rapMax_ || rap_xi < rapMin_) continue;
+        }
         else
+        {
             if(eta_xi > etaCutMax_ || eta_xi < etaCutMin_) continue;
+        }
 
         //secvz  = v0cand->vz();
         //secvx  = v0cand->vx();
