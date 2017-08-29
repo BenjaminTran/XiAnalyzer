@@ -759,10 +759,10 @@ V0Correlation::beginJob()
     
     for(int i=0; i<ptbin_n_; i++)
     {
-        hKET_ks[i] = fs->make<TH1D>(Form("KETkshort_pt%d",i),";GeV",25000,0,12.5);
-        hKET_la[i] = fs->make<TH1D>(Form("KETlambda_pt%d",i),";GeV",25000,0,12.5);
-        hPt_ks[i] = fs->make<TH1D>(Form("Ptkshort_pt%d",i),";GeV",25000,0,12.5);
-        hPt_la[i] = fs->make<TH1D>(Form("Ptlambda_pt%d",i),";GeV",25000,0,12.5);
+        hKET_ks[i] = fs->make<TH1D>(Form("KETkshort_pt%d",i),";GeV",50000,0,25);
+        hKET_la[i] = fs->make<TH1D>(Form("KETlambda_pt%d",i),";GeV",50000,0,25);
+        hPt_ks[i] = fs->make<TH1D>(Form("Ptkshort_pt%d",i),";GeV",50000,0,25);
+        hPt_la[i] = fs->make<TH1D>(Form("Ptlambda_pt%d",i),";GeV",50000,0,25);
         hEta_ks[i] = fs->make<TH1D>(Form("Etakshort_pt%d",i),";eta",24,-2.4,2.4);
         hRap_ks[i] = fs->make<TH1D>(Form("Rapkshort_pt%d",i),";y",30,-1.5,1.5);
         hRap_ks_Lorentz[i] = fs->make<TH1D>(Form("RapksLorentz_pt%d",i),";y",30,-1.5,1.5);
@@ -780,10 +780,10 @@ V0Correlation::beginJob()
         pVectVect_trg_la[i] = new vector< vector<TLorentzVector> >;
         pVectVect_dau_ks[i] = new vector< vector<TVector3> >;
         pVectVect_dau_la[i] = new vector< vector<TVector3> >;
-        hKET_ks_bkg[i] = fs->make<TH1D>(Form("KETkshort_bkg_pt%d",i),";GeV",25000,0,12.5);
-        hKET_la_bkg[i] = fs->make<TH1D>(Form("KETlambda_bkg_pt%d",i),";GeV",25000,0,12.5);
-        hPt_ks_bkg[i] = fs->make<TH1D>(Form("Ptkshort_bkg_pt%d",i),";GeV",25000,0,12.5);
-        hPt_la_bkg[i] = fs->make<TH1D>(Form("Ptlambda_bkg_pt%d",i),";GeV",25000,0,12.5);
+        hKET_ks_bkg[i] = fs->make<TH1D>(Form("KETkshort_bkg_pt%d",i),";GeV",50000,0,25);
+        hKET_la_bkg[i] = fs->make<TH1D>(Form("KETlambda_bkg_pt%d",i),";GeV",50000,0,25);
+        hPt_ks_bkg[i] = fs->make<TH1D>(Form("Ptkshort_bkg_pt%d",i),";GeV",50000,0,25);
+        hPt_la_bkg[i] = fs->make<TH1D>(Form("Ptlambda_bkg_pt%d",i),";GeV",50000,0,25);
         hEta_ks_bkg[i] = fs->make<TH1D>(Form("Etakshort_bkg_pt%d",i),";GeV",24,-2.4,2.4);
         hRap_ks_bkg[i] = fs->make<TH1D>(Form("Rapkshort_bkg_pt%d",i),";y",30,-1.5,1.5);
         hEta_la_bkg[i] = fs->make<TH1D>(Form("Etalambda_bkg_pt%d",i),";GeV",24,-2.4,2.4);
