@@ -304,13 +304,16 @@ HadronCorrelationGen::beginJob(){
         pVectVect_trg[i] = new vector< vector<TVector3> >;
     }
     
+    pVect2_ass = new vector< vector<TVector3> >;
     pVectVect_ass = new vector< vector<TVector3> >;
     zvtxVect = new vector<double>;
+    cout << "End of beginJob" << endl;
 }
 
 // ------------ method called once each job just after ending the event loop  ------------
 void
 HadronCorrelationGen::endJob() {
+    cout << "End event loop" << endl;
     int nevttotal_ass = (int)pVectVect_ass->size();
     int nevttotal_ass_Reco = (int)pVect2_ass->size();
     
