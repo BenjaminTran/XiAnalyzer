@@ -83,7 +83,7 @@ private:
     vector< vector<TVector3> > *pVectVect_trg[18];
     
     vector<TVector3> *pVect_ass;
-    vector<TVector3> *pVect_trkass;
+    vector<TVector3> *pepVect_trkass;
     vector< vector<TVector3> > *pVectVect_ass;
     vector< vector<TVector3> > *pVect2_ass;
     vector<double> *zvtxVect;
