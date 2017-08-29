@@ -8,7 +8,7 @@ hltHM = hltHM.clone()
 
 
 xiCorrelationRapidity = xiCorrelation.clone(
-        xiCollection = cms.InputTag('selectV0CandidatesLowXiRapidity:Xi')
+        xiCollection = cms.InputTag('selectV0CandidatesLowXiRapidity:Xi'),
         ptBin         = cms.vdouble(1.0, 1.4, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10, 20),
         PtBinNum      = cms.int32(10),
         xiMassMean    = cms.vdouble(1.32338 ,1.3227 ,1.32243 ,1.32235 ,1.32224 ,1.32218 ,1.32214 ,1.32211 ,1.32208 ,1.32236),
