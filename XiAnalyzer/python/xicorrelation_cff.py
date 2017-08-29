@@ -16,9 +16,9 @@ xiCorrelationRapidity = xiCorrelation.clone(
         )
 
 xiCorrelationRapidityLoose = xiCorrelationRapidity.clone(
-        xiCollection = cms.InputTag('selectV0CandidatesLowXiRapidityLoose:Xi')
+        xiCollection = cms.InputTag('selectV0CandidatesXiRapidityLoose:Xi')
         )
 
 xiCorrelationRapidityTight = xiCorrelationRapidity.clone(
-        xiCollection = cms.InputTag('selectV0CandidatesLowXiRapidityTight:Xi')
+        xiCollection = cms.InputTag('selectV0CandidatesXiRapidityTight:Xi')
         )
