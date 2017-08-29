@@ -31,6 +31,7 @@ process.load("XiAnalyzer.XiAnalyzer.v0selector_cff")
 process.load("XiAnalyzer.XiAnalyzer.xicorrelation_cff")
 process.load("XiAnalyzer.XiAnalyzer.v0correlation_cff")
 process.load("XiAnalyzer.XiAnalyzer.v0correlationmc_cff")
+process.load("XiAnalyzer.XiAnalyzer.hadroncorrelationgen_cff")
 process.load("XiAnalyzer.XiAnalyzer.massptproducer_cff")
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
@@ -65,7 +66,7 @@ process.TFileService = cms.Service("TFileService",
                                     #'kslaMassPt.root'
 				    #'CasCutLoose.root'
                                     #'V0CorrelationClosureNyes.root'
-                                    'V0CorrelationClosureB.root'
+                                    'V0CorrelationClosureHadron.root'
 				    )
                                   )
 # CORRELATION
@@ -85,8 +86,9 @@ process.V0CorrAnalysisRapidityLoose = cms.Sequence(process.selectV0CandidatesNew
 process.V0CorrAnalysisRapidityTight = cms.Sequence(process.selectV0CandidatesNewlambdatightRapidity*process.selectV0CandidatesNewkshorttightRapidity*process.v0CorrelationtightRapidity)
 
 process.V0CorrAnalysisRapidityMCGen = cms.Sequence(process.v0CorrelationMCRapidity)
+process.HadCorrAnalysisRapidityMCGen = cms.Sequence(process.HadronCorrelation)
 
-process.p = cms.Path(process.V0CorrAnalysisRapidityMC)
+process.p = cms.Path(process.HadCorrAnalysisRapidityMCGen)
 
 process.schedule = cms.Schedule(process.p)
 
