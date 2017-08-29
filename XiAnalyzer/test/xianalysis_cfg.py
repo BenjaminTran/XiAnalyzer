@@ -37,7 +37,7 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(60000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(5000))
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -76,7 +76,7 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
                                     #'V0Correlation.root'
-                                    'XiCorrelationRapidityB.root'
+                                    'XiCorrelationRapidityLoose.root'
 				    )
                                   )
 # CORRELATION
@@ -86,11 +86,18 @@ process.TFileService = cms.Service("TFileService",
 # HM
 #process.XiAnalysis = cms.Sequence(process.hltHM*process.selectV0CandidatesLowXi*process.xiCorrelation)
 process.XiCorrAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.xiCorrelation)
+
 process.XiCorrAnalysisRapidity = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.xiCorrelationRapidity)
-process.RapidityAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.v0CorrelationRapidity*process.xiCorrelationRapidity)
+
+process.XiCorrAnalysisRapidityLoose = cms.Sequence(process.selectV0CandidatesXiRapidityLoose*process.xiCorrelationRapidityLoose)
+
+process.XiCorrAnalysisRapidityTight = cms.Sequence(process.selectV0CandidatesXiRapidityTight*process.xiCorrelationRapidityTight)
+
+# process.RapidityAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.v0CorrelationRapidity*process.xiCorrelationRapidity)
+
 process.OmCorrAnalysis = cms.Sequence(process.selectOmegaCandidatesNew)
 
-process.p = cms.Path(process.RapidityAnalysis)
+process.p = cms.Path(process.XiCorrAnalysisRapidityLoose)
 
 process.schedule = cms.Schedule(process.p)
 
