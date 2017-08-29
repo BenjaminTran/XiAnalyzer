@@ -4,18 +4,18 @@ HadronCorrelationGen::HadronCorrelationGen(const edm::ParameterSet& iConfig)
 
 {
     //now do what ever initialization is needed
-    etaMin_trg_ = iConfig.getParameter<double>("etaMin_trg", -2.4);
-    etaMax_trg_ = iConfig.getParameter<double>("etaMax_trg", 2.4);
-    etaMin_ass_ = iConfig.getParameter<double>("etaMin_ass", -2.4);
-    etaMax_ass_ = iConfig.getParameter<double>("etaMax_ass", 2.4);
-    ptMin_ass_ = iConfig.getParameter<double>("ptMin_ass", 0.3);
-    ptMax_ass_ = iConfig.getParameter<double>("ptMax_ass", 3.0);
-    bkgFactor_ = iConfig.getParameter<int>("bkgFactor", 20);
+    etaMin_trg_ = iConfig.getParameter<double>("etaMin_trg");
+    etaMax_trg_ = iConfig.getParameter<double>("etaMax_trg");
+    etaMin_ass_ = iConfig.getParameter<double>("etaMin_ass");
+    etaMax_ass_ = iConfig.getParameter<double>("etaMax_ass");
+    ptMin_ass_ = iConfig.getParameter<double>("ptMin_ass");
+    ptMax_ass_ = iConfig.getParameter<double>("ptMax_ass");
+    bkgFactor_ = iConfig.getParameter<int>("bkgFactor");
     multMax_ = iConfig.getParameter<double>("multMax");
     multMin_ = iConfig.getParameter<double>("multMin");
     rapMax_ = iConfig.getParameter<double>("rapMax");
     rapMin_ = iConfig.getParameter<double>("rapMin");
-    ptcut = iConfig.getParameter<std::vector<double> >("ptcut");
+    ptcut_ = iConfig.getParameter<std::vector<double> >("ptcut");
     _trkSrc         = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("trkSrc"));
     _vertexCollName = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexCollName"));
     _gnCollection   = consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("gnCollection"));
@@ -108,7 +108,7 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 
             for(int i=0;i<18;i++)
             {
-                if(rap<=rapMax_ && rap>=rapMin_ && pt<=ptcut[i+1] && pt>=ptcut[i] && fabs(trk.charge())==1 && st==1){
+                if(rap<=rapMax_ && rap>=rapMin_ && pt<=ptcut_[i+1] && pt>=ptcut_[i] && fabs(trk.charge())==1 && st==1){
                     hPt[i]->Fill(pt,1.0/effweight);
                     pVect_trg[i]->push_back(pvector);
                 }
@@ -183,12 +183,12 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
         //
         // Make signal histogram for pairing of two charged primary tracks
         //
-        int pepVect_trkhad_size = (int)pVect_trk->size();
+        int pepVect_trkhad_size = (int)pVect_ass->size();
         HadPerEvt->Fill(pepVect_trkhad_size);
 
         for(int trktrg1 = 0; trktrg1 < pepVect_trkhad_size; trktrg1++)
         {
-            TVector3 pepVect_had1 = (*pVect_trk)[trktrg1];
+            TVector3 pepVect_had1 = (*pVect_ass)[trktrg1];
             double eta_trg = pepVect_had1.Eta();
             double phi_trg = pepVect_had1.Phi();
 
@@ -197,7 +197,7 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
                 if(trktrg2 == trktrg1){
                     continue;
                 }
-                TVector3 pepVect_had2 = (*pVect_trk)[trktrg2];
+                TVector3 pepVect_had2 = (*pVect_ass)[trktrg2];
                 double eta_ass = pepVect_had2.Eta();
                 double phi_ass = pepVect_had2.Phi();
 
@@ -341,7 +341,7 @@ HadronCorrelationGen::endJob() {
     for(int bkgnum = 0; bkgnum<bkgFactor_; bkgnum++)
     {
         int ncount = 0;
-        for(int nevt_ass=0; nevttotal_ass<; nevt_ass++)
+        for(int nevt_ass=0; nevt_ass<nevttotal_ass; nevt_ass++)
         {
             int nevt_trg = gRandom->Integer(nevttotal_ass);
             if(nevt_trg == nevt_ass)

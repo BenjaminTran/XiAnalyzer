@@ -58,7 +58,7 @@ private:
     
     // ----------member data ---------------------------
 
-    edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _vertexCollName;
+    edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
     edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
     edm::EDGetTokenT<reco::GenParticleCollection> _gnCollection;
 
@@ -84,6 +84,7 @@ private:
     vector< vector<TVector3> > *pVectVect_ass;
     vector< vector<TVector3> > *pVect2_ass;
     vector<double> *zvtxVect;
+    vector<double> ptcut_;
     
     double etaMin_trg_;
     double etaMax_trg_;
