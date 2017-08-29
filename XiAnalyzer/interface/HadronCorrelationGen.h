@@ -76,11 +76,14 @@ private:
     TH2F* effhisto;
     TH2D* SignalHad;
     TH2D* BackgroundHad;
+    TH2D* SignalHadReco;
+    TH2D* BackgroundHadReco;
     
     vector<TVector3> *pVect_trg[18];
     vector< vector<TVector3> > *pVectVect_trg[18];
     
     vector<TVector3> *pVect_ass;
+    vector<TVector3> *pVect_trkass;
     vector< vector<TVector3> > *pVectVect_ass;
     vector< vector<TVector3> > *pVect2_ass;
     vector<double> *zvtxVect;

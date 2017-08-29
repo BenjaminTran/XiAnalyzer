@@ -40,6 +40,8 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 {
     using namespace edm;
 
+    pepVect_trkass = new vector<TVector3>;
+
     // select on requirement of valid vertex
     edm::Handle<reco::VertexCollection> vertices;
     iEvent.getByToken(_vertexCollName,vertices);
@@ -81,8 +83,18 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
         
         double eta = trk.eta();
         double pt  = trk.pt();
+        double phi = trk.phi();
 
         nMult_ass_good++;
+
+        TVector3 primPEPvector;
+        primPEPvector.SetPtEtaPhi(pt,eta,phi);
+        if(eta <= etaMax_ass_  &&
+                eta >= etaMin_ass_ &&
+                pt <= ptMax_ass_ && //pT associated window
+                pt >= ptMin_ass_ //pT associated window
+          )
+            pepVect_trkass->push_back(primPEPvector);
     }
     hMult_selected->Fill(nMult_ass_good);
     
@@ -181,7 +193,7 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
             pVectVect_trg[i]->push_back(*pVect_trg[i]);
         }
         //
-        // Make signal histogram for pairing of two charged primary tracks
+        // Make signal histogram for pairing of two charged primary GEN tracks
         //
         int pepVect_trkhad_size = (int)pVect_ass->size();
         HadPerEvt->Fill(pepVect_trkhad_size);
@@ -218,6 +230,43 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
         }
 
 
+        // Make signal histogram for pairing of two charged primary RECO tracks
+        //
+        int pepVect_trkass_size = (int)pepVect_trkass->size();
+
+        for(int trktrg1 = 0; trktrg1 < pepVect_trkass_size; trktrg1++)
+        {
+            TVector3 pepVect_had1 = (*pepVect_trkass)[trktrg1];
+            double eta_trg = pepVect_had1.Eta();
+            double phi_trg = pepVect_had1.Phi();
+
+            for(int trktrg2 = 0; trktrg2 < pepVect_trkass_size; trktrg2++)
+            {
+                if(trktrg2 == trktrg1){
+                    continue;
+                }
+                TVector3 pepVect_had2 = (*pepVect_trkass)[trktrg2];
+                double eta_ass = pepVect_had2.Eta();
+                double phi_ass = pepVect_had2.Phi();
+
+                double dEta = eta_ass - eta_trg;
+                double dPhi = phi_ass - phi_trg;
+
+                if(dPhi > PI)
+                    dPhi=dPhi-2*PI;
+                if(dPhi < -PI)
+                    dPhi=dPhi+2*PI;
+                if(dPhi > -PI && dPhi < -PI/2.0)
+                    dPhi=dPhi+2*PI;
+
+                // To reduce jet fragmentation contributions
+                if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
+                SignalHadReco->Fill(dEta, dPhi);
+            }
+        }
+
+
+        pVect2_ass->push_back(*pepVect_trkass);
         pVectVect_ass->push_back(*pVect_ass);
         zvtxVect->push_back(bestvz);
 
@@ -226,6 +275,7 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
             delete pVect_trg[i];
         }
 
+        delete pepVect_trkass;
         delete pVect_ass;
     }
 }
@@ -240,6 +290,8 @@ HadronCorrelationGen::beginJob(){
     HadPerEvt       = fs->make<TH1D>("HadPerEvent", "Hadrons per Event", 1500, 0, 1500);
     BackgroundHad   = fs->make<TH2D>("BackgroundHad", "BkgHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     SignalHad       = fs->make<TH2D>("SignalHad", "SigHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+    BackgroundHadReco   = fs->make<TH2D>("BackgroundHadReco", "BkgHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+    SignalHadReco       = fs->make<TH2D>("SignalHadReco", "SigHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     
     for(int i=0;i<18;i++)
     {
@@ -260,6 +312,7 @@ HadronCorrelationGen::beginJob(){
 void
 HadronCorrelationGen::endJob() {
     int nevttotal_ass = (int)pVectVect_ass->size();
+    int nevttotal_ass_Reco = (int)pVect2_ass->size();
     
     // Calculate background
     for(int i=0;i<18;i++)
@@ -335,7 +388,7 @@ HadronCorrelationGen::endJob() {
     }
 
     //
-    // hadron paired with hadron
+    // hadron paired with hadron GEN
     //
 
     for(int bkgnum = 0; bkgnum<bkgFactor_; bkgnum++)
@@ -388,6 +441,65 @@ HadronCorrelationGen::endJob() {
                     if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
                     BackgroundHad->Fill(dEta, dPhi, 1.0/nMult_trg);
+                }
+            }
+        }
+    }
+
+    //
+    // hadron paired with hadron RECO
+    //
+
+    for(int bkgnum = 0; bkgnum<bkgFactor_; bkgnum++)
+    {
+        int ncount = 0;
+        for(int nevt_ass=0; nevt_ass<nevttotal_ass_Reco; nevt_ass++)
+        {
+            int nevt_trg = gRandom->Integer(nevttotal_ass);
+            if(nevt_trg == nevt_ass)
+            {
+                nevt_ass--;
+                continue;
+            }
+            if(fabs((*zvtxVect)[nevt_trg] - (*zvtxVect)[nevt_ass]) > 0.5)
+            {
+                nevt_ass--;
+                ncount++;
+                if(ncount > 5000)
+                {
+                    nevt_ass++;
+                    ncount=0;
+                }
+                continue;
+            }
+
+            vector<TVector3> pepVectTmp_trg = (*pVect2_ass)[nevt_trg];
+            vector<TVector3> pepVectTmp_ass = (*pVect2_ass)[nevt_ass];
+            int nMult_trg = pepVectTmp_trg.size();
+            int nMult_ass = pepVectTmp_ass.size();
+
+            for(int ntrg=0; ntrg<nMult_trg; ntrg++)
+            {
+                TVector3 pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                double eta_trg = pvectorTmp_trg.Eta();
+                double phi_trg = pvectorTmp_trg.Phi();
+
+                for(int nass=0; nass<nMult_ass; nass++)
+                {
+                    TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
+                    double eta_ass = pvectorTmp_ass.Eta();
+                    double phi_ass = pvectorTmp_ass.Phi();
+
+                    double dEta = eta_ass - eta_trg;
+                    double dPhi = phi_ass - phi_trg;
+
+                    if(dPhi > PI)                    dPhi=dPhi-2*PI;
+                    if(dPhi < -PI)                   dPhi=dPhi+2*PI;
+                    if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
+
+                    if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
+
+                    BackgroundHadReco->Fill(dEta, dPhi);
                 }
             }
         }
