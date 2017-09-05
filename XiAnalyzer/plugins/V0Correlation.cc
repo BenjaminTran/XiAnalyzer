@@ -128,6 +128,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
     hMult->Fill(nMult_ass_good);
     
     if(nMult_ass_good<multMax_ && nMult_ass_good>=multMin_){
+        hMult_accept->Fill(nMult_ass_good);
         for(unsigned it=0; it<v0candidates_ks->size(); ++it){
             
             const reco::VertexCompositeCandidate & trk = (*v0candidates_ks)[it];
@@ -776,6 +777,7 @@ V0Correlation::beginJob()
     
     hMult = fs->make<TH1D>("mult",";N",600,0,600);
     hMult_ass = fs->make<TH1D>("mult_ass",";N",600,0,600);
+    hMult_accept = fs->make<TH1D>("mult_acc",";N",600,0,600);
     
     for(int i=0; i<ptbin_n_; i++)
     {

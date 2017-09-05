@@ -69,6 +69,7 @@ private:
     // ----------member data ---------------------------
     
     TH1D* hMult;
+    TH1D* hMult_accept;
     
     TH2F* effhisto;
     TH2D* effhisto_ks;
