@@ -122,14 +122,14 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 
             if(trk.eta()<=etaMax_ass_ && trk.eta()>=etaMin_ass_ && trk.pt()<=ptMax_ass_ && trk.pt()>=ptMin_ass_ && fabs(trk.charge())==1 && st==1) pVect_ass->push_back(pvector);
 
-            int nm;
+            //int nm;
 
-            if(trk.numberOfMothers()==1){
-                const reco::Candidate * mom = trk.mother();
-                if(mom->numberOfMothers()!=0){
-                    nm = 1;
-                }
-            }
+            //if(trk.numberOfMothers()==1){
+                //const reco::Candidate * mom = trk.mother();
+                //if(mom->numberOfMothers()!=0){
+                    //nm = 1;
+                //}
+            //}
 
             if(fabs(id)==310){
                 double eta_dau1 = 0;
