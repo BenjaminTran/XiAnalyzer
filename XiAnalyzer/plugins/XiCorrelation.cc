@@ -47,6 +47,7 @@ XiCorrelation::XiCorrelation(const edm::ParameterSet& iConfig)
     xiMassSigma_    = iConfig.getParameter<std::vector<double> >("xiMassSigma");
     zVtxHigh_       = iConfig.getParameter<double>("zVtxHigh");
     zVtxLow_        = iConfig.getParameter<double>("zVtxLow");
+    doRap_          = iConfig.getParameter<bool>("doRap");
 }
 
 
@@ -92,8 +93,8 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     pepVect_trkass = new vector<TVector3>;
     for(int i=0; i<PtBinNum_; i++)
     {
-        pepVect_Xi_peak[i]    = new vector<TVector3>;
-        pepVect_Xi_side[i]    = new vector<TVector3>;
+        pepVect_Xi_peak[i]    = new vector<TLorentzVector>;
+        pepVect_Xi_side[i]    = new vector<TLorentzVector>;
     }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
@@ -144,10 +145,19 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             double xi_rap = xiCand->rapidity();
             MassPt->Fill(mass,xi_pT);
             double Ket = sqrt(mass*mass + xi_pT*xi_pT) - mass;
+            double EffXchoice = 0;
+
+            if(doRap_)
+                EffXchoice = xi_rap;
+            else
+                EffXchoice = xi_eta;
+
+            //efficiency
+            double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,xi_pT));
 
             // Make vector of Xi Candidate parameters
-            TVector3 xiPEPvector;
-            xiPEPvector.SetPtEtaPhi(xi_pT,xi_eta,xi_phi);
+            TLorentzVector xiPEPvector;
+            xiPEPvector.SetPtEtaPhiE(xi_pT,xi_eta,xi_phi,xi_rap);
             for(int i=0; i<PtBinNum_;i++)
             {
                 if(xi_pT <= ptBin_[i+1] && xi_pT >= ptBin_[i])
@@ -157,19 +167,20 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     if(mass >= (xiMassMean_[i] - peakFactor_*xiMassSigma_[i]) && mass <= (xiMassMean_[i] + peakFactor_*xiMassSigma_[i]))
                     {
                         pepVect_Xi_peak[i]->push_back(xiPEPvector);
-                        KET_xi[i]->Fill(Ket);
-                        Pt_xi[i]->Fill(xi_pT);
-                        Eta_xi[i]->Fill(xi_eta);
-                        rap_xi[i]->Fill(xi_rap);
+                        KET_xi[i]->Fill(Ket,1.0/effxi);
+                        Pt_xi[i]->Fill(xi_pT,1.0/effxi);
+                        Eta_xi[i]->Fill(xi_eta,1.0/effxi);
+                        rap_xi[i]->Fill(xi_rap,1.0/effxi);
+                        rap_xi_Lorentz[i]->Fill(xiPEPvector.E(),1.0/effxi);
                     }
                     //sideband
                     if((mass <= (xiMassMean_[i] - sideFactor_*xiMassSigma_[i]) && mass >= 1.25) || (mass <= 1.40 && mass >= (xiMassMean_[i] + sideFactor_*xiMassSigma_[i])))
                     {
                         pepVect_Xi_side[i]->push_back(xiPEPvector);
-                        KET_xi_bkg[i]->Fill(Ket);
-                        Pt_xi_bkg[i]->Fill(xi_pT);
-                        Eta_xi_bkg[i]->Fill(xi_eta);
-                        rap_xi_bkg[i]->Fill(xi_rap);
+                        KET_xi_bkg[i]->Fill(Ket,1.0/effxi);
+                        Pt_xi_bkg[i]->Fill(xi_pT,1.0/effxi);
+                        Eta_xi_bkg[i]->Fill(xi_eta,1.0/effxi);
+                        rap_xi_bkg[i]->Fill(xi_rap,1.0/effxi);
                     }
                 }
             }
@@ -217,12 +228,45 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             int pepVect_trkass_size = (int)pepVect_trkass->size();
             TrkassPerEvt->Fill(pepVect_trkass_size);
 
+            double nMult_trg_eff_xi = 0;
+
+            for(int ntrg = 0; ntrg<pepVect_Xi_peak_size; ntrg++)
+            {
+                TLorentzVector pepVect_trg = (*pepVect_Xi_peak[i])[xi_trg];
+                double pt_trg = pepVect_trg.Pt();
+                double eta_trg       = pepVect_trg.Eta();
+                double phi_trg       = pepVect_trg.Phi();
+                double rap_trg = pepVect_trg.E();
+                double EffXchoice = 0;
+
+                if(doRap_)
+                    EffXchoice = rap_trg;
+                else
+                    EffXchoice = eta_trg;
+
+                double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+
+                nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
+            }
+
+            mult_xi[i]->Fill(nMult_trg_eff_xi);
+
             // PEAK REGION signal
             for(int xi_trg = 0; xi_trg < pepVect_Xi_peak_size; xi_trg++)
             {
-                TVector3 pepVect_trg = (*pepVect_Xi_peak[i])[xi_trg];
-                double eta_trg       = pepVect_trg.Eta();
-                double phi_trg       = pepVect_trg.Phi();
+                TLorentzVector pepVect_trg = (*pepVect_Xi_peak[i])[xi_trg];
+                double pt_trg     = pepVect_trg.Pt();
+                double eta_trg    = pepVect_trg.Eta();
+                double phi_trg    = pepVect_trg.Phi();
+                double rap_trg    = pepVect_trg.E();
+                double EffXchoice = 0;
+
+                if(doRap_)
+                    EffXchoice = rap_trg;
+                else
+                    EffXchoice = eta_trg;
+
+                double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
                 for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
                 {
@@ -242,16 +286,48 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
                     // To reduce jet fragmentation contributions
                     if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                    SignalXiPeak[i]->Fill(dEta, dPhi);//, 1.0/pepVect_Xi_size);
+                    SignalXiPeak[i]->Fill(dEta, dPhi,1.0/nMult_trg_eff_xi/effxi);
                 }
             }
 
+            for(int ntrg = 0; ntrg<pepVect_Xi_side_size; ntrg++)
+            {
+                TLorentzVector pepVect_trg = (*pepVect_Xi_side[i])[xi_trg];
+                double pt_trg     = pepVect_trg.Pt();
+                double eta_trg    = pepVect_trg.Eta();
+                double phi_trg    = pepVect_trg.Phi();
+                double rap_trg    = pepVect_trg.E();
+                double EffXchoice = 0;
+
+                if(doRap_)
+                    EffXchoice = rap_trg;
+                else
+                    EffXchoice = eta_trg;
+
+                double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+
+                nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
+            }
+
+            mult_xi_bkg->Fill(nMult_trg_eff_xi);
+
+            mult_xi[i]->Fill(nMult_trg_eff_xi);
             // SIDEBAND REGION signal
             for(int xi_trg = 0; xi_trg < pepVect_Xi_side_size; xi_trg++)
             {
-                TVector3 pepVect_trg = (*pepVect_Xi_side[i])[xi_trg];
-                double eta_trg       = pepVect_trg.Eta();
-                double phi_trg       = pepVect_trg.Phi();
+                TLorentzVector pepVect_trg = (*pepVect_Xi_side[i])[xi_trg];
+                double pt_trg     = pepVect_trg.Pt();
+                double eta_trg    = pepVect_trg.Eta();
+                double phi_trg    = pepVect_trg.Phi();
+                double rap_trg    = pepVect_trg.E();
+                double EffXchoice = 0;
+
+                if(doRap_)
+                    EffXchoice = rap_trg;
+                else
+                    EffXchoice = eta_trg;
+
+                double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
                 for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
                 {
@@ -271,7 +347,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
                     // To reduce jet fragmentation contributions
                     if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                    SignalXiSide[i]->Fill(dEta, dPhi);//, 1.0/pepVect_Xi_size);
+                    SignalXiSide[i]->Fill(dEta, dPhi, 1.0/nMult_trg_eff_xi/effxi);
                 }
             }
         }
@@ -374,6 +450,10 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 void
 XiCorrelation::beginJob()
 {
+    TH1::SetDefaultSumw2();
+    edm::FileInPath fip("XiAnalyzer/XiAnalyzer/data/EffhistoXi.root");
+    TFile f(fip.fullPath().c_str(),"READ");
+    effhisto_xi = (TH2D*)f.Get("EffHistoXi");
 
     nTrk            = fs->make<TH1D>("nTrk", "nTrk", 250, 0, 250);
     nEvt            = fs->make<TH1D>("nEvt","nEvt",10,0,10);
@@ -396,12 +476,15 @@ XiCorrelation::beginJob()
         Mass_xi[i]          = fs->make<TH1D>(Form("Mass_xi_pt%d",i),";GeV",2000,0.8,1.8);
         Pt_xi[i]            = fs->make<TH1D>(Form("Pt_xi_pt%d",i),";GeV",40000,0,20);
         Pt_xi_bkg[i]        = fs->make<TH1D>(Form("Pt_xi_bkg_pt%d",i),";GeV",40000,0,20);
-        Eta_xi[i]           = fs->make<TH1D>(Form("Eta_xi_pt%d",i),";eta",24,-2.4,2.4);
-        Eta_xi_bkg[i]       = fs->make<TH1D>(Form("Eta_xi_bkg_pt%d",i),";eta",24,-2.4,2.4);
+        Eta_xi[i]           = fs->make<TH1D>(Form("Eta_xi_pt%d",i),";eta",30,-3.0,3.0);
+        Eta_xi_bkg[i]       = fs->make<TH1D>(Form("Eta_xi_bkg_pt%d",i),";eta",30,-3.0,3.0);
         rap_xi[i]           = fs->make<TH1D>(Form("rap_xi_pt%d",i),";y",100,-5,5);
         rap_xi_bkg[i]       = fs->make<TH1D>(Form("rap_xi_bkg_pt%d",i),";y",100,-5,5);
-        PepVect2_Xi_peak[i] = new vector< vector<TVector3> >;
-        PepVect2_Xi_side[i] = new vector< vector<TVector3> >;
+        rap_xi_Lorentz[i]   = fs->make<TH1D>(Form("rap_xi_Lorentz_pt%d",i),";y",100,-5,5);
+        mult_xi[i] = fs->make<TH1D>(Form("mult_xi_pt%d",i),250,0,250);
+        mult_xi_bkg[i] = fs->make<TH1D>(Form("mult_xi_bkg_pt%d",i),250,0,250);
+        PepVect2_Xi_peak[i] = new vector< vector<TLorentzVector> >;
+        PepVect2_Xi_side[i] = new vector< vector<TLorentzVector> >;
     }
 
     // For Background calculations which must be done in the endJob function
@@ -414,39 +497,39 @@ XiCorrelation::beginJob()
 void
 XiCorrelation::endJob()
 {
+    int PepVect2_ass_size = (int)PepVect2_ass->size();
     for(int i=0; i<PtBinNum_; i++)
     {
         // Make background histograms
         // Xi paired with hadron
         int PepVect2_Xi_peak_size = (int)PepVect2_Xi_peak[i]->size();
         int PepVect2_Xi_side_size = (int)PepVect2_Xi_side[i]->size();
-        int PepVect2_ass_size = (int)PepVect2_ass->size();
 
         // PEAK REGION Background
         for(int bkgnum = 0; bkgnum<bkgnum_; bkgnum++)
         {
             int ncount = 0;
-            for(int nevt_ass=0; nevt_ass<PepVect2_ass_size; nevt_ass++)
+            for(int nevt_trg=0; nevt_trg<PepVect2_Xi_peak_size; nevt_trg++)
             {
-                int nevt_trg = gRandom->Integer(PepVect2_Xi_peak_size);
+                int nevt_ass = gRandom->Integer(PepVect2_ass_size);
                 if(nevt_trg == nevt_ass)
                 {
-                    nevt_ass--;
+                    nevt_trg--;
                     continue;
                 }
                 if(fabs((*zvtxVect)[nevt_trg] - (*zvtxVect)[nevt_ass]) > 0.5)
                 {
-                    nevt_ass--;
+                    nevt_trg--;
                     ncount++;
                     if(ncount > 5000)
                     {
-                        nevt_ass++;
+                        nevt_trg++;
                         ncount=0;
                     }
                     continue;
                 }
 
-                vector<TVector3> pepVectTmp_trg = (*PepVect2_Xi_peak[i])[nevt_trg];
+                vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_Xi_peak[i])[nevt_trg];
                 vector<TVector3> pepVectTmp_ass = (*PepVect2_ass)[nevt_ass];
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
@@ -454,9 +537,38 @@ XiCorrelation::endJob()
 
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
                 {
-                    TVector3 pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                    TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                    double pt_trg = pvectorTmp_trg.Pt();
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
+                    double rap_trg = pvectorTmp_trg.E();
+                    double EffXchoice = 0;
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+
+                    nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
+                }
+
+                for(int ntrg=0; ntrg<nMult_trg; ntrg++)
+                {
+                    TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                    double pt_trg = pvectorTmp_trg.Pt();
+                    double eta_trg = pvectorTmp_trg.Eta();
+                    double phi_trg = pvectorTmp_trg.Phi();
+                    double rap_trg = pvectorTmp_trg.E();
+                    double EffXchoice = 0;
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
                     for(int nass=0; nass<nMult_ass; nass++)
                     {
@@ -473,48 +585,76 @@ XiCorrelation::endJob()
 
                         if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                        BackgroundXiPeak[i]->Fill(dEta, dPhi, 1.0/nMult_trg);
+                        BackgroundXiPeak[i]->Fill(dEta, dPhi, 1.0/nMult_trg_eff_xi/effxi);
                     }
                 }
             }
         }
 
-
         // SIDEBAND REGION Background
         for(int bkgnum = 0; bkgnum<bkgnum_; bkgnum++)
         {
             int ncount = 0;
-            for(int nevt_ass=0; nevt_ass<PepVect2_ass_size; nevt_ass++)
+            for(int nevt_trg=0; nevt_trg<PepVect2_Xi_side_size; nevt_trg++)
             {
-                int nevt_trg = gRandom->Integer(PepVect2_Xi_side_size);
+                int nevt_ass = gRandom->Integer(PepVect2_ass_size);
                 if(nevt_trg == nevt_ass)
                 {
-                    nevt_ass--;
+                    nevt_trg--;
                     continue;
                 }
                 if(fabs((*zvtxVect)[nevt_trg] - (*zvtxVect)[nevt_ass]) > 0.5)
                 {
-                    nevt_ass--;
+                    nevt_trg--;
                     ncount++;
                     if(ncount > 5000)
                     {
-                        nevt_ass++;
+                        nevt_trg++;
                         ncount=0;
                     }
                     continue;
                 }
 
-                vector<TVector3> pepVectTmp_trg = (*PepVect2_Xi_side[i])[nevt_trg];
+                vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_Xi_side[i])[nevt_trg];
                 vector<TVector3> pepVectTmp_ass = (*PepVect2_ass)[nevt_ass];
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
 
+                double nMult_trg_eff_xi = 0;
 
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
                 {
-                    TVector3 pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                    TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                    double pt_trg = pvectorTmp_trg.Pt();
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
+                    double rap_trg = pvectorTmp_trg.E();
+                    double EffXchoice = 0;
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+                    nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
+                }
+
+                for(int ntrg=0; ntrg<nMult_trg; ntrg++)
+                {
+                    TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
+                    double eta_trg = pvectorTmp_trg.Eta();
+                    double phi_trg = pvectorTmp_trg.Phi();
+                    double pt_trg = pvectorTmp_trg.Pt();
+                    double rap_trg = pvectorTmp_trg.E();
+                    double EffXchoice = 0;
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
                     for(int nass=0; nass<nMult_ass; nass++)
                     {
@@ -531,7 +671,7 @@ XiCorrelation::endJob()
 
                         if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                        BackgroundXiSide[i]->Fill(dEta, dPhi, 1.0/nMult_trg);
+                        BackgroundXiSide[i]->Fill(dEta, dPhi, 1.0/nMult_trg_eff_xi/effxi);
                     }
                 }
             }

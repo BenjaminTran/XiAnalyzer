@@ -19,7 +19,7 @@ xiCorrelation          = cms.EDAnalyzer('XiCorrelation',
         #Input tags
         trkSrc         = cms.InputTag('generalTracks'),
         vertexCollName = cms.InputTag('offlinePrimaryVertices'),
-        #xiCollection   = cms.InputTag('selectV0CandidatesLowXi:Xi'),
+        #xiCollection  = cms.InputTag('selectV0CandidatesLowXi:Xi'),
         xiCollection   = cms.InputTag('selectV0CandidatesLowXiRapidity:Xi'),
         #Parameters
         bkgnum         = cms.double(20.0),
@@ -36,5 +36,6 @@ xiCorrelation          = cms.EDAnalyzer('XiCorrelation',
         zVtxLow        = cms.double(-15.0),
         PtBinNum       = cms.int32(7),
         xiMassMean     = cms.vdouble(1.32296, 1.32254, 1.3225, 1.32246, 1.32242, 1.32226, 1.32214),
-        xiMassSigma    = cms.vdouble(0.00558245, 0.00520491, 0.00518877, 0.00514213, 0.00512142, 0.00512142, 0.00490732)
+        xiMassSigma    = cms.vdouble(0.00558245, 0.00520491, 0.00518877, 0.00514213, 0.00512142, 0.00512142, 0.00490732),
+        doRap          = cms.bool(False)
         )
