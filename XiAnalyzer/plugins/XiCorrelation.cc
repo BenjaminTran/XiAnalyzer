@@ -311,7 +311,6 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
             mult_xi_bkg[i]->Fill(nMult_trg_eff_xi);
 
-            mult_xi[i]->Fill(nMult_trg_eff_xi);
             // SIDEBAND REGION signal
             for(int xi_trg = 0; xi_trg < pepVect_Xi_side_size; xi_trg++)
             {
