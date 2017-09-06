@@ -469,20 +469,20 @@ XiCorrelation::beginJob()
     {
         BackgroundXiPeak[i] = fs->make<TH2D>(Form("BackgroundPeak_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
         BackgroundXiSide[i] = fs->make<TH2D>(Form("BackgroundSide_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        SignalXiPeak[i]     = fs->make<TH2D>(Form("SignalPeak_pt%d",i) , ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        SignalXiSide[i]     = fs->make<TH2D>(Form("SignalSide_pt%d",i) , ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+        SignalXiPeak[i]     = fs->make<TH2D>(Form("SignalPeak_pt%d",i), ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+        SignalXiSide[i]     = fs->make<TH2D>(Form("SignalSide_pt%d",i), ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
         KET_xi[i]           = fs->make<TH1D>(Form("KET_xi_pt%d",i),";GeV",40000,0,20);
         KET_xi_bkg[i]       = fs->make<TH1D>(Form("KET_xi_bkg_pt%d",i),";GeV",40000,0,20);
         Mass_xi[i]          = fs->make<TH1D>(Form("Mass_xi_pt%d",i),";GeV",2000,0.8,1.8);
         Pt_xi[i]            = fs->make<TH1D>(Form("Pt_xi_pt%d",i),";GeV",40000,0,20);
         Pt_xi_bkg[i]        = fs->make<TH1D>(Form("Pt_xi_bkg_pt%d",i),";GeV",40000,0,20);
-        Eta_xi[i]           = fs->make<TH1D>(Form("Eta_xi_pt%d",i),";eta",30,-3.0,3.0);
-        Eta_xi_bkg[i]       = fs->make<TH1D>(Form("Eta_xi_bkg_pt%d",i),";eta",30,-3.0,3.0);
+        Eta_xi[i]           = fs->make<TH1D>(Form("Eta_xi_pt%d",i),";#eta",30,-3.0,3.0);
+        Eta_xi_bkg[i]       = fs->make<TH1D>(Form("Eta_xi_bkg_pt%d",i),";#eta",30,-3.0,3.0);
         rap_xi[i]           = fs->make<TH1D>(Form("rap_xi_pt%d",i),";y",100,-5,5);
         rap_xi_bkg[i]       = fs->make<TH1D>(Form("rap_xi_bkg_pt%d",i),";y",100,-5,5);
         rap_xi_Lorentz[i]   = fs->make<TH1D>(Form("rap_xi_Lorentz_pt%d",i),";y",100,-5,5);
-        mult_xi[i] = fs->make<TH1D>(Form("mult_xi_pt%d",i),250,0,250);
-        mult_xi_bkg[i] = fs->make<TH1D>(Form("mult_xi_bkg_pt%d",i),250,0,250);
+        mult_xi[i] = fs->make<TH1D>(Form("mult_xi_pt%d",i),"mult_xi",250,0,250);
+        mult_xi_bkg[i] = fs->make<TH1D>(Form("mult_xi_bkg_pt%d",i),"mult_xi_bkg",250,0,250);
         PepVect2_Xi_peak[i] = new vector< vector<TLorentzVector> >;
         PepVect2_Xi_side[i] = new vector< vector<TLorentzVector> >;
     }
