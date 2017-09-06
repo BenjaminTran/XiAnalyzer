@@ -130,8 +130,6 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                     nm = 1;
                 }
             }
-            double nom = nm;
-
 
             if(fabs(id)==310){
                 double eta_dau1 = 0;
@@ -285,24 +283,27 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                 pvector.SetPtEtaPhi(pt,eta,phi);
 
                 if(fabs(midXi) != 3334){
-                    if(doRap_)
+                    for(int i=0; i<10; i++)
                     {
-                        if(trk.rapidity()<rapMax_ && trk.rapidity()>rapMin_ && trk.pt()<=ptcut_xi_[i+1] && trk.pt()>=ptcut_xi_[i]){
-                            pVect_trg_xi[i]->push_back(pvector);
-                            hRap_xi[i]->Fill(trk.rapidity());
-                            hPt_xi[i]->Fill(pt);
-                            double KET = sqrt(mass*mass + pt*pt) - mass;
-                            hKET_xi[i]->Fill(KET);
+                        if(doRap_)
+                        {
+                            if(trk.rapidity()<rapMax_ && trk.rapidity()>rapMin_ && trk.pt()<=ptcut_xi_[i+1] && trk.pt()>=ptcut_xi_[i]){
+                                pVect_trg_xi[i]->push_back(pvector);
+                                hRap_xi[i]->Fill(trk.rapidity());
+                                hPt_xi[i]->Fill(pt);
+                                double KET = sqrt(mass*mass + pt*pt) - mass;
+                                hKET_xi[i]->Fill(KET);
+                            }
                         }
-                    }
-                    else
-                    {
-                        if(trk.eta()<=etaMax_trg_ && trk.eta()>=etaMin_trg_ && trk.pt()<=ptcut_xi_[i+1] && trk.pt()>=ptcut_xi_[i]){
-                            pVect_trg_xi[i]->push_back(pvector);
-                            hRap_xi[i]->Fill(trk.rapidity());
-                            hPt_xi[i]->Fill(pt);
-                            double KET = sqrt(mass*mass + pt*pt) - mass;
-                            hKET_xi[i]->Fill(KET);
+                        else
+                        {
+                            if(trk.eta()<=etaMax_trg_ && trk.eta()>=etaMin_trg_ && trk.pt()<=ptcut_xi_[i+1] && trk.pt()>=ptcut_xi_[i]){
+                                pVect_trg_xi[i]->push_back(pvector);
+                                hRap_xi[i]->Fill(trk.rapidity());
+                                hPt_xi[i]->Fill(pt);
+                                double KET = sqrt(mass*mass + pt*pt) - mass;
+                                hKET_xi[i]->Fill(KET);
+                            }
                         }
                     }
                 }
@@ -325,7 +326,7 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                 TVector3 pvector_trg = (*pVect_trg_ks[i])[ntrg];
                 double eta_trg = pvector_trg.Eta();
                 double phi_trg = pvector_trg.Phi();
-                double pt_trg = pvector_trg.Pt();
+                //double pt_trg = pvector_trg.Pt();
                 /*double effks = 1.0;
 
                   if(pt_trg<1.2)
@@ -373,7 +374,7 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                 TVector3 pvector_trg = (*pVect_trg_la[i])[ntrg];
                 double eta_trg = pvector_trg.Eta();
                 double phi_trg = pvector_trg.Phi();
-                double pt_trg = pvector_trg.Pt();
+                //double pt_trg = pvector_trg.Pt();
                 /*double effla = 1.0;
 
                   if(pt_trg<1.6)
@@ -422,7 +423,7 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                 TVector3 pvector_trg = (*pVect_trg_xi[i])[ntrg];
                 double eta_trg = pvector_trg.Eta();
                 double phi_trg = pvector_trg.Phi();
-                double pt_trg = pvector_trg.Pt();
+                //double pt_trg = pvector_trg.Pt();
                 /*double effks = 1.0;
 
                   if(pt_trg<1.2)
@@ -554,7 +555,7 @@ V0CorrelationMC::endJob() {
                     TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
-                    double pt_trg = pvectorTmp_trg.Pt();
+                    //double pt_trg = pvectorTmp_trg.Pt();
                     /*double effks = 1.0;
 
                     if(pt_trg<1.2)
@@ -611,7 +612,7 @@ V0CorrelationMC::endJob() {
                     TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
-                    double pt_trg = pvectorTmp_trg.Pt();
+                    //double pt_trg = pvectorTmp_trg.Pt();
                     /*double effla = 1.0;
 
                     if(pt_trg<1.6)
@@ -668,7 +669,7 @@ V0CorrelationMC::endJob() {
                     TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
-                    double pt_trg = pvectorTmp_trg.Pt();
+                    //double pt_trg = pvectorTmp_trg.Pt();
                     /*double effks = 1.0;
 
                     if(pt_trg<1.2)
