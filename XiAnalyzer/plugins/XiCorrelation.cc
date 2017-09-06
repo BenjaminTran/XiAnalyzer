@@ -235,7 +235,6 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 TLorentzVector pepVect_trg = (*pepVect_Xi_peak[i])[xi_ntrg];
                 double pt_trg     = pepVect_trg.Pt();
                 double eta_trg    = pepVect_trg.Eta();
-                double phi_trg    = pepVect_trg.Phi();
                 double rap_trg    = pepVect_trg.E();
                 double EffXchoice = 0;
 
@@ -295,7 +294,6 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 TLorentzVector pepVect_trg = (*pepVect_Xi_side[i])[xi_trg];
                 double pt_trg     = pepVect_trg.Pt();
                 double eta_trg    = pepVect_trg.Eta();
-                double phi_trg    = pepVect_trg.Phi();
                 double rap_trg    = pepVect_trg.E();
                 double EffXchoice = 0;
 
@@ -540,7 +538,6 @@ XiCorrelation::endJob()
                     TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
                     double pt_trg = pvectorTmp_trg.Pt();
                     double eta_trg = pvectorTmp_trg.Eta();
-                    double phi_trg = pvectorTmp_trg.Phi();
                     double rap_trg = pvectorTmp_trg.E();
                     double EffXchoice = 0;
 
@@ -627,7 +624,6 @@ XiCorrelation::endJob()
                     TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
                     double pt_trg = pvectorTmp_trg.Pt();
                     double eta_trg = pvectorTmp_trg.Eta();
-                    double phi_trg = pvectorTmp_trg.Phi();
                     double rap_trg = pvectorTmp_trg.E();
                     double EffXchoice = 0;
 
