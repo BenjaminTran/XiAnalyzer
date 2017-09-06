@@ -232,11 +232,11 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
             for(int ntrg = 0; ntrg<pepVect_Xi_peak_size; ntrg++)
             {
-                TLorentzVector pepVect_trg = (*pepVect_Xi_peak[i])[xi_trg];
-                double pt_trg = pepVect_trg.Pt();
-                double eta_trg       = pepVect_trg.Eta();
-                double phi_trg       = pepVect_trg.Phi();
-                double rap_trg = pepVect_trg.E();
+                TLorentzVector pepVect_trg = (*pepVect_Xi_peak[i])[n_trg];
+                double pt_trg     = pepVect_trg.Pt();
+                double eta_trg    = pepVect_trg.Eta();
+                double phi_trg    = pepVect_trg.Phi();
+                double rap_trg    = pepVect_trg.E();
                 double EffXchoice = 0;
 
                 if(doRap_)
@@ -279,7 +279,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
                     if(dPhi > PI)
                         dPhi=dPhi-2*PI;
-                    if(dPhi < -PI)
+
                         dPhi=dPhi+2*PI;
                     if(dPhi > -PI && dPhi < -PI/2.0)
                         dPhi=dPhi+2*PI;
@@ -309,7 +309,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
             }
 
-            mult_xi_bkg->Fill(nMult_trg_eff_xi);
+            mult_xi_bkg[i]->Fill(nMult_trg_eff_xi);
 
             mult_xi[i]->Fill(nMult_trg_eff_xi);
             // SIDEBAND REGION signal
@@ -534,6 +534,7 @@ XiCorrelation::endJob()
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
 
+                double nMult_trg_eff_xi = 0;
 
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
                 {
@@ -642,7 +643,7 @@ XiCorrelation::endJob()
 
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
                 {
-                    TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
+                    TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
                     double pt_trg = pvectorTmp_trg.Pt();
