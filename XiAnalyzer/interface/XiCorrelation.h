@@ -45,6 +45,7 @@
 #include <TVector3.h>
 #include <TRandom.h>
 #include <TNtuple.h>
+#include <TLorentzVector.h>
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
@@ -198,17 +199,18 @@ class XiCorrelation : public edm::EDAnalyzer {
         int multLow_;
         int peakFactor_;
         int sideFactor_;
+        bool doRap_;
 
         //vector<TVector3> *pepVect_trkhad;
         vector<TVector3> *pepVect_trkass;
-        vector<TVector3> *pepVect_Xi_peak[11];
-        vector<TVector3> *pepVect_Xi_side[11];
+        vector<TLorentzVector> *pepVect_Xi_peak[11];
+        vector<TLorentzVector> *pepVect_Xi_side[11];
         vector<double> ptBin_;
         vector<double> xiMassMean_;
         vector<double> xiMassSigma_;
         vector<double> *zvtxVect;
-        vector< vector<TVector3> > *PepVect2_Xi_peak[11];
-        vector< vector<TVector3> > *PepVect2_Xi_side[11];
+        vector< vector<TLorentzVector> > *PepVect2_Xi_peak[11];
+        vector< vector<TLorentzVector> > *PepVect2_Xi_side[11];
         vector< vector<TVector3> > *PepVect2_ass;
         //vector< vector<TVector3> > *PepVect2_had;
 
@@ -240,6 +242,9 @@ class XiCorrelation : public edm::EDAnalyzer {
         TH1D* Eta_xi_bkg[11];
         TH1D* rap_xi[11];
         TH1D* rap_xi_bkg[11];
+        TH1D* rap_xi_Lorentz[11];
+        TH1D* mult_xi[11];
+        TH1D* mult_xi_bkg[11];
 
 };
 
