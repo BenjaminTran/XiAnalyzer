@@ -76,7 +76,8 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
                                     #'V0Correlation.root'
-                                    'XiCorrelationRapidityPbpLoose.root'
+                                    #'XiCorrelationRapidityPbpLoose.root'
+                                    'XiCorrelationRapidityClosure.root'
 				    )
                                   )
 # CORRELATION
@@ -97,7 +98,7 @@ process.XiCorrAnalysisRapidityTight = cms.Sequence(process.selectV0CandidatesXiR
 
 process.OmCorrAnalysis = cms.Sequence(process.selectOmegaCandidatesNew)
 
-process.p = cms.Path(process.XiCorrAnalysisRapidityLoose)
+process.p = cms.Path(process.XiCorrAnalysisRapidity)
 
 process.schedule = cms.Schedule(process.p)
 
