@@ -452,7 +452,7 @@ XiCorrelation::beginJob()
     TFile f(fip.fullPath().c_str(),"READ");
     effhisto_xi = (TH2D*)f.Get("EffHistoXi");
 
-    nTrk            = fs->make<TH1D>("nTrk", "nTrk", 250, 0, 250);
+    nTrk            = fs->make<TH1D>("nTrk", "nTrk", 300, 0, 300);
     nEvt            = fs->make<TH1D>("nEvt","nEvt",10,0,10);
     nEvtCut         = fs->make<TH1D>("nEvtCut", "nEvtCut", 10, 0, 10);
     HadPerEvt       = fs->make<TH1D>("HadPerEvent", "Hadrons per Event", 1500, 0, 1500);
