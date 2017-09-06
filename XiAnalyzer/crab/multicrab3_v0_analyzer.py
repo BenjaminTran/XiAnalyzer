@@ -18,7 +18,7 @@ if __name__ == '__main__':
             print "Failed submitting task: %s" % (cle)
 
 
-    for num in range(0,6):
+    for num in range(0,1):
         try:
             with open( 'V0VarStore.dat', 'r' ) as fle:
                 counter = int( fle.readline() )
@@ -35,7 +35,7 @@ if __name__ == '__main__':
             print 'Input Dataset is %r ' % (DataSet[num])
             v0.config.Data.inputDataset = DataSet[num]
             v0.config.General.workArea = 'crab_dir/HLT185_250FlowV0v2ppb2016PD' + str(num+1) + 'Rap'
-            v0.config.General.requestName = 'HLT185_250Flow2016PDCorrelationpPbV0PD' + str(num+1) + 'JL' + str(counter)
+            v0.config.General.requestName = 'HLT185_250Flow2016CorrelationpPbV0PD' + str(num+1) + 'JL' + str(counter)
         else:
             DataSet = ['/PAHighMultiplicity1/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER',
                        '/PAHighMultiplicity2/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER',
@@ -46,7 +46,7 @@ if __name__ == '__main__':
             print 'Input Dataset is %r ' % (DataSet[num])
             v0.config.Data.inputDataset = DataSet[num]
             v0.config.General.workArea = 'crab_dir/HLT185_250FlowV0v2pbp2016PD' + str(num+1) + 'Rap'
-            v0.config.General.requestName = 'HLT185_250Flow2016PDCorrelationPbpV0PD' + str(num+1) + 'JL' + str(counter)
+            v0.config.General.requestName = 'HLT185_250Flow2016CorrelationPbpV0PD' + str(num+1) + 'JL' + str(counter)
         with open( 'V0VarStore.dat', 'w' ) as fle:
             counter = counter + 1
             fle.write( str(counter) )

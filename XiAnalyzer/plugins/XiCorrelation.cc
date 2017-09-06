@@ -36,8 +36,8 @@ XiCorrelation::XiCorrelation(const edm::ParameterSet& iConfig)
     bkgnum_         = iConfig.getParameter<double>("bkgnum");
     etaMax_ass_     = iConfig.getParameter<double>("etaMax_ass");
     etaMin_ass_     = iConfig.getParameter<double>("etaMin_ass");
-    multHigh_       = iConfig.getParameter<int>("multHigh");
-    multLow_        = iConfig.getParameter<int>("multLow");
+    multHigh_       = iConfig.getParameter<double>("multHigh");
+    multLow_        = iConfig.getParameter<double>("multLow");
     peakFactor_     = iConfig.getParameter<int>("peakFactor");
     ptBin_          = iConfig.getParameter<std::vector<double> >("ptBin");
     ptMax_ass_      = iConfig.getParameter<double>("ptMax_ass");
