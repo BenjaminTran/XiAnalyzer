@@ -31,6 +31,7 @@ process.load("XiAnalyzer.XiAnalyzer.v0selector_cff")
 process.load("XiAnalyzer.XiAnalyzer.omegaselector_cff")
 process.load("XiAnalyzer.XiAnalyzer.xicorrelation_cff")
 process.load("XiAnalyzer.XiAnalyzer.v0correlation_cff")
+process.load("XiAnalyzer.XiAnalyzer.v0correlationmc_cff")
 process.load("XiAnalyzer.XiAnalyzer.massptproducer_cff")
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
