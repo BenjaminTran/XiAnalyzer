@@ -230,9 +230,9 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
             double nMult_trg_eff_xi = 0;
 
-            for(int ntrg = 0; ntrg<pepVect_Xi_peak_size; ntrg++)
+            for(int xi_ntrg = 0; xi_ntrg<pepVect_Xi_peak_size; xi_ntrg++)
             {
-                TLorentzVector pepVect_trg = (*pepVect_Xi_peak[i])[n_trg];
+                TLorentzVector pepVect_trg = (*pepVect_Xi_peak[i])[xi_ntrg];
                 double pt_trg     = pepVect_trg.Pt();
                 double eta_trg    = pepVect_trg.Eta();
                 double phi_trg    = pepVect_trg.Phi();
@@ -290,7 +290,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 }
             }
 
-            for(int ntrg = 0; ntrg<pepVect_Xi_side_size; ntrg++)
+            for(int xi_trg = 0; xi_trg<pepVect_Xi_side_size; xi_trg++)
             {
                 TLorentzVector pepVect_trg = (*pepVect_Xi_side[i])[xi_trg];
                 double pt_trg     = pepVect_trg.Pt();
