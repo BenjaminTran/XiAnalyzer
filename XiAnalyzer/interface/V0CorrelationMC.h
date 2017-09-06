@@ -86,12 +86,15 @@ private:
 
     TH1D* hRap_ks[18];
     TH1D* hRap_la[18];
+    TH1D* hRap_xi[18];
 
     TH1D* hKET_ks[18];
     TH1D* hKET_la[18];
+    TH1D* hKET_xi[18];
 
     TH1D* hPt_ks[18];
     TH1D* hPt_la[18];
+    TH1D* hPt_xi[18];
 
     TH1D* hMult_ks[18];
     TH2D* hSignal_ks[18];
@@ -103,10 +106,16 @@ private:
     TH2D* hSignal_la[18];
     TH2D* hBackground_la[18];
 
+    TH1D* hMult_xi[18];
+    TH2D* hSignal_xi[18];
+    TH2D* hBackground_xi[18];
+
     vector<TVector3> *pVect_trg_ks[18];
     vector< vector<TVector3> > *pVectVect_trg_ks[18];
     vector<TVector3> *pVect_trg_la[18];
     vector< vector<TVector3> > *pVectVect_trg_la[18];
+    vector<TVector3> *pVect_trg_xi[18];
+    vector< vector<TVector3> > *pVectVect_trg_xi[18];
 
     vector<TVector3> *pVect_dau_ks[18];
     vector<TVector3> *pVect_dau_la[18];
@@ -116,6 +125,7 @@ private:
     vector<double> *zvtxVect;
     vector<double> ptcut_ks_;
     vector<double> ptcut_la_;
+    vector<double> ptcut_xi_;
 
     double etaMin_trg_;
     double etaMax_trg_;
