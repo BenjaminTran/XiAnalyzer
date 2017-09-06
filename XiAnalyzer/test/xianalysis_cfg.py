@@ -94,11 +94,15 @@ process.XiCorrAnalysisRapidityLoose = cms.Sequence(process.selectV0CandidatesXiR
 
 process.XiCorrAnalysisRapidityTight = cms.Sequence(process.selectV0CandidatesXiRapidityTight*process.xiCorrelationRapidityTight)
 
+process.XiCorrAnalysisRapidityMC = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.xiCorrelationRapidityMC)
+
 # process.RapidityAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.v0CorrelationRapidity*process.xiCorrelationRapidity)
 
 process.OmCorrAnalysis = cms.Sequence(process.selectOmegaCandidatesNew)
 
-process.p = cms.Path(process.XiCorrAnalysisRapidity)
+process.GenCorrAnalysis = cms.Sequence(process.v0CorrelationMCRapidity)
+
+process.p = cms.Path(process.XiCorrAnalysisRapidity*process.GenCorrAnalysis)
 
 process.schedule = cms.Schedule(process.p)
 
