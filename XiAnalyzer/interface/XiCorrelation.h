@@ -246,6 +246,8 @@ class XiCorrelation : public edm::EDAnalyzer {
         TH1D* mult_xi[11];
         TH1D* mult_xi_bkg[11];
 
+        TH2D* effhisto_xi;
+
 };
 
 #endif
