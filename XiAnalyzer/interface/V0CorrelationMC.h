@@ -139,5 +139,8 @@ private:
     double multMin_;
     int bkgFactor_;
     bool doRap_;
+    bool doKs_;
+    bool doLa_;
+    bool doXi_;
 };
 #endif

@@ -28,5 +28,8 @@ v0CorrelationMC = cms.EDAnalyzer('V0CorrelationMC',
         bkgnum       = cms.untracked.int32(20),
         rapMin       = cms.untracked.double(0),
         rapMax       = cms.untracked.double(0),
+        doKs         = cms.untracked.bool(True),
+        doLa         = cms.untracked.bool(True),
+        doXi         = cms.untracked.bool(True),
         doRap        = cms.untracked.bool(False)
         )
