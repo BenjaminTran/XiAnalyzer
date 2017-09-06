@@ -25,6 +25,6 @@ xiCorrelationRapidityTight = xiCorrelationRapidity.clone(
         )
 
 xiCorrelationRapidityMC = xiCorrelationRapidity.clone(
-        multHigh = cms.double(9999999999),
+        multHigh = cms.double(999999),
         multLow = cms.double(-1)
         )

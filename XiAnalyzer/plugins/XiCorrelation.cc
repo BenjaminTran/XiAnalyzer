@@ -129,7 +129,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         EtaPtCutnTracks++;
     }
 
-
+    cout << EtaPtCutnTracks << endl;
     if(EtaPtCutnTracks >= multLow_ && EtaPtCutnTracks < multHigh_){
         nEvtCut->Fill(1);
         nTrk->Fill(EtaPtCutnTracks);
