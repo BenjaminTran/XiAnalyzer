@@ -129,7 +129,6 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         EtaPtCutnTracks++;
     }
 
-    cout << EtaPtCutnTracks << endl;
     if(EtaPtCutnTracks >= multLow_ && EtaPtCutnTracks < multHigh_){
         nEvtCut->Fill(1);
         nTrk->Fill(EtaPtCutnTracks);
@@ -146,6 +145,23 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             MassPt->Fill(mass,xi_pT);
             double Ket = sqrt(mass*mass + xi_pT*xi_pT) - mass;
             double EffXchoice = 0;
+
+            const reco::Candidate *dau1 = xiCand->daughter(0);
+            const reco::Candidate *dau2 = xiCand->daughter(1);
+
+            double pt_dau1 = dau1->pt();
+            double eta_dau1 = dau1->eta();
+            double phi_dau1 = dau1->phi();
+
+            double pt_dau2 = dau2->pt();
+            double eta_dau2 = dau2->eta();
+            double phi_dau2 = dau2->phi();
+
+            TVector3 dau1PEPvector;
+            dau1PEPvector.SetPtEtaPhi(pt_dau1,eta_dau1,phi_dau1);
+
+            TVector3 dau2PEPvector;
+            dau2PEPvector.SetPtEtaPhi(pt_dau2,eta_dau2,phi_dau2);
 
             if(doRap_)
                 EffXchoice = xi_rap;
@@ -167,6 +183,8 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     if(mass >= (xiMassMean_[i] - peakFactor_*xiMassSigma_[i]) && mass <= (xiMassMean_[i] + peakFactor_*xiMassSigma_[i]))
                     {
                         pepVect_Xi_peak[i]->push_back(xiPEPvector);
+                        pepVect_dau_xi_peak[i]->push_back(dau1PEPvector);
+                        pepVect_dau_xi_peak[i]->push_back(dau2PEPvector);
                         KET_xi[i]->Fill(Ket,1.0/effxi);
                         Pt_xi[i]->Fill(xi_pT,1.0/effxi);
                         Eta_xi[i]->Fill(xi_eta,1.0/effxi);
@@ -177,6 +195,8 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                     if((mass <= (xiMassMean_[i] - sideFactor_*xiMassSigma_[i]) && mass >= 1.25) || (mass <= 1.40 && mass >= (xiMassMean_[i] + sideFactor_*xiMassSigma_[i])))
                     {
                         pepVect_Xi_side[i]->push_back(xiPEPvector);
+                        pepVect_dau_xi_side[i]->push_back(dau1PEPvector);
+                        pepVect_dau_xi_side[i]->push_back(dau2PEPvector);
                         KET_xi_bkg[i]->Fill(Ket,1.0/effxi);
                         Pt_xi_bkg[i]->Fill(xi_pT,1.0/effxi);
                         Eta_xi_bkg[i]->Fill(xi_eta,1.0/effxi);
@@ -267,11 +287,24 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
                 double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
+                TVector3 pepvector_trg_dau1 = (*pepVect_dau_xi_peak[i])[2*xi_trg];
+
+                double eta_trg_dau1 = pepvector_trg_dau1.Eta();
+                double phi_trg_dau1 = pepvector_trg_dau1.Phi();
+
+                TVector3 pepvector_trg_dau2 = (*pepVect_dau_xi_peak[i])[2*xi_trg+1];
+
+                double eta_trg_dau2 = pepvector_trg_dau2.Eta();
+                double phi_trg_dau2 = pepvector_trg_dau2.Phi();
+
                 for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
                 {
                     TVector3 pepVect_ass = (*pepVect_trkass)[assoc];
                     double eta_ass       = pepVect_ass.Eta();
                     double phi_ass       = pepVect_ass.Phi();
+
+                    if(fabs(eta_ass-eta_trg_dau1) < 0.03 && fabs(phi_ass-phi_trg_dau1) < 0.03) continue;
+                    if(fabs(eta_ass-eta_trg_dau2) < 0.03 && fabs(phi_ass-phi_trg_dau2) < 0.03) continue;
 
                     double dEta = eta_ass - eta_trg;
                     double dPhi = phi_ass - phi_trg;
@@ -353,8 +386,12 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         {
             PepVect2_Xi_peak[i]->push_back(*pepVect_Xi_peak[i]);
             PepVect2_Xi_side[i]->push_back(*pepVect_Xi_side[i]);
+            PepVect2_dau_xi_peak[i]->push_back(*pepVect_dau_xi_peak[i]);
+            PepVect2_dau_xi_side[i]->push_back(*pepVect_dau_xi_side[i]);
             delete pepVect_Xi_peak[i];
             delete pepVect_Xi_side[i];
+            delete pepVect_dau_xi_peak[i];
+            delete pepVect_dau_xi_side[i];
         }
         PepVect2_ass->push_back(*pepVect_trkass);
         zvtxVect->push_back(bestvz);
@@ -527,6 +564,7 @@ XiCorrelation::endJob()
                 }
 
                 vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_Xi_peak[i])[nevt_trg];
+                vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_xi_peak[i])[nevt_trg];
                 vector<TVector3> pepVectTmp_ass = (*PepVect2_ass)[nevt_ass];
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
@@ -567,11 +605,21 @@ XiCorrelation::endJob()
 
                     double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
+                    TVector3 pvectorTmp_dau1_trg = pepVectTmp_dau[2*ntrg];
+                    double eta_trg_dau1 = pvectorTmp_dau1_trg.Eta();
+                    double phi_trg_dau1 = pvectorTmp_dau1_trg.Phi();
+                    TVector3 pvectorTmp_dau2_trg = pepVectTmp_dau[2*ntrg+1];
+                    double eta_trg_dau2 = pvectorTmp_dau2_trg.Eta();
+                    double phi_trg_dau2 = pvectorTmp_dau2_trg.Phi();
+
+
                     for(int nass=0; nass<nMult_ass; nass++)
                     {
                         TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
                         double eta_ass = pvectorTmp_ass.Eta();
                         double phi_ass = pvectorTmp_ass.Phi();
+                            if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
+                            if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
 
                         double dEta = eta_ass - eta_trg;
                         double dPhi = phi_ass - phi_trg;
@@ -613,6 +661,7 @@ XiCorrelation::endJob()
                 }
 
                 vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_Xi_side[i])[nevt_trg];
+                vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_xi_side[i])[nevt_trg];
                 vector<TVector3> pepVectTmp_ass = (*PepVect2_ass)[nevt_ass];
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
@@ -652,11 +701,21 @@ XiCorrelation::endJob()
 
                     double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
+                    TVector3 pvectorTmp_dau1_trg = pepVectTmp_dau[2*ntrg];
+                    double eta_trg_dau1 = pvectorTmp_dau1_trg.Eta();
+                    double phi_trg_dau1 = pvectorTmp_dau1_trg.Phi();
+                    TVector3 pvectorTmp_dau2_trg = pepVectTmp_dau[2*ntrg+1];
+                    double eta_trg_dau2 = pvectorTmp_dau2_trg.Eta();
+                    double phi_trg_dau2 = pvectorTmp_dau2_trg.Phi();
+
                     for(int nass=0; nass<nMult_ass; nass++)
                     {
                         TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
                         double eta_ass = pvectorTmp_ass.Eta();
                         double phi_ass = pvectorTmp_ass.Phi();
+
+                            if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
+                            if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
 
                         double dEta = eta_ass - eta_trg;
                         double dPhi = phi_ass - phi_trg;
