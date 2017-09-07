@@ -151,16 +151,16 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double mass_xi = xiCand->mass();
                 double pT_xi   = xiCand->pt();
                 double eta_xi  = xiCand->eta();
-                int charge_xi = xiCand->charge();
+                int charge = xiCand->charge();
 
-                charge_xi -> Fill(charge_xi);
+                charge_xi -> Fill(charge);
 
-                if(fabs(charge_xi) != 1) continue;
+                if(fabs(charge) != 1) continue;
 
                 XiMassPtRap       -> Fill(mass_xi,pT_xi,rap_xi);
                 rapidity_xi       -> Fill(rap_xi);
                 pseudorapidity_xi -> Fill(eta_xi);
-                chargecut_xi -> Fill(charge_xi);
+                chargecut_xi -> Fill(charge);
 
                 cout<<"Fill Xi"<<endl;
             }
@@ -176,16 +176,16 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double mass_om = omCand->mass();
                 double pT_om   = omCand->pt();
                 double eta_om  = omCand->eta();
-                int charge_om = omCand->charge();
+                int charge = omCand->charge();
 
-                charge_om ->Fill(charge_om);
+                charge_om ->Fill(charge);
 
-                if(fabs(charge_om) != 1) continue;
+                if(fabs(charge) != 1) continue;
 
                 OmMassPtRap       -> Fill(mass_om,pT_om,rap_om);
                 rapidity_om       -> Fill(rap_om);
                 pseudorapidity_om -> Fill(eta_om);
-                chargecut_om ->Fill(charge_om);
+                chargecut_om ->Fill(charge);
 
                 cout<<"Fill Om"<<endl;
             }
