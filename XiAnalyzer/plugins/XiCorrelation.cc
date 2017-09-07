@@ -95,6 +95,8 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     {
         pepVect_Xi_peak[i]    = new vector<TLorentzVector>;
         pepVect_Xi_side[i]    = new vector<TLorentzVector>;
+        pepVect_dau_xi_peak[i]= new vector<TVector3>;
+        pepVect_dau_xi_side[i]= new vector<TVector3>;
     }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
