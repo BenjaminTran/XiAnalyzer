@@ -214,6 +214,10 @@ class MassPtProducer : public edm::EDAnalyzer {
         TH1D* pseudorapidity_om;
         TH1D* pseudorapidity_ks;
         TH1D* pseudorapidity_la;
+        TH1D* charge_xi;
+        TH1D* charge_om;
+        TH1D* chargecut_xi;
+        TH1D* chargecut_om;
 };
 
 #endif
