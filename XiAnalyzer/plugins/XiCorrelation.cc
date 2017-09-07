@@ -519,6 +519,8 @@ XiCorrelation::beginJob()
         mult_xi_bkg[i] = fs->make<TH1D>(Form("mult_xi_bkg_pt%d",i),"mult_xi_bkg",250,0,250);
         PepVect2_Xi_peak[i] = new vector< vector<TLorentzVector> >;
         PepVect2_Xi_side[i] = new vector< vector<TLorentzVector> >;
+        PepVect2_dau_xi_peak[i] = new vector<vector<TVector3> >;
+        PepVect2_dau_xi_side[i] = new vector<vector<TVector3> >;
     }
 
     // For Background calculations which must be done in the endJob function
