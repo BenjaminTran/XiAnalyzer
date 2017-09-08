@@ -313,7 +313,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
                     if(dPhi > PI)
                         dPhi=dPhi-2*PI;
-
+                    if(dPhi < -PI)
                         dPhi=dPhi+2*PI;
                     if(dPhi > -PI && dPhi < -PI/2.0)
                         dPhi=dPhi+2*PI;
