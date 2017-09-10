@@ -458,7 +458,7 @@ HadronCorrelationGen::endJob() {
         int ncount = 0;
         for(int nevt_ass=0; nevt_ass<nevttotal_ass_Reco; nevt_ass++)
         {
-            int nevt_trg = gRandom->Integer(nevttotal_ass);
+            int nevt_trg = gRandom->Integer(nevttotal_ass_Reco);
             if(nevt_trg == nevt_ass)
             {
                 nevt_ass--;
