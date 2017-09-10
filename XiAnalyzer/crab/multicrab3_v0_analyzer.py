@@ -18,7 +18,7 @@ if __name__ == '__main__':
             print "Failed submitting task: %s" % (cle)
 
 
-    for num in range(0,1):
+    for num in range(2,4):
         try:
             with open( 'V0VarStore.dat', 'r' ) as fle:
                 counter = int( fle.readline() )
