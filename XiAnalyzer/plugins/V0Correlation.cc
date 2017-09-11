@@ -507,7 +507,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         deltaPhi=deltaPhi+2*PI;
                     
                     //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks);///effweight_ass);
+                    hSignal_ks[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_ks/effks);///effweight_ass);
                 }
             }
             
@@ -560,7 +560,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         deltaPhi=deltaPhi+2*PI;
                     
                     //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla);///effweight_ass);
+                    hSignal_la[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_la/effla);///effweight_ass);
                 }
             }
 
@@ -662,7 +662,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         deltaPhi=deltaPhi+2*PI;
                     
                     //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks);///effweight_ass);
+                    hSignal_ks_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_ks/effks);///effweight_ass);
                 }
             }
             
@@ -715,7 +715,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         deltaPhi=deltaPhi+2*PI;
                     
                     //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla);///effweight_ass);
+                    hSignal_la_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_la/effla);///effweight_ass);
                 }
             }
             
@@ -931,7 +931,7 @@ V0Correlation::endJob() {
                             deltaPhi=deltaPhi+2*PI;
                         
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks);///effweight_ass);
+                        hBackground_ks[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff/effks);///effweight_ass);
                     }
                 }
             }
@@ -1025,7 +1025,7 @@ V0Correlation::endJob() {
                             deltaPhi=deltaPhi+2*PI;
                         
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla);///effweight_ass);
+                        hBackground_la[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff/effla);///effweight_ass);
                     }
                 }
             }
@@ -1125,7 +1125,7 @@ V0Correlation::endJob() {
                             deltaPhi=deltaPhi+2*PI;
                         
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks);///effweight_ass);
+                        hBackground_ks_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff/effks);///effweight_ass);
                     }
                 }
             }
@@ -1219,7 +1219,7 @@ V0Correlation::endJob() {
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla);///effweight_ass);
+                        hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi,);//1.0/nMult_trg_eff/effla);///effweight_ass);
                     }
                 }
             }
