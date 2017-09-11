@@ -63,9 +63,9 @@ process.source = cms.Source("PoolSource",
 # Additional output definition
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
-                                        'V0CorrelationCorrectMult.root'
+                                        #'V0CorrelationCorrectMult.root'
                                     #'V0CorrelationClosureNyes.root'
-                                    #'V0CorrelationClosureHadron.root'
+                                    'V0CorrelationClosureHadronRecoFix.root'
 				                    )
                                   )
 # CORRELATION
@@ -87,7 +87,7 @@ process.V0CorrAnalysisRapidityTight = cms.Sequence(process.selectV0CandidatesNew
 process.V0CorrAnalysisRapidityMCGen = cms.Sequence(process.v0CorrelationMCRapidity)
 process.HadCorrAnalysisRapidityMCGen = cms.Sequence(process.HadronCorrelation)
 
-process.p = cms.Path(process.V0CorrAnalysisRapidity)
+process.p = cms.Path(process.HadCorrAnalysisRapidityMCGen)
 
 process.schedule = cms.Schedule(process.p)
 
