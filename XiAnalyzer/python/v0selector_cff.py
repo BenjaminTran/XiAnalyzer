@@ -17,6 +17,14 @@ selectV0CandidatesNewlambdaRapidity = selectV0CandidatesNew.clone(
   dorap        = cms.bool(True)
 )
 
+selectV0CandidatesNewkshortRapidityMC = selectV0CandidatesNewkshortRapidity.clone(
+        v0CollName = cms.string("generalV0Candidates")
+)
+
+selectV0CandidatesNewlambdaRapidityMC = selectV0CandidatesNewlambdaRapidity.clone(
+        v0CollName = cms.string("generalV0Candidates")
+)
+
 selectV0CandidatesNewlambdatight = selectV0CandidatesNewlambda.clone(
   dxySigCut1      = cms.double(1.25),
   dxySigCut2      = cms.double(1.25),
