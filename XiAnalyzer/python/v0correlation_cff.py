@@ -31,7 +31,7 @@ v0CorrelationtightRapidity = v0CorrelationRapidity.clone(
         )
 
 v0CorrelationRapidityMC = v0CorrelationRapidity.clone(
-        multHigh = cms.untracked.double(99999999),
+        multHigh = cms.untracked.double(999999),
         multLow = cms.untracked.double(-1),
         doRap = cms.untracked.bool(True)
         )

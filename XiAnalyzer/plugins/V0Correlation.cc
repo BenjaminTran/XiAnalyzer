@@ -1219,7 +1219,7 @@ V0Correlation::endJob() {
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi,);//1.0/nMult_trg_eff/effla);///effweight_ass);
+                        hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff/effla);///effweight_ass);
                     }
                 }
             }
