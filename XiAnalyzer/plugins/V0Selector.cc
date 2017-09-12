@@ -57,8 +57,7 @@ V0Selector::V0Selector(const edm::ParameterSet& iConfig)
   rapMax_         = iConfig.getParameter<double>("rapMax");
   rapMin_         = iConfig.getParameter<double>("rapMin");
   _vertexCollName = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName" ) );
-  //_V0Collection = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag( v0CollName_,v0IDName_,"ANASKIM" ) );
-  _V0Collection = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag( v0CollName_,v0IDName_,"RECO" ) );
+  _V0Collection = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag( v0CollName_,v0IDName_,"ANASKIM" ) );
   // Trying this with Candidates instead of the simple reco::Vertex
   produces< reco::VertexCompositeCandidateCollection >(v0IDName_);
 
