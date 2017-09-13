@@ -4,8 +4,8 @@ from XiAnalyzer.XiAnalyzer.v0correlation_cfi import *
 
 v0CorrelationRapidity = v0Correlation.clone(
         multHigh       = cms.untracked.double(250),
-        etaMin_trg = cms.untracked.double(-9999999),
-        etaMax_trg = cms.untracked.double(9999999),
+        etaMin_trg = cms.untracked.double(-999999),
+        etaMax_trg = cms.untracked.double(999999),
         laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdaRapidity:Lambda'),
         ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshortRapidity:Kshort'),
         ptbin_n        = cms.untracked.int32(18),

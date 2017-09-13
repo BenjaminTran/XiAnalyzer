@@ -91,14 +91,14 @@ struct ParticleData{
                 float dauLongImpactSig_; //La_pion
                 float batDauTransImpactSig_; //Xi_pion
                 float batDauLongImpactSig_; //Xi_pion
-                float xiVtxSignificance3D_; //Xi_dls
+                float casVtxSignificance3D_; //Xi_dls
                 float vtxSignificance3D_; //La_dls
                 //Hong Cuts
-                float xi3DIpSigValue_;
-                float xiPi3DIpSigValue_;
+                float cas3DIpSigValue_;
+                float casPi3DIpSigValue_;
                 float VTrkPi3DIpSigValue_;
                 float VTrkP3DIpSigValue_;
-                float xiFlightSigValue_;
+                float casFlightSigValue_;
                 float distanceSigValue_; //lambda
     //General candidate parameters
                 float eta_;
@@ -117,12 +117,13 @@ struct ParticleData{
                 float pt_;
                 int nhit1_;
                 int nhit2_;
-                int n_;
+                int n_; //number of candidates
+    //Event Parameters
+                int nTrkAcc_; //Number of tracks that pass track selection and eta pT cut
+                int mult_; //Multiplicity
         } XI, OM, KS, LA;
 
-    edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _xiCollection;
     edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _v0Collection;
-    edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _omCollection;
     edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
     edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
 
