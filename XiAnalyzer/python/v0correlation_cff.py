@@ -31,8 +31,6 @@ v0CorrelationtightRapidity = v0CorrelationRapidity.clone(
         )
 
 v0CorrelationRapidityMC = v0CorrelationRapidity.clone(
-        laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdaRapidityMC:Lambda'),
-        ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshortRapidityMC:Kshort'),
         multHigh = cms.untracked.double(999999),
         multLow = cms.untracked.double(-1),
         doRap = cms.untracked.bool(True)
