@@ -121,6 +121,12 @@ struct ParticleData{
     //Event Parameters
                 int nTrkAcc_; //Number of tracks that pass track selection and eta pT cut
                 int mult_; //Multiplicity
+                double xVtx_;
+                double yVtx_;
+                double zVtx_;
+                double xVtxError_;
+                double yVtxError_;
+                double zVtxError_;
         } XI, OM, KS, LA;
 
     edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _v0Collection;
