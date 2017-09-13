@@ -359,6 +359,8 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 double distanceSigma    = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/distanceMag;
                 double distanceSigValue = distanceMag/distanceSigma;
 
+                double misIDMass_Om_pila = -999;
+                double misIDMass_Om_lapi = -999;
                 if(v0IDName_ == "Omega")
                 {
                     double pd1 = d1->p();
@@ -371,14 +373,14 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     double energyd1 = sqrt(massd1*massd1+pd1*pd1);
                     double energyd2 = sqrt(massd2*massd2+pd2*pd2);
                     double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
-                    double misIDMass_Om_pila = invmass - xiMass;
+                    misIDMass_Om_pila = invmass - xiMass;
 
                     massd1=lambdaMass;
                     massd2=piMass;
                     energyd1 = sqrt(massd1*massd1+pd1*pd1);
                     energyd2 = sqrt(massd2*massd2+pd2*pd2);
                     invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
-                    double misIDMass_Om_lapi = invmass - xiMass;
+                    misIDMass_Om_lapi = invmass - xiMass;
                     //if(fabs(invmass - xiMass) < misIDMassCut_) continue;
                 }
 
