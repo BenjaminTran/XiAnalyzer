@@ -100,7 +100,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         EtaPtCutnTracks++;
     }
 
-    if(v0IDName == "Xi" || v0IDName == "Omega")
+    if(v0IDName_ == "Xi" || v0IDName_ == "Omega")
     {
         edm::Handle< reco::VertexCompositeCandidateCollection > CascadeCandidates;
         iEvent.getByToken(_v0Collection, CascadeCandidates);
@@ -164,13 +164,13 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     cout<<"invalid v0 kinematic vertex fitting"<<endl;
                     continue;
                 }
-                v0FitTree->movePointerToTheTop()v0;
+                v0FitTree->movePointerToTheTop();
                 RefCountedKinematicParticle lamCand      = v0FitTree->currentParticle();
                 RefCountedKinematicVertex lamDecayVertex = v0FitTree->currentDecayVertex();
 
                 vector<RefCountedKinematicParticle> casParticles;
-                if(v0IDName == "Xi") casParticles.push_back(pFactory.particle(bat_CasTT,piMass,chi,ndf,piMass_sigma));
-                else if(v0IDName == "Omega") casParticles.push_back(pFactory.particle(bat_CasTT,kaonMass,chi,ndf,kaonMass_sigma));
+                if(v0IDName_ == "Xi") casParticles.push_back(pFactory.particle(bat_CasTT,piMass,chi,ndf,piMass_sigma));
+                else if(v0IDName_ == "Omega") casParticles.push_back(pFactory.particle(bat_CasTT,kaonMass,chi,ndf,kaonMass_sigma));
                 else cout << "unexpected boolean option" << endl;
                 casParticles.push_back(lamCand);
 
@@ -248,8 +248,8 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 RefCountedKinematicVertex lamDecayVertex = v0FitTree->currentDecayVertex();
 
                 vector<RefCountedKinematicParticle> casParticles;
-                if(v0IDName == "Xi") casParticles.push_back(pFactory.particle(bat_CasTT,piMass,chi,ndf,piMass_sigma));
-                else if(v0IDName == "Omega") casParticles.push_back(pFactory.particle(bat_CasTT,kaonMass,chi,ndf,kaonMass_sigma));
+                if(v0IDName_ == "Xi") casParticles.push_back(pFactory.particle(bat_CasTT,piMass,chi,ndf,piMass_sigma));
+                else if(v0IDName_ == "Omega") casParticles.push_back(pFactory.particle(bat_CasTT,kaonMass,chi,ndf,kaonMass_sigma));
                 else cout << "unexpected boolean option" << endl;
                 casParticles.push_back(lamCand);
 
@@ -371,18 +371,18 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     double energyd1 = sqrt(massd1*massd1+pd1*pd1);
                     double energyd2 = sqrt(massd2*massd2+pd2*pd2);
                     double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
-                    misIDMass_Om_pila = invmass - xiMass;
+                    double misIDMass_Om_pila = invmass - xiMass;
 
                     massd1=lambdaMass;
                     massd2=piMass;
                     energyd1 = sqrt(massd1*massd1+pd1*pd1);
                     energyd2 = sqrt(massd2*massd2+pd2*pd2);
                     invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
-                    misIDMass_Om_lapi = invmass - xiMass;
+                    double misIDMass_Om_lapi = invmass - xiMass;
                     //if(fabs(invmass - xiMass) < misIDMassCut_) continue;
                 }
 
-                if(v0IDName == "Xi")
+                if(v0IDName_ == "Xi")
                 {
                     XI.cas3DIpSigValue_     = cas3DIpSigValue;
                     XI.casPi3DIpSigValue_   = casBat3DIpSigValue;
@@ -398,7 +398,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
                     XiTree->Fill();
                 }
-                else if(v0IDName == "Omega")
+                else if(v0IDName_ == "Omega")
                 {
                     OM.cas3DIpSigValue_     = cas3DIpSigValue;
                     OM.casPi3DIpSigValue_   = casBat3DIpSigValue;
@@ -468,7 +468,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         }
     }
 
-    if(v0IDName == "Kshort" || v0IDName == "Lambda")
+    if(v0IDName_ == "Kshort" || v0IDName_ == "Lambda")
     {
         if(EtaPtCutnTracks >= multmin_)// && EtaPtCutnTracks < multmax_)
         {
@@ -609,7 +609,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     //if(fabs(invmass-lambdaMass)<misIDMassCut_) continue;
                 }
 
-                if(v0IDName == "Kshort")
+                if(v0IDName_ == "Kshort")
                 {
                     KS.eta_ =  eta_v0;
                     KS.mass_ = mass_v0;
