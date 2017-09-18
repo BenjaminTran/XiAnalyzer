@@ -21,6 +21,7 @@
 #include "XiAnalyzer/XiAnalyzer/interface/XiCorrelation.h" // for interactive
 
 #define PI 3.1416
+#define UNUSED(x) (void)(x)
 
 XiCorrelation::XiCorrelation(const edm::ParameterSet& iConfig)
 
@@ -147,6 +148,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             MassPt->Fill(mass,xi_pT);
             double Ket = sqrt(mass*mass + xi_pT*xi_pT) - mass;
             double EffXchoice = 0;
+            UNUSED(EffXchoice);
 
             const reco::Candidate *dau1 = xiCand->daughter(0);
             const reco::Candidate *dau2 = xiCand->daughter(1);
@@ -259,6 +261,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double eta_trg    = pepVect_trg.Eta();
                 double rap_trg    = pepVect_trg.E();
                 double EffXchoice = 0;
+                UNUSED(EffXchoice);
 
                 if(doRap_)
                     EffXchoice = rap_trg;
@@ -281,6 +284,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double phi_trg    = pepVect_trg.Phi();
                 double rap_trg    = pepVect_trg.E();
                 double EffXchoice = 0;
+                UNUSED(EffXchoice);
 
                 if(doRap_)
                     EffXchoice = rap_trg;
@@ -333,6 +337,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double eta_trg    = pepVect_trg.Eta();
                 double rap_trg    = pepVect_trg.E();
                 double EffXchoice = 0;
+                UNUSED(EffXchoice);
 
                 if(doRap_)
                     EffXchoice = rap_trg;
@@ -355,6 +360,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double phi_trg    = pepVect_trg.Phi();
                 double rap_trg    = pepVect_trg.E();
                 double EffXchoice = 0;
+                UNUSED(EffXchoice);
 
                 if(doRap_)
                     EffXchoice = rap_trg;
@@ -584,6 +590,7 @@ XiCorrelation::endJob()
                     double eta_trg = pvectorTmp_trg.Eta();
                     double rap_trg = pvectorTmp_trg.E();
                     double EffXchoice = 0;
+                    UNUSED(EffXchoice);
 
                     if(doRap_)
                         EffXchoice = rap_trg;
@@ -603,6 +610,7 @@ XiCorrelation::endJob()
                     double phi_trg = pvectorTmp_trg.Phi();
                     double rap_trg = pvectorTmp_trg.E();
                     double EffXchoice = 0;
+                    UNUSED(EffXchoice);
 
                     if(doRap_)
                         EffXchoice = rap_trg;
@@ -681,6 +689,7 @@ XiCorrelation::endJob()
                     double eta_trg = pvectorTmp_trg.Eta();
                     double rap_trg = pvectorTmp_trg.E();
                     double EffXchoice = 0;
+                    UNUSED(EffXchoice);
 
                     if(doRap_)
                         EffXchoice = rap_trg;
@@ -699,6 +708,7 @@ XiCorrelation::endJob()
                     double pt_trg = pvectorTmp_trg.Pt();
                     double rap_trg = pvectorTmp_trg.E();
                     double EffXchoice = 0;
+                    UNUSED(EffXchoice);
 
                     if(doRap_)
                         EffXchoice = rap_trg;
