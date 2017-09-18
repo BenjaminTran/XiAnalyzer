@@ -8,7 +8,10 @@ hltHM = hltHM.clone()
 
 omCorrelation = xiCorrelation.clone(
         casCollection = cms.InputTag('selectOmCandidates:Omega'),
-
+        ptBin = cms.vdouble(1.0, 1.5, 1.9, 2.3, 2.7, 3.3, 4.1, 5.0, 6.0, 8.0),
+        PtBinNum = cms.int32(9),
+        xiMassMean = cms.vdouble(1.67316 ,1.67273 ,1.67282 ,1.67275 ,1.67275 ,1.67285 ,1.67273 ,1.67271 ,1.6726),
+        xiMassSigma = cms.vdouble(0.00635809 ,0.00531942 ,0.00476514 ,0.00492592 ,0.00484927 ,0.00462567 ,0.00438588 ,0.00457689 ,0.00457444)
         )
 
 
