@@ -183,7 +183,7 @@ class XiCorrelation : public edm::EDAnalyzer {
 
         edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
         edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
-        edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _xiCollection;
+        edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _casCollection;
 
         double bkgnum_;
         double etaMax_ass_;
