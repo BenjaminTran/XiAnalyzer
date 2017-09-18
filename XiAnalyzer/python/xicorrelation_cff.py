@@ -7,6 +7,7 @@ from XiAnalyzer.XiAnalyzer.xicorrelation_cfi import *
 hltHM = hltHM.clone()
 
 omCorrelation = xiCorrelation.clone(
+        multHigh = cms.int32(220),
         casCollection = cms.InputTag('selectOmCandidates:Omega'),
         ptBin = cms.vdouble(1.0, 1.5, 1.9, 2.3, 2.7, 3.3, 4.1, 5.0, 6.0, 8.0),
         PtBinNum = cms.int32(9),
