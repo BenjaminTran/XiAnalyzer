@@ -43,7 +43,7 @@ process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(5000))
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
-    'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_pPb_V0Cascade_FullSkim_v4/170803_222621/0000/pPb_HM_102.root'
+    'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_pPb_V0Cascade_FullSkim_v4/170803_222621/0000/pPb_HM_103.root'
     #'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_Pbp_V0Cascade_v1/170301_202152/0000/pPb_HM_105.root'),
     #secondaryFileNames = cms.untracked.vstring(
     #    '/store/hidata/PARun2016C/PAHighMultiplicity1/AOD/PromptReco-v1/000/286/010/00000/3A1D69BC-01B7-E611-AD9A-FA163E98E135.root',
@@ -90,7 +90,7 @@ process.TFileService = cms.Service("TFileService",
                                     #'V0Correlation.root'
                                     #'XiCorrelationRapidityPbpLoose.root'
                                     #'XiCorrelationRapidityRECOClosure.root'
-                                    'XiCorrelationRapidityCorrectionA.root'
+                                    'OmCorrelation.root'
 				    )
                                   )
 # CORRELATION
@@ -111,11 +111,11 @@ process.XiCorrAnalysisRapidityMC = cms.Sequence(process.selectV0CandidatesLowXiR
 
 # process.RapidityAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.v0CorrelationRapidity*process.xiCorrelationRapidity)
 
-process.OmCorrAnalysis = cms.Sequence(process.selectOmegaCandidatesNew)
+process.OmCorrAnalysis = cms.Sequence(process.selectOmegaCandidatesNew*process.omCorrelation)
 
 process.GenCorrAnalysis = cms.Sequence(process.v0CorrelationMCRapidity)
 
-process.p = cms.Path(process.XiCorrAnalysisRapidity)
+process.p = cms.Path(process.OmCorrAnalysis)
 
 process.schedule = cms.Schedule(process.p)
 
