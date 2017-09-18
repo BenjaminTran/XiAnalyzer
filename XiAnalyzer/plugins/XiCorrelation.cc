@@ -30,7 +30,7 @@ XiCorrelation::XiCorrelation(const edm::ParameterSet& iConfig)
 
     TH1::SetDefaultSumw2();
     _trkSrc         = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("trkSrc"));
-    _xiCollection   = consumes<reco::VertexCompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("xiCollection"));
+    _casCollection   = consumes<reco::VertexCompositeCandidateCollection>(iConfig.getParameter<edm::InputTag>("casCollection"));
     _vertexCollName = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexCollName"));
     PtBinNum_       = iConfig.getParameter<int>("PtBinNum");
     bkgnum_         = iConfig.getParameter<double>("bkgnum");
@@ -99,13 +99,13 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         pepVect_dau_xi_side[i]= new vector<TVector3>;
     }
 
-    edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
-    iEvent.getByToken(_xiCollection, xiCollection);
+    edm::Handle<reco::VertexCompositeCandidateCollection> casCollection;
+    iEvent.getByToken(_casCollection, casCollection);
 
     edm::Handle<reco::TrackCollection> tracks;
     iEvent.getByToken(_trkSrc, tracks);
 
-    if(!xiCollection.isValid()){
+    if(!casCollection.isValid()){
         cout << "Collection invalid" << endl;
         return;
     }
@@ -136,7 +136,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         nTrk->Fill(EtaPtCutnTracks);
         //Make vector of cascade PEP
         for(reco::VertexCompositeCandidateCollection::const_iterator xiCand =
-                xiCollection->begin(); xiCand != xiCollection->end(); xiCand++)
+                casCollection->begin(); xiCand != casCollection->end(); xiCand++)
         {
             // Make 2D Mass v Pt
             double xi_eta = xiCand->eta();
@@ -171,7 +171,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 EffXchoice = xi_eta;
 
             //efficiency
-            double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,xi_pT));
+            //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,xi_pT));
 
             // Make vector of Xi Candidate parameters
             TLorentzVector xiPEPvector;
@@ -187,11 +187,11 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                         pepVect_Xi_peak[i]->push_back(xiPEPvector);
                         pepVect_dau_xi_peak[i]->push_back(dau1PEPvector);
                         pepVect_dau_xi_peak[i]->push_back(dau2PEPvector);
-                        KET_xi[i]->Fill(Ket,1.0/effxi);
-                        Pt_xi[i]->Fill(xi_pT,1.0/effxi);
-                        Eta_xi[i]->Fill(xi_eta,1.0/effxi);
-                        rap_xi[i]->Fill(xi_rap,1.0/effxi);
-                        rap_xi_Lorentz[i]->Fill(xiPEPvector.E(),1.0/effxi);
+                        KET_xi[i]->Fill(Ket);//,1.0/effxi);
+                        Pt_xi[i]->Fill(xi_pT);//,1.0/effxi);
+                        Eta_xi[i]->Fill(xi_eta);//,1.0/effxi);
+                        rap_xi[i]->Fill(xi_rap);//,1.0/effxi);
+                        rap_xi_Lorentz[i]->Fill(xiPEPvector.E());//,1.0/effxi);
                     }
                     //sideband
                     if((mass <= (xiMassMean_[i] - sideFactor_*xiMassSigma_[i]) && mass >= 1.25) || (mass <= 1.40 && mass >= (xiMassMean_[i] + sideFactor_*xiMassSigma_[i])))
@@ -199,10 +199,10 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                         pepVect_Xi_side[i]->push_back(xiPEPvector);
                         pepVect_dau_xi_side[i]->push_back(dau1PEPvector);
                         pepVect_dau_xi_side[i]->push_back(dau2PEPvector);
-                        KET_xi_bkg[i]->Fill(Ket,1.0/effxi);
-                        Pt_xi_bkg[i]->Fill(xi_pT,1.0/effxi);
-                        Eta_xi_bkg[i]->Fill(xi_eta,1.0/effxi);
-                        rap_xi_bkg[i]->Fill(xi_rap,1.0/effxi);
+                        KET_xi_bkg[i]->Fill(Ket);//,1.0/effxi);
+                        Pt_xi_bkg[i]->Fill(xi_pT);//,1.0/effxi);
+                        Eta_xi_bkg[i]->Fill(xi_eta);//,1.0/effxi);
+                        rap_xi_bkg[i]->Fill(xi_rap);//,1.0/effxi);
                     }
                 }
             }
@@ -265,9 +265,9 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 else
                     EffXchoice = eta_trg;
 
-                double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+                //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
-                nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
+                //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
             }
 
             mult_xi[i]->Fill(nMult_trg_eff_xi);
@@ -287,7 +287,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 else
                     EffXchoice = eta_trg;
 
-                double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+                //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
                 TVector3 pepvector_trg_dau1 = (*pepVect_dau_xi_peak[i])[2*xi_trg];
 
@@ -320,9 +320,11 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
                     // To reduce jet fragmentation contributions
                     if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                    SignalXiPeak[i]->Fill(dEta, dPhi,1.0/nMult_trg_eff_xi/effxi);
+                    SignalXiPeak[i]->Fill(dEta, dPhi);//,1.0/nMult_trg_eff_xi/effxi);
                 }
             }
+
+            nMult_trg_eff_xi = 0;
 
             for(int xi_trg = 0; xi_trg<pepVect_Xi_side_size; xi_trg++)
             {
@@ -337,9 +339,9 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 else
                     EffXchoice = eta_trg;
 
-                double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+                //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
-                nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
+                //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
             }
 
             mult_xi_bkg[i]->Fill(nMult_trg_eff_xi);
@@ -359,7 +361,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 else
                     EffXchoice = eta_trg;
 
-                double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+                //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
                 for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
                 {
@@ -379,7 +381,7 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
                     // To reduce jet fragmentation contributions
                     if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                    SignalXiSide[i]->Fill(dEta, dPhi, 1.0/nMult_trg_eff_xi/effxi);
+                    SignalXiSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_xi/effxi);
                 }
             }
         }
@@ -487,9 +489,9 @@ void
 XiCorrelation::beginJob()
 {
     TH1::SetDefaultSumw2();
-    edm::FileInPath fip("XiAnalyzer/XiAnalyzer/data/EffhistoXi.root");
-    TFile f(fip.fullPath().c_str(),"READ");
-    effhisto_xi = (TH2D*)f.Get("EffHistoXi");
+    //edm::FileInPath fip("XiAnalyzer/XiAnalyzer/data/EffhistoXi.root");
+    //TFile f(fip.fullPath().c_str(),"READ");
+    //effhisto_xi = (TH2D*)f.Get("EffHistoXi");
 
     nTrk            = fs->make<TH1D>("nTrk", "nTrk", 300, 0, 300);
     nEvt            = fs->make<TH1D>("nEvt","nEvt",10,0,10);
@@ -588,9 +590,9 @@ XiCorrelation::endJob()
                     else
                         EffXchoice = eta_trg;
 
-                    double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+                    //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
-                    nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
+                    //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
                 }
 
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
@@ -607,7 +609,7 @@ XiCorrelation::endJob()
                     else
                         EffXchoice = eta_trg;
 
-                    double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+                    //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
                     TVector3 pvectorTmp_dau1_trg = pepVectTmp_dau[2*ntrg];
                     double eta_trg_dau1 = pvectorTmp_dau1_trg.Eta();
@@ -634,7 +636,7 @@ XiCorrelation::endJob()
 
                         if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                        BackgroundXiPeak[i]->Fill(dEta, dPhi, 1.0/nMult_trg_eff_xi/effxi);
+                        BackgroundXiPeak[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_xi/effxi);
                     }
                 }
             }
@@ -685,8 +687,8 @@ XiCorrelation::endJob()
                     else
                         EffXchoice = eta_trg;
 
-                    double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
-                    nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
+                    //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+                    //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
                 }
 
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
@@ -703,7 +705,7 @@ XiCorrelation::endJob()
                     else
                         EffXchoice = eta_trg;
 
-                    double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+                    //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
                     TVector3 pvectorTmp_dau1_trg = pepVectTmp_dau[2*ntrg];
                     double eta_trg_dau1 = pvectorTmp_dau1_trg.Eta();
@@ -730,7 +732,7 @@ XiCorrelation::endJob()
 
                         if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                        BackgroundXiSide[i]->Fill(dEta, dPhi, 1.0/nMult_trg_eff_xi/effxi);
+                        BackgroundXiSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_xi/effxi);
                     }
                 }
             }
