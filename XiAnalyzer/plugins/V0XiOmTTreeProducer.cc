@@ -746,8 +746,8 @@ V0XiOmTTreeProducer::beginJob()
         OmTree->Branch("rapidity",      &OM.rapidity_,"rapidity/F");
         OmTree->Branch("eta",           &OM.eta_,"eta/F");
         OmTree->Branch("pt",            &OM.pt_,"pt/F");
-        OmTree->Branch("misIDMasspiLa", &OM.misIDMasspiLa_,"misIDMasspiLa/F");
-        OmTree->Branch("misIDMassLapi", &OM.misIDMassLapi_,"misIDMassLapi/F");
+        OmTree->Branch("misIDMasspiLa", &OM.misIDMassForward_,"misIDMasspiLa/F");
+        OmTree->Branch("misIDMassLapi", &OM.misIDMassBackward_,"misIDMassLapi/F");
         OmTree->Branch("xVtx",          &OM.xVtx_,"xVtx/F");
         OmTree->Branch("yVtx",          &OM.yVtx_,"yVtx/F");
         OmTree->Branch("zVtx",          &OM.zVtx_,"zVtx/F");
