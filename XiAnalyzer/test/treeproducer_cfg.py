@@ -84,9 +84,9 @@ process.TFileService = cms.Service("TFileService",
 #Tree producer
 process.TreeProd = cms.Sequence(process.OmTreeProducer*process.XiTreeProducer*process.KsTreeProducer*process.LaTreeProducer)
 
-process.OmTreeProd = cms.Sequence(process.OmTreeProducer)
+process.LaOmTreeProd = cms.Sequence(process.LaTreeProducer + process.OmTreeProducer)
 
-process.p = cms.Path(process.TreeProd)
+process.p = cms.Path(process.LaOmTreeProd)
 
 process.schedule = cms.Schedule(process.p)
 

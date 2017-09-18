@@ -1,7 +1,7 @@
 import v0analyzerheader as v0
 
-collID = 'pPb'
-#collID = 'Pbp'
+#collID = 'pPb'
+collID = 'Pbp'
 
 if __name__ == '__main__':
 
@@ -18,7 +18,7 @@ if __name__ == '__main__':
             print "Failed submitting task: %s" % (cle)
 
 
-    for num in range(2,4):
+    for num in range(0,6):
         try:
             with open( 'V0VarStore.dat', 'r' ) as fle:
                 counter = int( fle.readline() )
