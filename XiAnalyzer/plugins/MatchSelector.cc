@@ -28,10 +28,10 @@ const double protonMassSquared = protonMass*protonMass;
 const double electronMass = 0.000511;
 const double electronMassSquared = electronMass*electronMass;
 const double lambdaMass = 1.115683;
-const double kshortMass = 0.497614; 
+const double kshortMass = 0.497614;
 
 // Constructor
-V0Selector::V0Selector(const edm::ParameterSet& iConfig) 
+V0Selector::V0Selector(const edm::ParameterSet& iConfig)
 {
   using std::string;
 
@@ -141,7 +141,38 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
            int st = trk.status();
            if(v0IDName_ == "Kshort")
            {
-               if()
+               if(fabs(id) == 310)
+               {
+                   if(trk.numberOfDaughters()==2)
+                   {
+                       const reco::Candidate *gen_dau1 = trk.daughter(0);
+                       const reco::Candidate *gen_dau2 = trk.daughter(1);
+
+                       int id_dau1 = gen_dau1->pdgID();
+                       int id_dau2 = gen_dau2->pdgID();
+
+                       double eta_gen_dau1 = gen_dau1->eta();
+                       double eta_gen_dau2 = gen_dau2->eta();
+
+                       double phi_gen_dau1 = gen_dau1->phi();
+                       double phi_gen_dau2 = gen_dau2->phi();
+
+                       double pt_gen_dau1 = gen_dau1->pt();
+                       double pt_gen_dau2 = gen_dau2->pt();
+                       if(id_dau1 == 211)
+                       {
+                           double dphi1 = phi_gen_dau1 - phi1;
+                           double deta1 = eta_gen_dau1 - eta1;
+                           double dR1 = sqrt(dphi*dphi + deta*deta);
+                           double dpt1 = pt_gen_dau1 - pt1;
+                           double sumpt1 = pt_gen_dau1 + pt1;
+                           //dR Fill daughter1 hist
+                           //sumpt Fill daughter1 hist
+                           //
+                           double dphi2 = 
+                       }
+                   }
+               }
            }
        }
 
