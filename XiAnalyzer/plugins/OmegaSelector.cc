@@ -49,6 +49,7 @@ OmegaSelector::OmegaSelector(const edm::ParameterSet& iConfig)
     distanceSigValue_   = iConfig.getParameter<double>("distanceSigValue");
     etaCutMax_          = iConfig.getParameter<double>("etaCutMax");
     etaCutMin_          = iConfig.getParameter<double>("etaCutMin");
+    misIDMassCut_       = iConfig.getParameter<double>("misIDMassCut");
     nHitCut1_           = iConfig.getParameter<int>("nHitCut1");
     v0CollName_         = iConfig.getParameter<string>("v0CollName");
     v0IDName_           = iConfig.getParameter<string>("v0IDName");
@@ -147,7 +148,27 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         reco::TrackRef  lambda_dau1 = lambda_d1->get<reco::TrackRef>();
         reco::TrackRef  lambda_dau2 = lambda_d2->get<reco::TrackRef>();
 
+        if(v0IDName_ == "Omega")
+        {
+            double pd1 = d1->p();
+            double pd2 = d2->p();
+            TVector3 dauvec1(d1->px(),d1->py(),d1->pz());
+            TVector3 dauvec2(d2->px(),d2->py(),d2->pz());
+            TVector3 dauvecsum(dauvec1+dauvec2);
+            double massd1=piMass;
+            double massd2=lambdaMass;
+            double energyd1 = sqrt(massd1*massd1+pd1*pd1);
+            double energyd2 = sqrt(massd2*massd2+pd2*pd2);
+            double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+            if(fabs(invmass - xiMass) < misIDMassCut_) continue;
 
+            massd1=lambdaMass;
+            massd2=piMass;
+            energyd1 = sqrt(massd1*massd1+pd1*pd1);
+            energyd2 = sqrt(massd2*massd2+pd2*pd2);
+            invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+            if(fabs(invmass - xiMass) < misIDMassCut_) continue;
+        }
 
         //pt,mass
         double eta_xi = v0cand->eta();

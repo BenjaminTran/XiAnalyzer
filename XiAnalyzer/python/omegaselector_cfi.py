@@ -17,6 +17,7 @@ selectOmCandidates = cms.EDProducer('OmegaSelector',
     VTrkP3DIpSigValue  = cms.double(2),
     xiFlightSigValue   = cms.double(2),
     distanceSigValue   = cms.double(10),
+    misIDMassCut       = cms.double(0.015),
     dorap              = cms.bool(False),
     rapMax             = cms.double(1.0),
     rapMin             = cms.double(-1.0)
