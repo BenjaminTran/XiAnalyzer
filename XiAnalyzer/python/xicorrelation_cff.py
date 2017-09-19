@@ -7,12 +7,21 @@ from XiAnalyzer.XiAnalyzer.xicorrelation_cfi import *
 hltHM = hltHM.clone()
 
 omCorrelation = xiCorrelation.clone(
-        multHigh = cms.double(220),
+        multHigh      = cms.double(220),
         casCollection = cms.InputTag('selectOmegaCandidatesNew:Omega'),
-        ptBin = cms.vdouble(1.0, 1.5, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10.0),
-        PtBinNum = cms.int32(9),
-        xiMassMean = cms.vdouble(1.67316 ,1.6728 ,1.67278 ,1.67273 ,1.67283 ,1.67283 ,1.67269 ,1.67251 ,1.673),
-        xiMassSigma = cms.vdouble(0.00635809 ,0.0052194 ,0.00463206 ,0.0049998 ,0.00469137 ,0.00451139 ,0.00444609 ,0.00430358 ,0.00556587)
+        ptBin         = cms.vdouble(1.0, 1.5, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10.0),
+        PtBinNum      = cms.int32(9),
+        xiMassMean    = cms.vdouble(1.67316 ,1.6728 ,1.67278 ,1.67273 ,1.67283 ,1.67283 ,1.67269 ,1.67251 ,1.673),
+        xiMassSigma   = cms.vdouble(0.00635809 ,0.0052194 ,0.00463206 ,0.0049998 ,0.00469137 ,0.00451139 ,0.00444609 ,0.00430358 ,0.00556587)
+        )
+
+omCorrelationRapidity = xiCorrelation.clone(
+        casCollection = cms.InputTag('selectOmegaCandidatesNewRapidity:Omega'),
+        ptBin         = cms.vdouble(1.0, 1.5, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10.0),
+        PtBinNum      = cms.int32(9),
+        xiMassMean    = cms.vdouble(1.67302 ,1.67285 ,1.67278 ,1.67267 ,1.67273 ,1.67271 ,1.67263 ,1.67266 ,1.67274),
+        xiMassSigma   = cms.vdouble(0.00809827 ,0.00437071 ,0.00392287 ,0.00441197 ,0.00350338 ,0.00333124 ,0.00336817 ,0.00342727 ,0.0049246),
+        doRap         = cms.bool(True)
         )
 
 

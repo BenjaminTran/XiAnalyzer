@@ -3,7 +3,7 @@ import FWCore.ParameterSet.Config as cms
 from XiAnalyzer.XiAnalyzer.omegaselector_cfi import *
 selectOmegaCandidatesNew = selectOmCandidates.clone()
 
-selectOmCandidatesLowRapidity = selectOmCandidates.clone(
+selectOmegaCandidatesNewRapidity = selectOmCandidates.clone(
     dorap = cms.bool(True)
         )
 

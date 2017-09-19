@@ -125,13 +125,11 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     std::auto_ptr< reco::VertexCompositeCandidateCollection >
         theNewOmCands( new reco::VertexCompositeCandidateCollection() );
 
-    int count = 0;
 
     for( reco::VertexCompositeCandidateCollection::const_iterator v0cand =
             v0candidates->begin(); v0cand != v0candidates->end();
             v0cand++)
     {
-        cout << count << endl;
 
         //double secvz = -999.9, secvx = -999.9, secvy = -999.9;
 
@@ -177,7 +175,8 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         //double py_xi   = v0cand->py();
         //double pz_xi   = v0cand->pz();
 
-        if(dorap_ && (rap_xi > rapMax_ || rap_xi < rapMin_)) continue;
+        if(dorap_)
+            if(rap_xi > rapMax_ || rap_xi < rapMin_) continue;
         else
             if(eta_xi > etaCutMax_ || eta_xi < etaCutMin_) continue;
 
@@ -331,7 +330,6 @@ void OmegaSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         theNewOmCands->push_back( *v0cand );
 
         cout<<"Successful Omega"<<endl;
-        count++;
     }
 
     // Write the collections to the Event
