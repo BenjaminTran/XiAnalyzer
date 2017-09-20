@@ -148,7 +148,7 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
                     if(dR < 0.1 && dpt/pt_gen < 0.1)
                     {
                         theNewV0Cands->push_back(*v0cand);
-                        continue;
+                        break;
                     }
                 }
             }
@@ -166,7 +166,7 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
                     if(dR < 0.1 && dpt/pt_gen < 0.1)
                     {
                         theNewV0Cands->push_back(*v0cand);
-                        continue;
+                        break;
                     }
                 }
             }
