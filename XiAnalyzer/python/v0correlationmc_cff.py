@@ -20,4 +20,3 @@ v0CorrelationMCRapidity = v0CorrelationMC.clone(
         multHigh = cms.untracked.double(999999),
         multLow = cms.untracked.double(-1)
         )
-#hltHM = hltHM.clone()
