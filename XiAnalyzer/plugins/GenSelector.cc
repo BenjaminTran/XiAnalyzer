@@ -45,15 +45,23 @@ GenSelector::~GenSelector() {
 // Producer Method
 void GenSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
+    std::cout << "Unique1" << std::endl;
    using namespace edm;
 
    edm::Handle<reco::GenParticleCollection> gencand;
    iEvent.getByToken(_gnCollection, gencand);
-   if(!gencand.isValid()) return;
+   if(!gencand.isValid()) 
+   {
+       std::cout << "Actual GenCollection is invalid" << std::endl;
+       return;
+   }
+   std::cout << "Unique2" << std::endl;
 
    // Create auto_ptr for each collection to be stored in the Event
    std::auto_ptr< reco::GenParticleCollection >
      theGenCands( new reco::GenParticleCollection );
+
+   std::cout << "Unique3" << std::endl;
 
    for( reco::GenParticleCollection::const_iterator gncand = gencand->begin();
          gncand != gencand->end();
@@ -63,10 +71,15 @@ void GenSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
        int st = gncand->status();
        int rap = gncand->rapidity();
 
+       std::cout << "Before" << std::endl;
        if(v0IDName_ == "Kshort")
        {
+           std::cout << "There is a Kshort" << std::endl;
            if(fabs(id) == 310 && fabs(rap) < 1.0 && st == 1)
+           {
                theGenCands->push_back(*gncand);
+               std::cout << "Kshort filled" << std::endl;
+           }
        }
 
        if(v0IDName_ == "Lambda")
@@ -88,10 +101,13 @@ void GenSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
                theGenCands->push_back(*gncand);
            }
        }
+       std::cout << "After" << std::endl;
    }
 
    // Write the collections to the Event
+   std::cout << "Unique4" << std::endl;
    iEvent.put( theGenCands, std::string(v0IDName_) );
+   std::cout << "Unique5" << std::endl;
 }
 
 
