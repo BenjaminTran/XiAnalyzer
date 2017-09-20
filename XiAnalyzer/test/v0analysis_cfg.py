@@ -26,8 +26,8 @@ process.GlobalTag.globaltag = '80X_dataRun2_Prompt_v15'
 
 #process.load("SimTracker.TrackAssociation.TrackAssociatorByHits_cfi")
 #process.load("SimTracker.TrackAssociation.TrackAssociatorByChi2_cfi")
-process.load("XiAnalyzer.XiAnalyzer.genselector_cfi")
-process.load("XiAnalyzer.XiAnalyzer.matchselector_cfi")
+process.load("XiAnalyzer.XiAnalyzer.genselector_cff")
+process.load("XiAnalyzer.XiAnalyzer.matchselector_cff")
 process.load("XiAnalyzer.XiAnalyzer.xiselector_cff")
 process.load("XiAnalyzer.XiAnalyzer.v0selector_cff")
 process.load("XiAnalyzer.XiAnalyzer.xicorrelation_cff")
@@ -40,7 +40,7 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(40000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -67,7 +67,8 @@ process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
                                     #'V0CorrelationCorrectMultB.root'
                                     #'V0CorrelationRapidityClosureRecoCollection.root'
-                                    'MatchTest.root'
+                                    'MatchV0Closure.root'
+                                    #'daughtertest.root'
 				                    )
                                   )
 # CORRELATION
@@ -89,7 +90,7 @@ process.V0CorrAnalysisRapidityTight = cms.Sequence(process.selectV0CandidatesNew
 process.V0CorrAnalysisRapidityMCGen = cms.Sequence(process.v0CorrelationMCRapidity)
 process.HadCorrAnalysisRapidityMCGen = cms.Sequence(process.HadronCorrelation)
 
-process.genSelector = cms.Sequence(process.selectGenCandidates*process.MatchCandidates)
+process.genSelector = cms.Sequence(process.selectGenCandidatesKshort*process.selectGenCandidatesLambda*process.MatchCandidatesKshort*process.MatchCandidatesLambda*process.v0CorrelationRapidityMatchMC)
 
 process.p = cms.Path(process.genSelector)
 

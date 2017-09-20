@@ -36,10 +36,10 @@ v0CorrelationRapidityMC = v0CorrelationRapidity.clone(
         doRap = cms.untracked.bool(True)
         )
 
-v0CorrelationRapidityMC = v0CorrelationRapidity.clone(
+v0CorrelationRapidityMatchMC = v0CorrelationRapidity.clone(
         multHigh = cms.untracked.double(999999),
         multLow = cms.untracked.double(-1),
-        doRap = cms.untracked.bool(True)
+        doRap = cms.untracked.bool(True),
         laCollection   = cms.untracked.InputTag('MatchCandidatesLambda:Lambda'),
         ksCollection   = cms.untracked.InputTag('MatchCandidatesKshort:Kshort')
         #TO USE THIS MODULE, COMMENT OUT ALL KINEMATIC CUTS
