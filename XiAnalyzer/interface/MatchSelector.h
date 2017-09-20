@@ -46,6 +46,7 @@
 
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 
 #include <TString.h>
 #include <TVector3.h>
@@ -68,7 +69,7 @@ private:
 
   edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
   edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _V0Collection;
-  edm::EDGetTokenT<reco:VertexCompositeCandidateCollection> _gnCollection;
+  edm::EDGetTokenT<reco:GenParticleCollection> _gnCollection;
 
   edm::InputTag vertexCollName_;
   std::string v0CollName_;

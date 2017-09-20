@@ -49,7 +49,7 @@ void GenSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
    edm::Handle<reco::GenParticleCollection> gencand;
    iEvent.getByToken(_gnCollection, gencand);
-   if(!gnCollection.isValid()) return;
+   if(!gencand.isValid()) return;
 
    // Create auto_ptr for each collection to be stored in the Event
    std::auto_ptr< reco::GenParticleCollection >
@@ -59,7 +59,7 @@ void GenSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
          gncand != gencand->end();
          gncand++)
    {
-       int id = gncand->PdgID();
+       int id = gncand->pdgId();
        int st = gncand->status();
        int rap = gncand->rapidity();
 
@@ -73,8 +73,19 @@ void GenSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
        {
            if(fabs(id) == 3122 && fabs(rap) < 1.0 && st == 1)
            {
+               int mid = 0;
+               if(gncand->numberOfMothers()==1)
+               {
+                   const reco::Candidate * mom = gncand->mother();
+                   mid = mom->pdgId();
+                   if(mom->numberOfMothers()==1)
+                   {
+                       const reco::Candidate * mom1 = mom->mother();
+                       mid = mom1->pdgId();
+                   }
+               }
                if(fabs(mid)==3322 || fabs(mid)==3312 || fabs(mid)==3324 || fabs(mid)==3314 || fabs(mid)==3334) continue;
-               tgeGenCands->push_back(*gncand);
+               theGenCands->push_back(*gncand);
            }
        }
    }

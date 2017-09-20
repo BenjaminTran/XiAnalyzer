@@ -47,7 +47,7 @@ V0Selector::V0Selector(const edm::ParameterSet& iConfig)
   rapMin_         = iConfig.getParameter<double>("rapMin");
   _vertexCollName = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName" ) );
   _V0Collection = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag( v0CollName_,v0IDName_,"ANASKIM" ) );
-  _gnCollection = consumes<reco::VertexCompositeCandidateCollection>(edm::InputTag("gnCollection"));
+  _gnCollection = consumes<reco::GenParticleCollection>(edm::InputTag("gnCollection"));
   // Trying this with Candidates instead of the simple reco::Vertex
   produces< reco::VertexCompositeCandidateCollection >(v0IDName_);
 
@@ -85,7 +85,7 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
    edm::Handle<reco::GenParticleCollection> gencand;
    iEvent.getByToken(_gnCollection, gencand);
-   if(!gnCollection.isValid()) return;
+   if(!gencand.isValid()) return;
 
    // Create auto_ptr for each collection to be stored in the Event
    std::auto_ptr< reco::VertexCompositeCandidateCollection >
@@ -133,23 +133,23 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
        for(reco::GenParticleCollection::const_iterator gncand = gencand->begin(); gncand != gencand->end(); gncand++)
        {
-           double eta = trk.eta();
-           double phi = trk.phi();
-           double pt  = trk.pt();
-           double mass = trk.mass();
-           int id = gncand->pdgID();
-           int st = trk.status();
+           double eta = gncand->eta();
+           double phi = gncand->phi();
+           double pt  = gncand->pt();
+           double mass = gncand->mass();
+           int id = gncand->pdgId();
+           int st = gncand->status();
            if(v0IDName_ == "Kshort")
            {
                if(fabs(id) == 310)
                {
-                   if(trk.numberOfDaughters()==2)
+                   if(gncand->numberOfDaughters()==2)
                    {
-                       const reco::Candidate *gen_dau1 = trk.daughter(0);
-                       const reco::Candidate *gen_dau2 = trk.daughter(1);
+                       const reco::Candidate *gen_dau1 = gncand->daughter(0);
+                       const reco::Candidate *gen_dau2 = gncand->daughter(1);
 
-                       int id_dau1 = gen_dau1->pdgID();
-                       int id_dau2 = gen_dau2->pdgID();
+                       int id_dau1 = gen_dau1->pdgId();
+                       int id_dau2 = gen_dau2->pdgId();
 
                        double eta_gen_dau1 = gen_dau1->eta();
                        double eta_gen_dau2 = gen_dau2->eta();
@@ -163,13 +163,13 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
                        {
                            double dphi1 = phi_gen_dau1 - phi1;
                            double deta1 = eta_gen_dau1 - eta1;
-                           double dR1 = sqrt(dphi*dphi + deta*deta);
+                           double dR1 = sqrt(dphi1*dphi1 + deta1*deta1);
                            double dpt1 = pt_gen_dau1 - pt1;
                            double sumpt1 = pt_gen_dau1 + pt1;
+                           cout << "Mathc" << endl;
                            //dR Fill daughter1 hist
                            //sumpt Fill daughter1 hist
                            //
-                           double dphi2 = 
                        }
                    }
                }
