@@ -112,20 +112,21 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         double pt_V0 = v0cand->pt();
         double phi_V0 = v0cand->phi();
         double eta_V0 = v0cand->eta();
+        double rap_V0 = v0cand->rapidity();
 
         if(doRap_)
         {
-            if(rap > rapMax_ || rap < rapMin_) continue;
+            if(rap_V0 > rapMax_ || rap_V0 < rapMin_) continue;
         }
         else
         {
-            if(eta > etaCutMax_ || eta < etaCutMin_) continue;
+            if(eta_V0 > etaCutMax_ || eta_V0 < etaCutMin_) continue;
         }
 
         //secvz = v0cand->vz(); secvx = v0cand->vx(); secvy = v0cand->vy();
 
 
-        if(pt1 <= ptCut1_ || pt2 <= ptCut2_) continue;
+        if(pt_V0 <= ptCut1_) continue;
 
 
         for(reco::GenParticleCollection::const_iterator gncand = gencand->begin(); gncand != gencand->end(); gncand++)
