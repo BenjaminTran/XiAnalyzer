@@ -145,7 +145,7 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
                     double dpt = pt_gen - pt_V0;
                     dR_ks->Fill(dR);
                     dpt_ks->Fill(dpt/pt_gen);
-                    if(dR < 0.5 && dpt/pt_gen < 0.5)
+                    if(dR < 0.1 && dpt/pt_gen < 0.1)
                     {
                         theNewV0Cands->push_back(*v0cand);
                         continue;
@@ -163,7 +163,7 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
                     double dpt = pt_gen - pt_V0;
                     dR_la->Fill(dR);
                     dpt_la->Fill(dpt/pt_gen);
-                    if(dR < 0.5 && dpt/pt_gen < 0.5)
+                    if(dR < 0.1 && dpt/pt_gen < 0.1)
                     {
                         theNewV0Cands->push_back(*v0cand);
                         continue;
@@ -184,11 +184,17 @@ void MatchSelector::beginJob() {
 
     TH1D::SetDefaultSumw2();
 
-    dR_ks = fs->make<TH1D>("dR_ks","dR_ks",100,0,1);
-    dR_la = fs->make<TH1D>("dR_la","dR_la",100,0,1);
+    if(v0IDName_ == "Kshort")
+    {
+        dR_ks = fs->make<TH1D>("dR_ks","dR_ks",100,0,1);
+        dpt_ks = fs->make<TH1D>("dpt_ks","dpt_ks",100,0,1);
+    }
 
-    dpt_ks = fs->make<TH1D>("dpt_ks","dpt_ks",100,0,1);
-    dpt_la = fs->make<TH1D>("dpt_la","dpt_la",100,0,1);
+    if(v0IDName_ == "Lambda")
+    {
+        dR_la = fs->make<TH1D>("dR_la","dR_la",100,0,1);
+        dpt_la = fs->make<TH1D>("dpt_la","dpt_la",100,0,1);
+    }
 }
 
 
