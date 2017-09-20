@@ -47,7 +47,8 @@ V0Selector::V0Selector(const edm::ParameterSet& iConfig)
   rapMin_         = iConfig.getParameter<double>("rapMin");
   _vertexCollName = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName" ) );
   _V0Collection = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag( v0CollName_,v0IDName_,"ANASKIM" ) );
-  _gnCollection = consumes<reco::GenParticleCollection>(edm::InputTag("gnCollection"));
+  _gnV0Collection = consumes<reco::GenParticleCollection>(edm::InputTag("gnV0Collection"))
+  //_gnCollection = consumes<reco::GenParticleCollection>(edm::InputTag("gnCollection"));
   // Trying this with Candidates instead of the simple reco::Vertex
   produces< reco::VertexCompositeCandidateCollection >(v0IDName_);
 
@@ -83,8 +84,11 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
    iEvent.getByToken(_V0Collection, v0candidates);
    if(!v0candidates.isValid()) return;
 
+   //edm::Handle<reco::GenParticleCollection> gencand;
+   //iEvent.getByToken(_gnCollection, gencand);
+   //if(!gencand.isValid()) return;
    edm::Handle<reco::GenParticleCollection> gencand;
-   iEvent.getByToken(_gnCollection, gencand);
+   iEvent.getByToken(_gnV0Collection, gencand);
    if(!gencand.isValid()) return;
 
    // Create auto_ptr for each collection to be stored in the Event

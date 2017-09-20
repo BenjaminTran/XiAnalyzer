@@ -69,7 +69,8 @@ private:
 
   edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
   edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _V0Collection;
-  edm::EDGetTokenT<reco:GenParticleCollection> _gnCollection;
+  edm::EDGetTokenT<reco::GenParticleCollection> _gnV0Collection;
+  //edm::EDGetTokenT<reco:GenParticleCollection> _gnCollection;
 
   edm::InputTag vertexCollName_;
   std::string v0CollName_;
