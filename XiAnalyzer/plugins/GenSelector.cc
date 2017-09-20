@@ -79,7 +79,7 @@ void GenSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
        if(v0IDName_ == "Lambda")
        {
-           if(fabs(id) == 3122 && fabs(rap) < 1.0)
+           if(fabs(id) == 3122 && fabs(rap) < 1.0 && gncand->numberOfDaughters() == 2)
            {
                int mid = 0;
                if(gncand->numberOfMothers()==1)
@@ -94,6 +94,7 @@ void GenSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
                }
                if(fabs(mid)==3322 || fabs(mid)==3312 || fabs(mid)==3324 || fabs(mid)==3314 || fabs(mid)==3334) continue;
                theGenCands->push_back(*gncand);
+               std::cout << "Lambda fill" << std::endl;
            }
        }
    }
