@@ -65,21 +65,21 @@ void GenSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
          gncand++)
    {
        int id = gncand->pdgId();
-       int st = gncand->status();
+       //int st = gncand->status();
        int rap = gncand->rapidity();
 
        if(v0IDName_ == "Kshort")
        {
-           if(fabs(id) == 310 && fabs(rap) < 1.0 && st == 1)
+           if(fabs(id) == 310 && fabs(rap) < 1.0 && gncand->numberOfDaughters() == 2)
            {
                theGenCands->push_back(*gncand);
-               std::cout << "Kshort filled" << std::endl;
+               std::cout << "Kshort fill" << std::endl;
            }
        }
 
        if(v0IDName_ == "Lambda")
        {
-           if(fabs(id) == 3122 && fabs(rap) < 1.0 && st == 1)
+           if(fabs(id) == 3122 && fabs(rap) < 1.0)
            {
                int mid = 0;
                if(gncand->numberOfMothers()==1)

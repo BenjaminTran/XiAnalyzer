@@ -46,7 +46,7 @@ MatchSelector::MatchSelector(const edm::ParameterSet& iConfig)
   rapMax_         = iConfig.getParameter<double>("rapMax");
   rapMin_         = iConfig.getParameter<double>("rapMin");
   _vertexCollName = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName" ) );
-  _V0Collection = consumes<reco::VertexCompositeCandidateCollection>( iConfig.getParameter<edm::InputTag>( v0CollName_,v0IDName_,"ANASKIM" ) );
+  _V0Collection = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag( v0CollName_,v0IDName_,"ANASKIM" ) );
   _gnV0Collection = consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("gnV0Collection"));
   //_gnCollection = consumes<reco::GenParticleCollection>(edm::InputTag("gnCollection"));
   // Trying this with Candidates instead of the simple reco::Vertex
@@ -107,7 +107,6 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
          v0cand != v0candidates->end();
          v0cand++) {
 
-       std::cout << "entered V0Collection" << std::endl;
        //double secvz=-999.9, secvx=-999.9, secvy=-999.9;
 
        const reco::Candidate * d1 = v0cand->daughter(0);
@@ -144,16 +143,15 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
        double eta1 = dau1->eta();
        double eta2 = dau2->eta();
 
-       std::cout << "about to enter genCand collection" << std::endl;
        for(reco::GenParticleCollection::const_iterator gncand = gencand->begin(); gncand != gencand->end(); gncand++)
        {
-           std::cout << "not empty" << std::endl;
            double eta = gncand->eta();
            double phi = gncand->phi();
            double pt  = gncand->pt();
            double mass = gncand->mass();
            int id = gncand->pdgId();
            int st = gncand->status();
+           std::cout << "Status: " << st << std::endl;
            if(v0IDName_ == "Kshort")
            {
                if(fabs(id) == 310)
@@ -174,6 +172,8 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
                        double pt_gen_dau1 = gen_dau1->pt();
                        double pt_gen_dau2 = gen_dau2->pt();
+                       std::cout << "id_dau1: " << id_dau1 << std::endl;
+                       std::cout << "id_dau2: " << id_dau2 << std::endl;
                        if(id_dau1 == 211)
                        {
                            double dphi1 = phi_gen_dau1 - phi1;
@@ -181,13 +181,17 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
                            double dR1 = sqrt(dphi1*dphi1 + deta1*deta1);
                            double dpt1 = pt_gen_dau1 - pt1;
                            double sumpt1 = pt_gen_dau1 + pt1;
-                           if(dR1 == dpt1 && sumpt1 == dpt1) continue;
+                           if(dR1 == dpt1 && sumpt1 == dpt1) {
+                               std::cout << "REALLY?" << std::endl;
+                               continue;
+                           }
                            //dR Fill daughter1 hist
                            //sumpt Fill daughter1 hist
                            //
                        }
                        std::cout << "Mathc" << std::endl;
                    }
+                   std::cout << "++++++++++++" << std::endl;
                }
            }
        }
