@@ -109,17 +109,9 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
         //double secvz=-999.9, secvx=-999.9, secvy=-999.9;
 
-        const reco::Candidate * d1 = v0cand->daughter(0);
-        const reco::Candidate * d2 = v0cand->daughter(1);
-
-        reco::TrackRef dau1 = d1->get<reco::TrackRef>();
-        reco::TrackRef dau2 = d2->get<reco::TrackRef>();
-
-        //pt,mass
-        double eta = v0cand->eta();
-        //       double pt = v0cand->pt();
-        double rap = v0cand->rapidity();
-        //       double mass = v0cand->mass();
+        double pt_V0 = v0cand->pt();
+        double phi_V0 = v0cand->phi();
+        double eta_V0 = v0cand->eta();
 
         if(doRap_)
         {
@@ -132,94 +124,30 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
         //secvz = v0cand->vz(); secvx = v0cand->vx(); secvy = v0cand->vy();
 
-        double pt1 = dau1->pt();
-        double pt2 = dau2->pt();
 
         if(pt1 <= ptCut1_ || pt2 <= ptCut2_) continue;
 
-        double phi1 = dau1->phi();
-        double phi2 = dau2->phi();
-
-        double eta1 = dau1->eta();
-        double eta2 = dau2->eta();
 
         for(reco::GenParticleCollection::const_iterator gncand = gencand->begin(); gncand != gencand->end(); gncand++)
         {
-            double eta = gncand->eta();
-            double phi = gncand->phi();
-            double pt  = gncand->pt();
-            double mass = gncand->mass();
+            double eta_gen = gncand->eta();
+            double phi_gen = gncand->phi();
+            double pt_gen  = gncand->pt();
             int id = gncand->pdgId();
-            int st = gncand->status();
-            std::cout << "Status: " << st << std::endl;
             if(v0IDName_ == "Kshort")
             {
                 if(fabs(id) == 310)
                 {
-                    if(gncand->numberOfDaughters()==2)
+                    double dphi = phi_gen - phi_V0;
+                    double deta = eta_gen - eta_V0;
+                    double dR = sqrt(dphi*dphi + deta*deta);
+                    double dpt = pt_gen - pt_V0;
+                    dR_ks->Fill(dR);
+                    dpt_ks->Fill(dpt/pt_gen);
+                    if(dR < 0.5 && dpt/pt_gen < 0.5)
                     {
-                        const reco::Candidate *gen_dau1 = gncand->daughter(0);
-                        const reco::Candidate *gen_dau2 = gncand->daughter(1);
-
-                        int id_dau1 = gen_dau1->pdgId();
-                        int id_dau2 = gen_dau2->pdgId();
-
-                        double eta_gen_dau1 = gen_dau1->eta();
-                        double eta_gen_dau2 = gen_dau2->eta();
-
-                        double phi_gen_dau1 = gen_dau1->phi();
-                        double phi_gen_dau2 = gen_dau2->phi();
-
-                        double pt_gen_dau1 = gen_dau1->pt();
-                        double pt_gen_dau2 = gen_dau2->pt();
-                        std::cout << "id_dau1: " << id_dau1 << std::endl;
-                        std::cout << "id_dau2: " << id_dau2 << std::endl;
-                        if(id_dau1 == 211 && gen_dau1->charge() == 1)
-                        {
-                            double dphi1 = phi_gen_dau1 - phi1;
-                            double deta1 = eta_gen_dau1 - eta1;
-                            double dR1 = sqrt(dphi1*dphi1 + deta1*deta1);
-                            double dpt1 = pt_gen_dau1 - pt1;
-                            //dR Fill daughter1 hist
-                            //dpt1 Fill daughter1 hist
-                            if(dR1 < 0.5 && dpt1/pt_gen_dau1 < 0.5)
-                            {
-                                double dphi2 = phi_gen_dau2 - phi2;
-                                double deta2 = eta_gen_dau2 - eta2;
-                                double dR2 = sqrt(dphi2*dphi2 + deta2*deta2);
-                                double dpt2 = pt_gen_dau2 - pt2;
-                                //dR Fill daughter2 hist
-                                //dpt2 Fill daughter2 hist
-                                if(dR2 < 0.5 && dpt2/pt_gen_dau2 < 0.5)
-                                {
-                                    theNewV0Cands->push_back(*v0cand);
-                                    continue;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            double dphi1 = phi_gen_dau1 - phi2;
-                            double deta1 = eta_gen_dau1 - eta2;
-                            double dR1 = sqrt(dphi1*dphi1 + deta1*deta1);
-                            double dpt1 = pt_gen_dau1 - pt2;
-                            //dR Fill daughter1 hist
-                            //dpt1 Fill daughter1 hist
-                            if(dR1 < 0.5 && dpt1/pt_gen_dau1 < 0.5)
-                            {
-                                double dphi2 = phi_gen_dau2 - phi1;
-                                double deta2 = eta_gen_dau2 - eta1;
-                                double dR2 = sqrt(dphi2*dphi2 + deta2*deta2);
-                                double dpt2 = pt_gen_dau2 - pt1;
-                                //dR Fill daughter2 hist
-                                //dpt2 Fill daughter2 hist
-                                if(dR2 < 0.5 && dpt2/pt_gen_dau2 < 0.5)
-                                {
-                                    theNewV0Cands->push_back(*v0cand);
-                                    continue;
-                                }
-                            }
-                        }
+                        theNewV0Cands->push_back(*v0cand);
+                        continue;
                     }
                 }
             }
@@ -228,76 +156,21 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
             {
                 if(fabs(id) == 3122)
                 {
-                    if(gncand->numberOfDaughters()==2)
+                    double dphi = phi_gen - phi_V0;
+                    double deta = eta_gen - eta_V0;
+                    double dR = sqrt(dphi*dphi + deta*deta);
+                    double dpt = pt_gen - pt_V0;
+                    dR_la->Fill(dR);
+                    dpt_la->Fill(dpt/pt_gen);
+                    if(dR < 0.5 && dpt/pt_gen < 0.5)
                     {
-                        const reco::Candidate *gen_dau1 = gncand->daughter(0);
-                        const reco::Candidate *gen_dau2 = gncand->daughter(1);
-
-                        int id_dau1 = gen_dau1->pdgId();
-                        int id_dau2 = gen_dau2->pdgId();
-
-                        double eta_gen_dau1 = gen_dau1->eta();
-                        double eta_gen_dau2 = gen_dau2->eta();
-
-                        double phi_gen_dau1 = gen_dau1->phi();
-                        double phi_gen_dau2 = gen_dau2->phi();
-
-                        double pt_gen_dau1 = gen_dau1->pt();
-                        double pt_gen_dau2 = gen_dau2->pt();
-                        std::cout << "id_dau1: " << id_dau1 << std::endl;
-                        std::cout << "id_dau2: " << id_dau2 << std::endl;
-                        if(id_dau1 == 2212 && gen_dau1->charge() == 1)
-                        {
-                            double dphi1 = phi_gen_dau1 - phi1;
-                            double deta1 = eta_gen_dau1 - eta1;
-                            double dR1 = sqrt(dphi1*dphi1 + deta1*deta1);
-                            double dpt1 = pt_gen_dau1 - pt1;
-                            //dR Fill daughter1 hist
-                            //dpt1 Fill daughter1 hist
-                            if(dR1 < 0.5 && dpt1/pt_gen_dau1 < 0.5)
-                            {
-                                double dphi2 = phi_gen_dau2 - phi2;
-                                double deta2 = eta_gen_dau2 - eta2;
-                                double dR2 = sqrt(dphi2*dphi2 + deta2*deta2);
-                                double dpt2 = pt_gen_dau2 - pt2;
-                                //dR Fill daughter2 hist
-                                //dpt2 Fill daughter2 hist
-                                if(dR2 < 0.5 && dpt2/pt_gen_dau2 < 0.5)
-                                {
-                                    theNewV0Cands->push_back(*v0cand);
-                                    continue;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            double dphi1 = phi_gen_dau1 - phi2;
-                            double deta1 = eta_gen_dau1 - eta2;
-                            double dR1 = sqrt(dphi1*dphi1 + deta1*deta1);
-                            double dpt1 = pt_gen_dau1 - pt2;
-                            //dR Fill daughter1 hist
-                            //dpt1 Fill daughter1 hist
-                            if(dR1 < 0.5 && dpt1/pt_gen_dau1 < 0.5)
-                            {
-                                double dphi2 = phi_gen_dau2 - phi1;
-                                double deta2 = eta_gen_dau2 - eta1;
-                                double dR2 = sqrt(dphi2*dphi2 + deta2*deta2);
-                                double dpt2 = pt_gen_dau2 - pt1;
-                                //dR Fill daughter2 hist
-                                //dpt2 Fill daughter2 hist
-                                if(dR2 < 0.5 && dpt2/pt_gen_dau2 < 0.5)
-                                {
-                                    theNewV0Cands->push_back(*v0cand);
-                                    continue;
-                                }
-                            }
-                        }
+                        theNewV0Cands->push_back(*v0cand);
+                        continue;
                     }
                 }
             }
         }
     }
-
     // Write the collections to the Event
     iEvent.put( theNewV0Cands, std::string(v0IDName_) );
     //   iEvent.put( theNewV0Cands, std::string("") );
@@ -305,6 +178,16 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
 
 void MatchSelector::beginJob() {
+
+    edm::Service<TFileService> fs;
+
+    TH1D::SetDefaultSumw2();
+
+    dR_ks = fs->make<TH1D>("dR_ks","dR_ks",100,0,1);
+    dR_la = fs->make<TH1D>("dR_la","dR_la",100,0,1);
+
+    dpt_ks = fs->make<TH1D>("dpt_ks","dpt_ks",100,0,1);
+    dpt_la = fs->make<TH1D>("dpt_la","dpt_la",100,0,1);
 }
 
 

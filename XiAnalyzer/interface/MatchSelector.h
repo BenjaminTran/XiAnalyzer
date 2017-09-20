@@ -87,6 +87,12 @@ private:
   bool doRap_;
   double rapMax_;
   double rapMin_;
+
+  TH1D* dR_ks;
+  TH1D* dR_la;
+
+  TH1D* dpt_ks;
+  TH1D* dpt_la;
 };
 
 #endif
