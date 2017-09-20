@@ -144,6 +144,9 @@ struct ParticleData{
     double multmax_;
     double rapMin_;
     double rapMax_;
+    double OMmisIDMassCut_;
+    double LAmisIDMassCut_;
+    double KSmisIDMassCut_;
     bool doRap_;
     bool doXi_;
     bool doKs_;
