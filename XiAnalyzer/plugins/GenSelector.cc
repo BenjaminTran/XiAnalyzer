@@ -27,7 +27,7 @@ GenSelector::GenSelector(const edm::ParameterSet& iConfig)
     using std::string;
 
     v0IDName_     = iConfig.getParameter<string>("v0IDName");
-    _gnCollection = consumes<reco::GenParticleCollection>(edm::InputTag("gnCollection"));
+    _gnCollection = consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("gnCollection"));
     // Trying this with Candidates instead of the simple reco::Vertex
     produces< reco::GenParticleCollection >(v0IDName_);
 
