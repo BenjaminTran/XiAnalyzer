@@ -102,6 +102,8 @@ private:
 
     TH1D* hMult_ass;
 
+    TH1D* h2Daughter;
+
     TH1D* hMult_la[18];
     TH2D* hSignal_la[18];
     TH2D* hBackground_la[18];

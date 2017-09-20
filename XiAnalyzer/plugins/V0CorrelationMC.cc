@@ -156,6 +156,7 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                         eta_dau2 = dau2->eta();
                         phi_dau2 = dau2->phi();
                         pt_dau2 = dau2->pt();
+                        h2Daughter->Fill(1);
                     }
 
                     TVector3 pvector;
@@ -513,6 +514,7 @@ V0CorrelationMC::beginJob()
 
     hMult = fs->make<TH1D>("mult",";N",300,0,300);
     hMult_ass = fs->make<TH1D>("mult_ass",";N",600,0,600);
+    h2Daughter = fs->make<TH1D>("h2Daughter",";N",10,0,10);
 
     for(int i=0; i<18; i++)
     {
