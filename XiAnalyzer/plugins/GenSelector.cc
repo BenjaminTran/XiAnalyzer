@@ -53,7 +53,7 @@ void GenSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
    // Create auto_ptr for each collection to be stored in the Event
    std::auto_ptr< reco::GenParticleCollection >
-     theGenCands( new reco::GenParticleCollection() );
+     theGenCands( new reco::GenParticleCollection );
 
    for( reco::GenParticleCollection::const_iterator gncand = gencand->begin();
          gncand != gencand->end();
