@@ -265,7 +265,7 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
                                 if(dR2 < 0.5 && dpt2/pt_gen_dau2 < 0.5)
                                 {
                                     theNewV0Cands->push_back(*v0cand);
-                                    continue
+                                    continue;
                                 }
                             }
                         }
