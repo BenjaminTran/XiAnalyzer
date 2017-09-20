@@ -1,9 +1,9 @@
 // -*- C++ -*-
 //
-// Package:    V0Selector
-// Class:      V0Selector
+// Package:    MatchSelector
+// Class:      MatchSelector
 // 
-/**\class V0Selector V0Selector.h RiceHIG/V0Analysis/interface/V0Selector.h
+/**\class MatchSelector MatchSelector.h RiceHIG/V0Analysis/interface/MatchSelector.h
 
  Description: <one line class summary>
 
@@ -56,10 +56,10 @@
 #include <Math/SVector.h>
 #include <Math/SMatrix.h>
 
-class V0Selector : public edm::EDProducer {
+class MatchSelector : public edm::EDProducer {
 public:
-  explicit V0Selector(const edm::ParameterSet&);
-  ~V0Selector();
+  explicit MatchSelector(const edm::ParameterSet&);
+  ~MatchSelector();
 
 private:
   //virtual void beginJob() ;

@@ -18,7 +18,7 @@ if __name__ == '__main__':
             print "Failed submitting task: %s" % (cle)
 
 
-    for num in range(0,1):
+    for num in range(1,6):
         try:
             with open( 'XiVarStore.dat', 'r' ) as fle:
                 counter = int( fle.readline() )

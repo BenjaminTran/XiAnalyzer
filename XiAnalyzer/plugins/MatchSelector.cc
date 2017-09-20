@@ -1,9 +1,9 @@
 // -*- C++ -*-
 //
-// Package:    V0Selector
-// Class:      V0Selector
+// Package:    MatchSelector
+// Class:      MatchSelector
 // 
-/**\class V0Selector V0Selector.cc RiceHIG/V0Analysis/src/V0Selector.cc
+/**\class MatchSelector MatchSelector.cc RiceHIG/V0Analysis/src/MatchSelector.cc
 
  Description: <one line class summary>
 
@@ -31,7 +31,7 @@ const double lambdaMass = 1.115683;
 const double kshortMass = 0.497614;
 
 // Constructor
-V0Selector::V0Selector(const edm::ParameterSet& iConfig)
+MatchSelector::MatchSelector(const edm::ParameterSet& iConfig)
 {
   using std::string;
 
@@ -47,7 +47,7 @@ V0Selector::V0Selector(const edm::ParameterSet& iConfig)
   rapMin_         = iConfig.getParameter<double>("rapMin");
   _vertexCollName = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName" ) );
   _V0Collection = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag( v0CollName_,v0IDName_,"ANASKIM" ) );
-  _gnV0Collection = consumes<reco::GenParticleCollection>(edm::InputTag("gnV0Collection"))
+  _gnV0Collection = consumes<reco::GenParticleCollection>(edm::InputTag("gnV0Collection"));
   //_gnCollection = consumes<reco::GenParticleCollection>(edm::InputTag("gnCollection"));
   // Trying this with Candidates instead of the simple reco::Vertex
   produces< reco::VertexCompositeCandidateCollection >(v0IDName_);
@@ -55,7 +55,7 @@ V0Selector::V0Selector(const edm::ParameterSet& iConfig)
 }
 
 // (Empty) Destructor
-V0Selector::~V0Selector() {
+MatchSelector::~MatchSelector() {
 
 }
 
@@ -64,7 +64,7 @@ V0Selector::~V0Selector() {
 //
 
 // Producer Method
-void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
+void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
 //   using std::vector;
    using namespace edm;
@@ -73,23 +73,31 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     // select on requirement of valid vertex
    edm::Handle<reco::VertexCollection> vertices;
    iEvent.getByToken(_vertexCollName,vertices);
-   double bestvz=-999.9, bestvx=-999.9, bestvy=-999.9;
-   double bestvzError=-999.9, bestvxError=-999.9, bestvyError=-999.9;
-   const reco::Vertex & vtx = (*vertices)[0];
-   bestvz = vtx.z(); bestvx = vtx.x(); bestvy = vtx.y();
-   bestvzError = vtx.zError(); bestvxError = vtx.xError(); bestvyError = vtx.yError();
+   //double bestvz=-999.9, bestvx=-999.9, bestvy=-999.9;
+   //double bestvzError=-999.9, bestvxError=-999.9, bestvyError=-999.9;
+   //const reco::Vertex & vtx = (*vertices)[0];
+   //bestvz = vtx.z(); bestvx = vtx.x(); bestvy = vtx.y();
+   //bestvzError = vtx.zError(); bestvxError = vtx.xError(); bestvyError = vtx.yError();
 //   if(bestvz < -15.0 || bestvz>15.0) return;
 
    edm::Handle<reco::VertexCompositeCandidateCollection> v0candidates;
    iEvent.getByToken(_V0Collection, v0candidates);
-   if(!v0candidates.isValid()) return;
+   if(!v0candidates.isValid())
+   {
+       std::cout << "v0Collection invalid" << std::endl;
+       return;
+   }
 
    //edm::Handle<reco::GenParticleCollection> gencand;
    //iEvent.getByToken(_gnCollection, gencand);
    //if(!gencand.isValid()) return;
    edm::Handle<reco::GenParticleCollection> gencand;
    iEvent.getByToken(_gnV0Collection, gencand);
-   if(!gencand.isValid()) return;
+   if(!gencand.isValid())
+   {
+       std::cout << "genV0Collection invalid" << std::endl;
+       return;
+   }
 
    // Create auto_ptr for each collection to be stored in the Event
    std::auto_ptr< reco::VertexCompositeCandidateCollection >
@@ -99,7 +107,8 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
          v0cand != v0candidates->end();
          v0cand++) {
 
-       double secvz=-999.9, secvx=-999.9, secvy=-999.9;
+       std::cout << "entered V0Collection" << std::endl;
+       //double secvz=-999.9, secvx=-999.9, secvy=-999.9;
 
        const reco::Candidate * d1 = v0cand->daughter(0);
        const reco::Candidate * d2 = v0cand->daughter(1);
@@ -122,7 +131,7 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
             if(eta > etaCutMax_ || eta < etaCutMin_) continue;
         }
 
-       secvz = v0cand->vz(); secvx = v0cand->vx(); secvy = v0cand->vy();
+       //secvz = v0cand->vz(); secvx = v0cand->vx(); secvy = v0cand->vy();
 
        double pt1 = dau1->pt();
        double pt2 = dau2->pt();
@@ -135,8 +144,10 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
        double eta1 = dau1->eta();
        double eta2 = dau2->eta();
 
+       std::cout << "about to enter genCand collection" << std::endl;
        for(reco::GenParticleCollection::const_iterator gncand = gencand->begin(); gncand != gencand->end(); gncand++)
        {
+           std::cout << "not empty" << std::endl;
            double eta = gncand->eta();
            double phi = gncand->phi();
            double pt  = gncand->pt();
@@ -170,11 +181,12 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
                            double dR1 = sqrt(dphi1*dphi1 + deta1*deta1);
                            double dpt1 = pt_gen_dau1 - pt1;
                            double sumpt1 = pt_gen_dau1 + pt1;
-                           cout << "Mathc" << endl;
+                           if(dR1 == dpt1 && sumpt1 == dpt1) continue;
                            //dR Fill daughter1 hist
                            //sumpt Fill daughter1 hist
                            //
                        }
+                       std::cout << "Mathc" << std::endl;
                    }
                }
            }
@@ -190,9 +202,9 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 }
 
 
-void V0Selector::beginJob() {
+void MatchSelector::beginJob() {
 }
 
 
-void V0Selector::endJob() {
+void MatchSelector::endJob() {
 }
