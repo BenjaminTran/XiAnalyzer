@@ -550,8 +550,6 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                    if(eta_v0 > 2.4 || eta_v0 < -2.4 ) continue;
                    */
 
-                secvz = v0cand->vz(); secvx = v0cand->vx(); secvy = v0cand->vy();
-
                 //trkNHits
                 int nhit1 = dau1->numberOfValidHits();
                 int nhit2 = dau2->numberOfValidHits();
