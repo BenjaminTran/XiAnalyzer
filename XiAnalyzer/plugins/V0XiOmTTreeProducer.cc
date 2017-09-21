@@ -544,11 +544,57 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 double rapidity_v0 = v0cand->rapidity();
                 double mass_v0 = v0cand->mass();
 
-                /*
-                   if(dorap_ && (rapidity_v0 > rapMax_ || rapidity_v0 < rapMin_)) continue;
-                   else
-                   if(eta_v0 > 2.4 || eta_v0 < -2.4 ) continue;
-                   */
+                if(doRap_)
+                {
+                    if(rapidity_v0 > rapMax_ || rapidity_v0 < rapMin_) continue;
+
+                    double pd1 = d1->p();
+                    //       double charged1 = dau1->charge();
+                    double pd2 = d2->p();
+                    //       double charged2 = dau2->charge();
+
+                    TVector3 dauvec1(d1->px(),d1->py(),d1->pz());
+                    TVector3 dauvec2(d2->px(),d2->py(),d2->pz());
+                    TVector3 dauvecsum(dauvec1+dauvec2);
+
+                    double energyd1e = sqrt(electronMassSquared+pd1*pd1);
+                    double energyd2e = sqrt(electronMassSquared+pd2*pd2);
+                    double invmass_ee = sqrt((energyd1e+energyd2e)*(energyd1e+energyd2e)-dauvecsum.Mag2());
+                    if(invmass_ee<misIDMassCutEE_) continue;
+
+                    double misIDMass_la = -999;
+                    double misIDMass_ks_pip = -999;
+                    double misIDMass_ks_ppi = -999;
+                    if(v0IDName_ == "Lambda")
+                    {
+                        double massd1=piMass;
+                        double massd2=piMass;
+                        double energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                        double energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                        double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                        misIDMass_la = invmass - kshortMass;
+                        if(fabs(misIDMass_la)<misIDMassCut_) continue;
+                    }
+
+                    if(v0IDName_ == "Kshort")
+                    {
+                        double massd1=piMass;
+                        double massd2=protonMass;
+                        double energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                        double energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                        double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                        misIDMass_ks_pip = invmass - lambdaMass;
+                        if(fabs(misIDMass_ks_pip)<misIDMassCut_) continue;
+
+                        massd2=piMass;
+                        massd1=protonMass;
+                        energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                        energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                        invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                        misIDMass_ks_ppi = invmass - lambdaMass;
+                        if(fabs(misIDMass_ks_ppi)<misIDMassCut_) continue;
+                    }
+                }
 
                 //trkNHits
                 int nhit1 = dau1->numberOfValidHits();
@@ -561,59 +607,6 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
                 if(pt1 <= ptCut1_ || pt2 <= ptCut2_) continue;
 
-                //algo
-                //       double algo1 = dau1->algo();
-                //       double algo2 = dau2->algo();
-
-                //dau eta
-                //       double eta2 = dau2->eta();
-
-                double pd1 = d1->p();
-                //       double charged1 = dau1->charge();
-                double pd2 = d2->p();
-                //       double charged2 = dau2->charge();
-
-                TVector3 dauvec1(d1->px(),d1->py(),d1->pz());
-                TVector3 dauvec2(d2->px(),d2->py(),d2->pz());
-                TVector3 dauvecsum(dauvec1+dauvec2);
-
-                double energyd1e = sqrt(electronMassSquared+pd1*pd1);
-                double energyd2e = sqrt(electronMassSquared+pd2*pd2);
-                double invmass_ee = sqrt((energyd1e+energyd2e)*(energyd1e+energyd2e)-dauvecsum.Mag2());
-                if(invmass_ee<misIDMassCutEE_) continue;
-
-                double misIDMass_la = -999;
-                double misIDMass_ks_pip = -999;
-                double misIDMass_ks_ppi = -999;
-                if(v0IDName_ == "Lambda")
-                {
-                    double massd1=piMass;
-                    double massd2=piMass;
-                    double energyd1 = sqrt(massd1*massd1+pd1*pd1);
-                    double energyd2 = sqrt(massd2*massd2+pd2*pd2);
-                    double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
-                    misIDMass_la = invmass - kshortMass;
-                    if(fabs(misIDMass_la)<misIDMassCut_) continue;
-                }
-
-                if(v0IDName_ == "Kshort")
-                {
-                    double massd1=piMass;
-                    double massd2=protonMass;
-                    double energyd1 = sqrt(massd1*massd1+pd1*pd1);
-                    double energyd2 = sqrt(massd2*massd2+pd2*pd2);
-                    double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
-                    misIDMass_ks_pip = invmass - lambdaMass;
-                    if(fabs(misIDMass_ks_pip)<misIDMassCut_) continue;
-
-                    massd2=piMass;
-                    massd1=protonMass;
-                    energyd1 = sqrt(massd1*massd1+pd1*pd1);
-                    energyd2 = sqrt(massd2*massd2+pd2*pd2);
-                    invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
-                    misIDMass_ks_ppi = invmass - lambdaMass;
-                    if(fabs(misIDMass_ks_ppi)<misIDMassCut_) continue;
-                }
                 numCand_V0++;
             }
 
@@ -638,11 +631,56 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 double rapidity_v0 = v0cand->rapidity();
                 double mass_v0 = v0cand->mass();
 
-                /*
-                   if(dorap_ && (rapidity_v0 > rapMax_ || rapidity_v0 < rapMin_)) continue;
-                   else
-                   if(eta_v0 > 2.4 || eta_v0 < -2.4 ) continue;
-                   */
+                if(doRap_)
+                {
+                    if(rapidity_v0 > rapMax_ || rapidity_v0 < rapMin_) continue;
+
+                    double pd1 = d1->p();
+                    //       double charged1 = dau1->charge();
+                    double pd2 = d2->p();
+                    //       double charged2 = dau2->charge();
+
+                    TVector3 dauvec1(d1->px(),d1->py(),d1->pz());
+                    TVector3 dauvec2(d2->px(),d2->py(),d2->pz());
+                    TVector3 dauvecsum(dauvec1+dauvec2);
+                    double energyd1e = sqrt(electronMassSquared+pd1*pd1);
+                    double energyd2e = sqrt(electronMassSquared+pd2*pd2);
+                    double invmass_ee = sqrt((energyd1e+energyd2e)*(energyd1e+energyd2e)-dauvecsum.Mag2());
+                    if(invmass_ee<misIDMassCutEE_) continue;
+
+                    double misIDMass_la = -999;
+                    double misIDMass_ks_pip = -999;
+                    double misIDMass_ks_ppi = -999;
+                    if(v0IDName_ == "Lambda")
+                    {
+                        double massd1=piMass;
+                        double massd2=piMass;
+                        double energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                        double energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                        double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                        misIDMass_la = invmass - kshortMass;
+                        if(fabs(misIDMass_la)<misIDMassCut_) continue;
+                    }
+
+                    if(v0IDName_ == "Kshort")
+                    {
+                        double massd1=piMass;
+                        double massd2=protonMass;
+                        double energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                        double energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                        double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                        misIDMass_ks_pip = invmass - lambdaMass;
+                        if(fabs(misIDMass_ks_pip)<misIDMassCut_) continue;
+
+                        massd2=piMass;
+                        massd1=protonMass;
+                        energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                        energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                        invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                        misIDMass_ks_ppi = invmass - lambdaMass;
+                        if(fabs(misIDMass_ks_ppi)<misIDMassCut_) continue;
+                    }
+                }
 
                 secvz = v0cand->vz(); secvx = v0cand->vx(); secvy = v0cand->vy();
 
@@ -703,52 +741,52 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 double dlos = dl/dlerror;
                 //if(dlos < decayLSigCut_) continue;
 
-                double pd1 = d1->p();
-                //       double charged1 = dau1->charge();
-                double pd2 = d2->p();
-                //       double charged2 = dau2->charge();
+                //double pd1 = d1->p();
+                       double charged1 = dau1->charge();
+                //double pd2 = d2->p();
+                       double charged2 = dau2->charge();
 
-                TVector3 dauvec1(d1->px(),d1->py(),d1->pz());
-                TVector3 dauvec2(d2->px(),d2->py(),d2->pz());
-                TVector3 dauvecsum(dauvec1+dauvec2);
+                //TVector3 dauvec1(d1->px(),d1->py(),d1->pz());
+                //TVector3 dauvec2(d2->px(),d2->py(),d2->pz());
+                //TVector3 dauvecsum(dauvec1+dauvec2);
 
-                double energyd1e = sqrt(electronMassSquared+pd1*pd1);
-                double energyd2e = sqrt(electronMassSquared+pd2*pd2);
-                double invmass_ee = sqrt((energyd1e+energyd2e)*(energyd1e+energyd2e)-dauvecsum.Mag2());
-                if(invmass_ee<misIDMassCutEE_) continue;
+                //double energyd1e = sqrt(electronMassSquared+pd1*pd1);
+                //double energyd2e = sqrt(electronMassSquared+pd2*pd2);
+                //double invmass_ee = sqrt((energyd1e+energyd2e)*(energyd1e+energyd2e)-dauvecsum.Mag2());
+                //if(invmass_ee<misIDMassCutEE_) continue;
 
-                double misIDMass_la = -999;
-                double misIDMass_ks_pip = -999;
-                double misIDMass_ks_ppi = -999;
-                if(v0IDName_ == "Lambda")
-                {
-                    double massd1=piMass;
-                    double massd2=piMass;
-                    double energyd1 = sqrt(massd1*massd1+pd1*pd1);
-                    double energyd2 = sqrt(massd2*massd2+pd2*pd2);
-                    double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
-                    misIDMass_la = invmass - kshortMass;
-                    if(fabs(misIDMass_la)<misIDMassCut_) continue;
-                }
+                //double misIDMass_la = -999;
+                //double misIDMass_ks_pip = -999;
+                //double misIDMass_ks_ppi = -999;
+                //if(v0IDName_ == "Lambda")
+                //{
+                    //double massd1=piMass;
+                    //double massd2=piMass;
+                    //double energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                    //double energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                    //double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                    //misIDMass_la = invmass - kshortMass;
+                    //if(fabs(misIDMass_la)<misIDMassCut_) continue;
+                //}
 
-                if(v0IDName_ == "Kshort")
-                {
-                    double massd1=piMass;
-                    double massd2=protonMass;
-                    double energyd1 = sqrt(massd1*massd1+pd1*pd1);
-                    double energyd2 = sqrt(massd2*massd2+pd2*pd2);
-                    double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
-                    misIDMass_ks_pip = invmass - lambdaMass;
-                    if(fabs(misIDMass_ks_pip)<misIDMassCut_) continue;
+                //if(v0IDName_ == "Kshort")
+                //{
+                    //double massd1=piMass;
+                    //double massd2=protonMass;
+                    //double energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                    //double energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                    //double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                    //misIDMass_ks_pip = invmass - lambdaMass;
+                    //if(fabs(misIDMass_ks_pip)<misIDMassCut_) continue;
 
-                    massd2=piMass;
-                    massd1=protonMass;
-                    energyd1 = sqrt(massd1*massd1+pd1*pd1);
-                    energyd2 = sqrt(massd2*massd2+pd2*pd2);
-                    invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
-                    misIDMass_ks_ppi = invmass - lambdaMass;
-                    if(fabs(misIDMass_ks_ppi)<misIDMassCut_) continue;
-                }
+                    //massd2=piMass;
+                    //massd1=protonMass;
+                    //energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                    //energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                    //invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                    //misIDMass_ks_ppi = invmass - lambdaMass;
+                    //if(fabs(misIDMass_ks_ppi)<misIDMassCut_) continue;
+                //}
 
                 if(v0IDName_ == "Kshort")
                 {
