@@ -182,6 +182,8 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 if(doRap_)
                 {
                     if(rap < rapMin_ || rap > rapMax_) continue;
+                    double misIDMass_Om_pila = -999;
+                    double misIDMass_Om_lapi = -999;
                     if(v0IDName_ == "Omega")
                     {
                         double pd1 = d1->p();
