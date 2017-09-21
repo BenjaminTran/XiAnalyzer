@@ -5,52 +5,57 @@ from XiAnalyzer.XiAnalyzer.v0xiomttreeproducer_cfi import *
 KsTreeProducer = TreeProducer.clone(
         v0CollName = cms.string('generalV0CandidatesNew'),
         v0IDName = cms.string('Kshort'),
-        doKs = cms.bool(True),
         multmax = cms.double(250)
         )
 
 LaTreeProducer = TreeProducer.clone(
         v0CollName = cms.string('generalV0CandidatesNew'),
         v0IDName = cms.string('Lambda'),
-        doLa = cms.bool(True),
-        multmax = cms.double(250)
+        multmax = cms.double(250),
+        misIDMassCut = cms.double(0.020)
         )
 
 XiTreeProducer = TreeProducer.clone(
         v0CollName = cms.string('generalCascadeCandidatesNew'),
         v0IDName = cms.string('Xi'),
-        doXi = cms.bool(True),
         multmax = cms.double(250)
         )
 
 OmTreeProducer = TreeProducer.clone(
         v0CollName = cms.string('generalCascadeCandidatesNew'),
         v0IDName = cms.string('Omega'),
-        doOm = cms.bool(True),
-        multmax = cms.double(250)
+        multmax = cms.double(250),
+        misIDMassCut = cms.double(0.020)
         )
 
-XiTreeProducerRapidity = TreeProducer.clone(
-        v0CollName = cms.string('generalCascadeCandidatesNew'),
-        v0IDName = cms.string('Xi'),
-        doRap = cms.bool(True),
-        doXi = cms.bool(True),
-        multmax = cms.double(250)
+OmTreeProducerRapidity = OmTreeProducer.clone(
+        doRap = cms.bool(True)
         )
 
-KsTreeProducerRapidity = TreeProducer.clone(
-        v0CollName = cms.string('generalV0CandidatesNew'),
-        v0IDName = cms.string('Kshort'),
-        doRap = cms.bool(True),
-        doKs = cms.bool(True),
-        multmax = cms.double(250)
+XiTreeProducerRapidity = XiTreeProducer.clone(
+        doRap = cms.bool(True)
         )
 
-LaTreeProducerRapidity = TreeProducer.clone(
-        v0CollName = cms.string('generalV0CandidatesNew'),
-        v0IDName = cms.string('Lambda'),
-        doRap = cms.bool(True),
-        doLa = cms.bool(True),
-        multmax = cms.double(250)
+KsTreeProducerRapidity = KsTreeProducer.clone(
+        doRap = cms.bool(True)
         )
 
+LaTreeProducerRapidity = LaTreeProducer.clone(
+        doRap = cms.bool(True)
+        )
+
+KsTreeProducerRapidityPbPb = KsTreeProducerRapidity.clone(
+        useCentrality cms.bool(True)
+        )
+
+LaTreeProducerRapidityPbPb = LaTreeProducerRapidity.clone(
+        useCentrality cms.bool(True)
+        )
+
+XiTreeProducerRapidityPbPb = XiTreeProducerRapidity.clone(
+        useCentrality cms.bool(True)
+        )
+
+OmTreeProducerRapidityPbPb = OmTreeProducerRapidity.clone(
+        useCentrality cms.bool(True)
+        )

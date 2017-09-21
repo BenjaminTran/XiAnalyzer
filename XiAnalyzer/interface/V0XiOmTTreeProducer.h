@@ -132,6 +132,7 @@ struct ParticleData{
     edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _v0Collection;
     edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
     edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
+    edm::EDGetTokenT<CaloTowerCollection> _towerSrc;
 
 	TTree* XiTree;
 	TTree* OmTree;
@@ -144,14 +145,17 @@ struct ParticleData{
     double multmax_;
     double rapMin_;
     double rapMax_;
-    double OMmisIDMassCut_;
-    double LAmisIDMassCut_;
-    double KSmisIDMassCut_;
+    double ptCut1_;
+    double ptCut2_;
+    double misIDMassCut_;
+    double misIDMassCutEE_;
+    double cent_bin_low_;
+    double cent_bin_high_;
+    int nHitCut1_;
+    int nHitCut2_;
+
     bool doRap_;
-    bool doXi_;
-    bool doKs_;
-    bool doLa_;
-    bool doOm_;
+    bool useCentrality_;
     //std::string treeName_;
 };
 
