@@ -84,7 +84,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         double etHFtowerSumMinus=0;
         double etHFtowerSum=0;
         Handle<CaloTowerCollection> towers;
-        iEvent.getByToken(towerSrc_,towers);
+        iEvent.getByToken(_towerSrc,towers);
         for( size_t i = 0; i<towers->size(); ++ i){
             const CaloTower & tower = (*towers)[ i ];
             double eta = tower.eta();
@@ -247,7 +247,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 double pt   = CasCand->pt();
                 double rap  = CasCand->rapidity();
 
-                if(doRap)
+                if(doRap_)
                 {
                     if(rap < rapMin_ || rap > rapMax_) continue;
                 }
