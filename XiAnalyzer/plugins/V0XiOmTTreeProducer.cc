@@ -417,7 +417,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     double energyd2 = sqrt(massd2*massd2+pd2*pd2);
                     double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
                     misIDMass_Om_pila = invmass - xiMass;
-                    if(fabs(invmass - xiMass) < misIDMassCut_) continue;
+                    if(fabs(misIDMass_Om_pila) < misIDMassCut_) continue;
 
                     massd1=lambdaMass;
                     massd2=piMass;
@@ -425,7 +425,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     energyd2 = sqrt(massd2*massd2+pd2*pd2);
                     invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
                     misIDMass_Om_lapi = invmass - xiMass;
-                    if(fabs(invmass - xiMass) < misIDMassCut_) continue;
+                    if(fabs(misIDMass_Om_lapi) < misIDMassCut_) continue;
                 }
 
                 if(v0IDName_ == "Xi")
@@ -479,53 +479,6 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     OmTree->Fill();
                 }
                 else cout << "unexpected boolean option" << endl;
-
-                /*
-                //Skim cuts
-                math::XYZPoint bestvtxpt(bestvx,bestvy,bestvz);
-                //Impact Sig
-                double lambda_dau2_dxy      = lambda_dau2->dxy(bestvtxpt);
-                double lambda_dau2_dz       = lambda_dau2->dz(bestvtxpt);
-                double lambda_dau2_dxyerror = sqrt(lambda_dau2->d0Error()*lambda_dau2->d0Error() + bestvxError*bestvyError);
-                double lambda_dau2_dzerror  = sqrt(lambda_dau2->dzError()*lambda_dau2->dzError() + bestvzError*bestvzError);
-
-                double xi_dau2_dxy      = dau2->dxy(bestvtxpt);
-                double xi_dau2_dz       = dau2->dz(bestvtxpt);
-                double xi_dau2_dxyerror = sqrt(dau2->d0Error()*dau2->d0Error() + bestvxError*bestvyError);
-                double xi_dau2_dzerror  = sqrt(dau2->dzError()*dau2->dzError() + bestvzError*bestvzError);
-
-                //dls
-
-                double secvx_xi = -999, secvy_xi = -999, secvz_xi = -999;
-
-                secvx_xi = CasCand->vx();
-                secvy_xi = CasCand->vy();
-                secvz_xi = CasCand->vz();
-
-                SVector3 distanceVector_xi(secvx_xi-bestvx,secvy_xi-bestvy,secvz_xi-bestvz);
-                SMatrixSym3D totalCov_xi = bestvtx.covariance() + CasCand->vertexCovariance();
-                double dl_xi          = ROOT::Math::Mag(distanceVector_xi);
-                double dlerror_xi     = sqrt(ROOT::Math::Similarity(totalCov_xi, distanceVector_xi))/dl_xi;
-
-                double secvx_la = -999, secvy_la = -999, secvz_la = -999;
-
-                secvx_la = dau1->vx();
-                secvy_la = dau1->vy();
-                secvz_la = dau1->vz();
-
-                SVector3 distanceVector_la(secvx_la-bestvx,secvy_la-bestvy,secvz_la-bestvz);
-                SMatrixSym3D totalCov_la = bestvtx.covariance() + d1->vertexCovariance();
-                double dl_la          = ROOT::Math::Mag(distanceVector_la);
-                double dlerror_la     = sqrt(ROOT::Math::Similarity(totalCov_la, distanceVector_la))/dl_la;
-
-                XI.dauTransImpactSig_    = lambda_dau2_dxy/lambda_dau2_dxyerror;
-                XI.dauLongImpactSig_     = lambda_dau2_dz/lambda_dau2_dzerror;
-                XI.batDauTransImpactSig_ = xi_dau2_dxy/xi_dau2_dxyerror;
-                XI.batDauLongImpactSig_  = xi_dau2_dz/xi_dau2_dzerror;
-                XI.xiVtxSignificance3D_  = dl_xi/dlerror_xi;
-                XI.vtxSignificance3D_    = dl_la/dlerror_la;
-                */
-
             }
         }
     }
@@ -649,7 +602,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     double energyd2 = sqrt(massd2*massd2+pd2*pd2);
                     double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
                     misIDMass_la = invmass - kshortMass;
-                    if(fabs(invmass-kshortMass)<misIDMassCut_) continue;
+                    if(fabs(misIDMass_la)<misIDMassCut_) continue;
                 }
 
                 if(v0IDName_ == "Kshort")
@@ -660,7 +613,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     double energyd2 = sqrt(massd2*massd2+pd2*pd2);
                     double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
                     misIDMass_ks_pip = invmass - lambdaMass;
-                    if(fabs(invmass-lambdaMass)<misIDMassCut_) continue;
+                    if(fabs(misIDMass_ks_pip)<misIDMassCut_) continue;
 
                     massd2=piMass;
                     massd1=protonMass;
@@ -668,7 +621,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     energyd2 = sqrt(massd2*massd2+pd2*pd2);
                     invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
                     misIDMass_ks_ppi = invmass - lambdaMass;
-                    if(fabs(invmass-lambdaMass)<misIDMassCut_) continue;
+                    if(fabs(misIDMass_ks_ppi)<misIDMassCut_) continue;
                 }
 
                 if(v0IDName_ == "Kshort")
