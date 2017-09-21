@@ -529,8 +529,6 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     v0cand != v0candidates->end();
                     v0cand++)
             {
-                double secvz=-999.9, secvx=-999.9, secvy=-999.9;
-
                 const reco::Candidate * d1 = v0cand->daughter(0);
                 const reco::Candidate * d2 = v0cand->daughter(1);
 
