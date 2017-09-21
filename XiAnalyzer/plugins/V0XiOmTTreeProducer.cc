@@ -177,6 +177,37 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 reco::TrackRef  lambda_dau1 = lambda_d1->get<reco::TrackRef>();
                 reco::TrackRef  lambda_dau2 = lambda_d2->get<reco::TrackRef>();
 
+                double rap  = CasCand->rapidity();
+
+                if(doRap_)
+                {
+                    if(rap < rapMin_ || rap > rapMax_) continue;
+                    if(v0IDName_ == "Omega")
+                    {
+                        double pd1 = d1->p();
+                        double pd2 = d2->p();
+                        TVector3 dauvec1(d1->px(),d1->py(),d1->pz());
+                        TVector3 dauvec2(d2->px(),d2->py(),d2->pz());
+                        TVector3 dauvecsum(dauvec1+dauvec2);
+                        double massd1=piMass;
+                        double massd2=lambdaMass;
+                        double energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                        double energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                        double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                        misIDMass_Om_pila = invmass - xiMass;
+                        if(fabs(misIDMass_Om_pila) < misIDMassCut_) continue;
+
+                        massd1=lambdaMass;
+                        massd2=piMass;
+                        energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                        energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                        invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                        misIDMass_Om_lapi = invmass - xiMass;
+                        if(fabs(misIDMass_Om_lapi) < misIDMassCut_) continue;
+                    }
+                }
+
+
                 // Xi Impact Parameter Significance
                 // Build Transient Tracks of Xi_pion, Lambda_Proton, Lambda_pion
                 TransientTrack pion_lambdaTT(lambda_dau2, &(*bFieldHandle));
@@ -490,6 +521,103 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
             edm::Handle<reco::VertexCompositeCandidateCollection> v0candidates;
             iEvent.getByToken(_v0Collection, v0candidates);
             if(!v0candidates.isValid()) return;
+            int numCand_V0 = 0;
+
+            for( reco::VertexCompositeCandidateCollection::const_iterator v0cand = v0candidates->begin();
+                    v0cand != v0candidates->end();
+                    v0cand++)
+            {
+                double secvz=-999.9, secvx=-999.9, secvy=-999.9;
+
+                const reco::Candidate * d1 = v0cand->daughter(0);
+                const reco::Candidate * d2 = v0cand->daughter(1);
+
+                reco::TrackRef dau1 = d1->get<reco::TrackRef>();
+                reco::TrackRef dau2 = d2->get<reco::TrackRef>();
+
+                //pt,mass
+                double eta_v0 = v0cand->eta();
+                double pt_v0 = v0cand->pt();
+                double px_v0 = v0cand->px();
+                double py_v0 = v0cand->py();
+                double pz_v0 = v0cand->pz();
+                double rapidity_v0 = v0cand->rapidity();
+                double mass_v0 = v0cand->mass();
+
+                /*
+                   if(dorap_ && (rapidity_v0 > rapMax_ || rapidity_v0 < rapMin_)) continue;
+                   else
+                   if(eta_v0 > 2.4 || eta_v0 < -2.4 ) continue;
+                   */
+
+                secvz = v0cand->vz(); secvx = v0cand->vx(); secvy = v0cand->vy();
+
+                //trkNHits
+                int nhit1 = dau1->numberOfValidHits();
+                int nhit2 = dau2->numberOfValidHits();
+
+                if(nhit1 <= nHitCut1_ || nhit2 <= nHitCut2_) continue;
+
+                double pt1 = dau1->pt();
+                double pt2 = dau2->pt();
+
+                if(pt1 <= ptCut1_ || pt2 <= ptCut2_) continue;
+
+                //algo
+                //       double algo1 = dau1->algo();
+                //       double algo2 = dau2->algo();
+
+                //dau eta
+                //       double eta2 = dau2->eta();
+
+                double pd1 = d1->p();
+                //       double charged1 = dau1->charge();
+                double pd2 = d2->p();
+                //       double charged2 = dau2->charge();
+
+                TVector3 dauvec1(d1->px(),d1->py(),d1->pz());
+                TVector3 dauvec2(d2->px(),d2->py(),d2->pz());
+                TVector3 dauvecsum(dauvec1+dauvec2);
+
+                double energyd1e = sqrt(electronMassSquared+pd1*pd1);
+                double energyd2e = sqrt(electronMassSquared+pd2*pd2);
+                double invmass_ee = sqrt((energyd1e+energyd2e)*(energyd1e+energyd2e)-dauvecsum.Mag2());
+                if(invmass_ee<misIDMassCutEE_) continue;
+
+                double misIDMass_la = -999;
+                double misIDMass_ks_pip = -999;
+                double misIDMass_ks_ppi = -999;
+                if(v0IDName_ == "Lambda")
+                {
+                    double massd1=piMass;
+                    double massd2=piMass;
+                    double energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                    double energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                    double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                    misIDMass_la = invmass - kshortMass;
+                    if(fabs(misIDMass_la)<misIDMassCut_) continue;
+                }
+
+                if(v0IDName_ == "Kshort")
+                {
+                    double massd1=piMass;
+                    double massd2=protonMass;
+                    double energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                    double energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                    double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                    misIDMass_ks_pip = invmass - lambdaMass;
+                    if(fabs(misIDMass_ks_pip)<misIDMassCut_) continue;
+
+                    massd2=piMass;
+                    massd1=protonMass;
+                    energyd1 = sqrt(massd1*massd1+pd1*pd1);
+                    energyd2 = sqrt(massd2*massd2+pd2*pd2);
+                    invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+                    misIDMass_ks_ppi = invmass - lambdaMass;
+                    if(fabs(misIDMass_ks_ppi)<misIDMassCut_) continue;
+                }
+                numCand_V0++;
+            }
 
             for( reco::VertexCompositeCandidateCollection::const_iterator v0cand = v0candidates->begin();
                     v0cand != v0candidates->end();
@@ -639,6 +767,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     KS.vtxChi2_           = vtxChi2;
                     KS.cosTheta_          = agl;
                     KS.decayLSig_         = dlos;
+                    KS.n_ = numCand_V0;
                     //KS.misIDMassEE_       = invmass_ee;
                     //KS.misIDMassForward_  = misIDMass_ks_pip;
                     //KS.misIDMassBackward_ = misIDMass_ks_ppi;
@@ -669,6 +798,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     LA.vtxChi2_          = vtxChi2;
                     LA.cosTheta_         = agl;
                     LA.decayLSig_        = dlos;
+                    LA.n_ = numCand_V0;
                     //LA.misIDMassEE_      = invmass_ee;
                     //LA.misIDMassForward_ = misIDMass_la;
                     //LA.nTrkAcc_          = EtaPtCutnTracks;
