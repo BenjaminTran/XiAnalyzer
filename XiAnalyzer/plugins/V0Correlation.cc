@@ -72,7 +72,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
     bestvz = vtx.z(); bestvx = vtx.x(); bestvy = vtx.y();
     bestvzError = vtx.zError(); bestvxError = vtx.xError(); bestvyError = vtx.yError();
     
-    //if(bestvz < -15.0 || bestvz>15.0) return;
+    if(bestvz < -15.0 || bestvz>15.0) return;
     
     edm::Handle<reco::VertexCompositeCandidateCollection> v0candidates_ks;
     iEvent.getByToken(_ksCollection,v0candidates_ks);

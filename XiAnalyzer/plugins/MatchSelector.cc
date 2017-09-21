@@ -145,7 +145,7 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
                     double dpt = pt_gen - pt_V0;
                     dR_ks->Fill(dR);
                     dpt_ks->Fill(dpt/pt_gen);
-                    if(dR < 0.1 && dpt/pt_gen < 0.1)
+                    if(dR < 0.1 && fabs(dpt/pt_gen) < 0.1)
                     {
                         theNewV0Cands->push_back(*v0cand);
                         break;
@@ -163,7 +163,7 @@ void MatchSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
                     double dpt = pt_gen - pt_V0;
                     dR_la->Fill(dR);
                     dpt_la->Fill(dpt/pt_gen);
-                    if(dR < 0.1 && dpt/pt_gen < 0.1)
+                    if(dR < 0.1 && fabs(dpt/pt_gen) < 0.1)
                     {
                         theNewV0Cands->push_back(*v0cand);
                         break;
