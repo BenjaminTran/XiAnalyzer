@@ -187,13 +187,13 @@ void MatchSelector::beginJob() {
     if(v0IDName_ == "Kshort")
     {
         dR_ks = fs->make<TH1D>("dR_ks","dR_ks",100,0,1);
-        dpt_ks = fs->make<TH1D>("dpt_ks","dpt_ks",100,0,1);
+        dpt_ks = fs->make<TH1D>("dpt_ks","dpt_ks",200,-1,1);
     }
 
     if(v0IDName_ == "Lambda")
     {
         dR_la = fs->make<TH1D>("dR_la","dR_la",100,0,1);
-        dpt_la = fs->make<TH1D>("dpt_la","dpt_la",100,0,1);
+        dpt_la = fs->make<TH1D>("dpt_la","dpt_la",200,-1,1);
     }
 }
 
