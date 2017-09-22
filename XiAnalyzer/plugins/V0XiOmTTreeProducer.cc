@@ -401,6 +401,8 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     OM.eta_                = eta;
                     OM.nTrkAcc_            = EtaPtCutnTracks;
                     OM.mult_               = nTracks;
+                    OM.misIDMassForward_ = misIDMass_Om_pila;
+                    OM.misIDMassBackward_ = misIDMass_Om_lapi;
                     //OM.xVtx_               = bestvx;
                     //OM.yVtx_               = bestvy;
                     //OM.zVtx_               = bestvz;
@@ -653,15 +655,15 @@ V0XiOmTTreeProducer::beginJob()
         OmTree->Branch("om3dipsig",     &OM.cas3DIpSigValue_,"om3dipsig/F");
         OmTree->Branch("omKaon3dipsig", &OM.casPi3DIpSigValue_,"omKaon3dipsig/F");
         OmTree->Branch("vtrkpi3dipsig", &OM.VTrkPi3DIpSigValue_,"vtrkpi3dipsig/F");
-        OmTree->Branch("vtrkp3dipsig",  &OM.VTrkP3DIpSigValue_,"vtrkp3dipsig/F");
+        OmTree->Branch("vtrkp3dipsig",  &OM.VTrkP3DIpSigValue_,"vtrkp3dipsigpt/F");
         OmTree->Branch("omflightsig",   &OM.casFlightSigValue_,"omflightsig/F");
         OmTree->Branch("distancesig",   &OM.distanceSigValue_,"distancesig/F");
         OmTree->Branch("mass",          &OM.mass_,"mass/F");
         OmTree->Branch("rapidity",      &OM.rapidity_,"rapidity/F");
         OmTree->Branch("eta",           &OM.eta_,"eta/F");
         OmTree->Branch("pt",            &OM.pt_,"pt/F");
-        //OmTree->Branch("misIDMasspiLa", &OM.misIDMassForward_,"misIDMasspiLa/F");
-        //OmTree->Branch("misIDMassLapi", &OM.misIDMassBackward_,"misIDMassLapi/F");
+        OmTree->Branch("misIDMasspiLa", &OM.misIDMassForward_,"misIDMasspiLa/F");
+        OmTree->Branch("misIDMassLapi", &OM.misIDMassBackward_,"misIDMassLapi/F");
         //OmTree->Branch("xVtx",          &OM.xVtx_,"xVtx/F");
         //OmTree->Branch("yVtx",          &OM.yVtx_,"yVtx/F");
         //OmTree->Branch("zVtx",          &OM.zVtx_,"zVtx/F");
