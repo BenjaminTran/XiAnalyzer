@@ -894,7 +894,7 @@ V0XiOmTTreeProducer::beginJob()
         OmTree->Branch("om3dipsig",     &OM.cas3DIpSigValue_,"om3dipsig/F");
         OmTree->Branch("omKaon3dipsig", &OM.casPi3DIpSigValue_,"omKaon3dipsig/F");
         OmTree->Branch("vtrkpi3dipsig", &OM.VTrkPi3DIpSigValue_,"vtrkpi3dipsig/F");
-        OmTree->Branch("vtrkp3dipsig",  &OM.VTrkP3DIpSigValue_,"vtrkp3dipsigpt/F");
+        OmTree->Branch("vtrkp3dipsig",  &OM.VTrkP3DIpSigValue_,"vtrkp3dipsig/F");
         OmTree->Branch("omflightsig",   &OM.casFlightSigValue_,"omflightsig/F");
         OmTree->Branch("distancesig",   &OM.distanceSigValue_,"distancesig/F");
         OmTree->Branch("mass",          &OM.mass_,"mass/F");
