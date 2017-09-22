@@ -46,7 +46,7 @@ process.source = cms.Source("PoolSource",
         #PbPb
         #'root://cmsxrootd.fnal.gov//store/user/davidlw/HIMinimumBias5/RecoSkim2015_pprereco_V0Cascade_Golden_v2/170302_083114/0000/PbPb_MB_109.root'
         #),
-    seco#ndaryFileNames = cms.untracked.vstring(
+        #secondaryFileNames = cms.untracked.vstring(
         #'root://cmsxrootd.fnal.gov//store/hidata/HIRun2015/HIMinimumBias5/AOD/02May2016-v1/10000/52651877-FC24-E611-8885-003048F316DC.root'
         )
 )
