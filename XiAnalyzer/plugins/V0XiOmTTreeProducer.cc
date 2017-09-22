@@ -376,8 +376,8 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     XI.pt_                 = pt;
                     XI.rapidity_           = rap;
                     XI.eta_                = eta;
-                    //XI.nTrkAcc_            = EtaPtCutnTracks;
-                    //XI.mult_               = nTracks;
+                    XI.nTrkAcc_            = EtaPtCutnTracks;
+                    XI.mult_               = nTracks;
                     //XI.xVtx_               = bestvx;
                     //XI.yVtx_               = bestvy;
                     //XI.zVtx_               = bestvz;
@@ -399,8 +399,8 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     OM.pt_                 = pt;
                     OM.rapidity_           = rap;
                     OM.eta_                = eta;
-                    //OM.nTrkAcc_            = EtaPtCutnTracks;
-                    //OM.mult_               = nTracks;
+                    OM.nTrkAcc_            = EtaPtCutnTracks;
+                    OM.mult_               = nTracks;
                     //OM.xVtx_               = bestvx;
                     //OM.yVtx_               = bestvy;
                     //OM.zVtx_               = bestvz;
