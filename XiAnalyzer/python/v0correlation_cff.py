@@ -42,6 +42,6 @@ v0CorrelationRapidityMatchMC = v0CorrelationRapidity.clone(
         doRap = cms.untracked.bool(True),
         laCollection   = cms.untracked.InputTag('MatchCandidatesLambda:Lambda'),
         ksCollection   = cms.untracked.InputTag('MatchCandidatesKshort:Kshort')
-        #TO USE THIS MODULE, COMMENT OUT ALL KINEMATIC CUTS
+        #TO USE THIS MODULE ALSO COMMENT OUT ALL KINEMATIC CUTS IN SRC
         )
 #hltHM = hltHM.clone()

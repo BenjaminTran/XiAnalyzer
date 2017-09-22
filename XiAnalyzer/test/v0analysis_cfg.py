@@ -67,7 +67,8 @@ process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
                                     #'V0CorrelationCorrectMultB.root'
                                     #'V0CorrelationRapidityClosureRecoCollection.root'
-                                    'MatchV0ClosureB.root'
+                                    #'MatchV0ClosureB.root'
+                                    'MatchV0ClosureAbs_0_1.root'
 				                    )
                                   )
 # CORRELATION
