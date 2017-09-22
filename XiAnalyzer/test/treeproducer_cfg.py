@@ -42,19 +42,20 @@ process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
         #pPb
-        # 'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_pPb_V0Cascade_FullSkim_v4/170803_222621/0000/pPb_HM_109.root'
+        'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_pPb_V0Cascade_FullSkim_v4/170803_222621/0000/pPb_HM_109.root'
         #PbPb
-        'root://cmsxrootd.fnal.gov//store/user/davidlw/HIMinimumBias5/RecoSkim2015_pprereco_V0Cascade_Golden_v2/170302_083114/0000/PbPb_MB_109.root'
-        ),
-    secondaryFileNames = cms.untracked.vstring(
-        'root://cmsxrootd.fnal.gov//store/hidata/HIRun2015/HIMinimumBias5/AOD/02May2016-v1/10000/52651877-FC24-E611-8885-003048F316DC.root'
+        #'root://cmsxrootd.fnal.gov//store/user/davidlw/HIMinimumBias5/RecoSkim2015_pprereco_V0Cascade_Golden_v2/170302_083114/0000/PbPb_MB_109.root'
+        #),
+    seco#ndaryFileNames = cms.untracked.vstring(
+        #'root://cmsxrootd.fnal.gov//store/hidata/HIRun2015/HIMinimumBias5/AOD/02May2016-v1/10000/52651877-FC24-E611-8885-003048F316DC.root'
         )
 )
 
 # Additional output definition
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
-                                        'V0CasTreePbPb_Production.root'
+                                        # 'V0CasTreePbPb_Production.root'
+                                        'OmTree.root'
                                         )
                                   )
 # CORRELATION
@@ -64,9 +65,9 @@ process.TFileService = cms.Service("TFileService",
 #Tree producer
 process.TreeProd = cms.Sequence(process.OmTreeProducerRapidityPbPb*process.XiTreeProducerRapidityPbPb*process.KsTreeProducerRapidityPbPb*process.LaTreeProducerRapidityPbPb)
 
-process.LaOmTreeProd = cms.Sequence(process.LaTreeProducer + process.OmTreeProducer)
+process.OmTreeProd = cms.Sequence(process.OmTreeProducer)
 
-process.p = cms.Path(process.TreeProd)
+process.p = cms.Path(process.OmTreeProd)
 
 process.schedule = cms.Schedule(process.p)
 
