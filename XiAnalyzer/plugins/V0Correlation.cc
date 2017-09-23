@@ -91,9 +91,9 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
     edm::Handle<reco::TrackCollection> tracks;
     iEvent.getByToken(_trkSrc, tracks);
 
+    edm::Handle<reco::GenParticleCollection> genpars;
     if(doGenRef_)
     {
-        edm::Handle<reco::GenParticleCollection> genpars;
         iEvent.getByToken(_gnCollection,genpars);
     }
 

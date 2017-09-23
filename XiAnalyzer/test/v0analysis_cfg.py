@@ -68,7 +68,7 @@ process.TFileService = cms.Service("TFileService",
                                     #'V0CorrelationCorrectMultB.root'
                                     #'V0CorrelationRapidityClosureRecoCollection.root'
                                     #'MatchV0ClosureB.root'
-                                    'MatchV0ClosureAbs_0_1.root'
+                                    'MatchV0ClosureGenRef.root'
 				                    )
                                   )
 # CORRELATION
