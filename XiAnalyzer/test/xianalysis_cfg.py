@@ -89,7 +89,7 @@ process.TFileService = cms.Service("TFileService",
                                     #'V0Correlation.root'
                                     #'XiCorrelationRapidityPbpLoose.root'
                                     #'XiCorrelationRapidityRECOClosure.root'
-                                    'OmCorrelationRapidity.root'
+                                    'OmCorrelationRapidityPbp.root'
 				    )
                                   )
 # CORRELATION
