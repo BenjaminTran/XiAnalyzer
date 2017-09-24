@@ -55,7 +55,7 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
                                         # 'V0CasTreePbPb_Production.root'
-                                        'OmTree.root'
+                                        'OmTree2r.root'
                                         )
                                   )
 # CORRELATION
