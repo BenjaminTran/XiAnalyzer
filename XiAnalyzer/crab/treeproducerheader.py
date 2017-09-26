@@ -13,10 +13,11 @@ config.section_("Data")
 config.Data.inputDBS = 'phys03'
 config.Data.ignoreLocality = True
 #config.Data.primaryDataset = 'MinBias_TuneZ2star_7TeV_pythia6'
-config.Data.splitting = 'EventAwareLumiBased'
-#config.Data.splitting = 'FileBased'
+config.Data.splitting = 'FileBased'
+config.Data.unitsPerJob = 4
+#config.Data.splitting = 'EventAwareLumiBased'
+#config.Data.unitsPerJob = 100000
 #config.Data.totalUnits = 875000
-config.Data.unitsPerJob = 100000
 config.Data.outLFNDirBase = '/store/group/phys_heavyions/btran/'
 config.Data.useParent = True
 config.Data.publication = False
