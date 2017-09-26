@@ -19,8 +19,8 @@ omCorrelationRapidity = xiCorrelation.clone(
         casCollection = cms.InputTag('selectOmegaCandidatesNewRapidity:Omega'),
         ptBin         = cms.vdouble(1.0, 1.5, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10.0),
         PtBinNum      = cms.int32(9),
-        xiMassMean    = cms.vdouble(1.67302 ,1.67285 ,1.67278 ,1.67267 ,1.67273 ,1.67271 ,1.67263 ,1.67266 ,1.67274),
-        xiMassSigma   = cms.vdouble(0.00809827 ,0.00437071 ,0.00392287 ,0.00441197 ,0.00350338 ,0.00333124 ,0.00336817 ,0.00342727 ,0.0049246),
+        xiMassMean    = cms.vdouble(1.67306 ,1.67284 ,1.6728 ,1.67268 ,1.67272 ,1.6727 ,1.67262 ,1.67269 ,1.67279),
+        xiMassSigma   = cms.vdouble(0.00762585 ,0.00910153 ,0.00762863 ,0.00588798 ,0.00553094 ,0.00401328 ,0.00372463 ,0.00354882 ,0.00479006),
         doRap         = cms.bool(True)
         )
 
