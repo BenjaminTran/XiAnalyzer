@@ -171,7 +171,10 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
             double agl = cos(secvec.Angle(ptosvec));
 
-            //if(agl<=0.999) continue;
+            if(!doGenRef_)
+            {
+                if(agl<=0.999) continue;
+            }
 
             typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
             typedef ROOT::Math::SVector<double, 3> SVector3;
@@ -184,7 +187,10 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
             double dlos = dl/dlerror;
 
-            //if(dlos<=5) continue;
+            if(!doGenRef_)
+            {
+                if(dlos<=5) continue;
+            }
 
             const reco::Candidate * dau1 = trk.daughter(0);
             const reco::Candidate * dau2 = trk.daughter(1);
@@ -206,7 +212,10 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
             double v0masspiproton2 = sqrt((sqrt(0.13957*0.13957+pd1*pd1)+sqrt(0.93827*0.93827+pd2*pd2))*(sqrt(0.13957*0.13957+pd1*pd1)+sqrt(0.93827*0.93827+pd2*pd2))-dauvecsum.Mag2());
 
-            //if((v0masspiproton1>=(1.115683-mis_la_range_) && v0masspiproton1<=(1.115683+mis_la_range_)) || (v0masspiproton2>=(1.115683-mis_la_range_) && v0masspiproton2<=(1.115683+mis_la_range_)) ) continue;
+            if(!doGenRef_)
+            {
+                if((v0masspiproton1>=(1.115683-mis_la_range_) && v0masspiproton1<=(1.115683+mis_la_range_)) || (v0masspiproton2>=(1.115683-mis_la_range_) && v0masspiproton2<=(1.115683+mis_la_range_)) ) continue;
+            }
 
             //efficiency
             double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt));
@@ -297,7 +306,10 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
             double agl = cos(secvec.Angle(ptosvec));
 
-            //if(agl<=0.999) continue;
+            if(!doGenRef_)
+            {
+                if(agl<=0.999) continue;
+            }
 
             typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
             typedef ROOT::Math::SVector<double, 3> SVector3;
@@ -310,7 +322,10 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
             double dlos = dl/dlerror;
 
-            //if(dlos<=5) continue;
+            if(!doGenRef_)
+            {
+                if(dlos<=5) continue;
+            }
 
             const reco::Candidate * dau1 = trk.daughter(0);
             const reco::Candidate * dau2 = trk.daughter(1);
@@ -331,7 +346,10 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             double v0masspipi = sqrt((sqrt(0.13957*0.13957+pd1*pd1)+sqrt(0.13957*0.13957+pd2*pd2))*(sqrt(0.13957*0.13957+pd1*pd1)+sqrt(0.13957*0.13957+pd2*pd2))-dauvecsum.Mag2());
             double v0massee = sqrt((sqrt(0.000511*0.000511+pd1*pd1)+sqrt(0.000511*0.000511+pd2*pd2))*(sqrt(0.000511*0.000511+pd1*pd1)+sqrt(0.000511*0.000511+pd2*pd2))-dauvecsum.Mag2());
 
-            //if( (v0masspipi>=(0.497614-mis_ks_range_) && v0masspipi<=(0.497614+mis_ks_range_)) || v0massee <= mis_ph_range_ ) continue;
+            if(!doGenRef_)
+            {
+                if( (v0masspipi>=(0.497614-mis_ks_range_) && v0masspipi<=(0.497614+mis_ks_range_)) || v0massee <= mis_ph_range_ ) continue;
+            }
 
             //efficiency
             double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt));
