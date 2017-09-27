@@ -171,7 +171,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
             double agl = cos(secvec.Angle(ptosvec));
 
-            //if(agl<=0.999) continue;
+            if(agl<=0.999) continue;
 
             typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
             typedef ROOT::Math::SVector<double, 3> SVector3;
