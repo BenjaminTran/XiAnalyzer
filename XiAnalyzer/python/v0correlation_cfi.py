@@ -44,5 +44,6 @@ v0Correlation          = cms.EDAnalyzer('V0Correlation',
         ptcut_ks       = cms.untracked.vdouble(0.2,0.4,0.6,0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,9.0,12.0),
         ptcut_la       = cms.untracked.vdouble(0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,9.0,12.0),
         rejectDaughter = cms.untracked.bool(True),
-        doRap = cms.untracked.bool(False)
+        doRap = cms.untracked.bool(False),
+        doGenRef = cms.untracked.bool(False)
         )

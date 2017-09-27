@@ -45,6 +45,7 @@
 
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/Candidate/interface/CandidateFwd.h"
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 
 #include <Math/Functions.h>
 #include <Math/SVector.h>
@@ -167,12 +168,14 @@ private:
     double mis_ph_range_;
     bool rejectDaughter_;
     bool doRap_;
+    bool doGenRef_;
     
     edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
     edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
     
     edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _ksCollection;
     edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _laCollection;
+    edm::EDGetTokenT<reco::GenParticleCollection> _gnCollection;
 };
 
 #endif

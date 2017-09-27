@@ -215,12 +215,12 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 
                     if(fabs(mid)==3322 || fabs(mid)==3312 || fabs(mid)==3324 || fabs(mid)==3314 || fabs(mid)==3334) continue;
 
-                    double eta_dau1 = 0;
-                    double phi_dau1 = 0;
+                    double eta_dau1 = 999999;
+                    double phi_dau1 = 999999;
                     double pt_dau1 = 999.999;
 
-                    double eta_dau2 = 0;
-                    double phi_dau2 = 0;
+                    double eta_dau2 = 999999;
+                    double phi_dau2 = 999999;
                     double pt_dau2 = 999.999;
 
                     if(trk.numberOfDaughters()==2){
