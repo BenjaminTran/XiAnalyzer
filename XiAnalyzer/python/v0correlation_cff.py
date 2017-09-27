@@ -20,30 +20,31 @@ v0CorrelationRapidity = v0Correlation.clone(
 
 v0CorrelationlooseRapidity = v0CorrelationRapidity.clone(
         laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdalooseRapidity:Lambda'),
-        ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshortlooseRapidity:Kshort'),
-        doRap = cms.untracked.bool(True)
+        ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshortlooseRapidity:Kshort')
         )
 
 v0CorrelationtightRapidity = v0CorrelationRapidity.clone(
         laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdatightRapidity:Lambda'),
-        ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshorttightRapidity:Kshort'),
-        doRap = cms.untracked.bool(True)
+        ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshorttightRapidity:Kshort')
         )
 
 v0CorrelationRapidityMC = v0CorrelationRapidity.clone(
         multHigh = cms.untracked.double(999999),
-        multLow = cms.untracked.double(-1),
-        doRap = cms.untracked.bool(True)
+        multLow = cms.untracked.double(-1)
         )
 
 v0CorrelationRapidityMatchMC = v0CorrelationRapidity.clone(
         gnCollection   = cms.InputTag('genParticles'),
         multHigh = cms.untracked.double(999999),
         multLow = cms.untracked.double(-1),
-        doRap = cms.untracked.bool(True),
         laCollection   = cms.untracked.InputTag('MatchCandidatesLambda:Lambda'),
         ksCollection   = cms.untracked.InputTag('MatchCandidatesKshort:Kshort'),
         doGenRef = cms.untracked.bool(True)
         #TO USE THIS MODULE ALSO COMMENT OUT ALL KINEMATIC CUTS IN SRC
         )
 #hltHM = hltHM.clone()
+
+v0CorrelationRapidityPeriSub = v0CorrelationRapidity.clone(
+        multHigh = cms.untracked.double(20),
+        multLow = cms.untracked.double(0)
+        )
