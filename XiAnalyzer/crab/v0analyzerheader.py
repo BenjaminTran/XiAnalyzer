@@ -16,13 +16,13 @@ config.Data.ignoreLocality = True
 #config.Data.splitting = 'FileBased'
 #config.Data.unitsPerJob = 2
 config.Data.splitting = 'EventAwareLumiBased'
-#config.Data.totalUnits = 2000000
-config.Data.unitsPerJob = 100000
+config.Data.totalUnits = 1125000
+config.Data.unitsPerJob = 225000
 config.Data.outLFNDirBase = '/store/group/phys_heavyions/btran/'
 config.Data.useParent = True
 config.Data.publication = False
 config.Data.publishDBS = 'phys03'
-config.Data.outputDatasetTag = 'RapidityCut_V0_Rereco_HM185_250Flow'
+config.Data.outputDatasetTag = 'RapidityCut_V0_Rereco_MB185_250Flow'
 
 config.section_("Site")
 config.Site.storageSite = 'T2_CH_CERN'

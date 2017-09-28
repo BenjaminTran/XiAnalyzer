@@ -810,9 +810,9 @@ V0Correlation::beginJob()
 
     TH1::SetDefaultSumw2();
 
-    edm::FileInPath fip("XiAnalyzer/XiAnalyzer/data/Hijing_8TeV_dataBS.root");
-    TFile f(fip.fullPath().c_str(),"READ");
-    effhisto = (TH2F*)f.Get("rTotalEff3D_0");
+    edm::FileInPath fip2("XiAnalyzer/XiAnalyzer/data/Hijing_8TeV_dataBS.root");
+    TFile f2(fip2.fullPath().c_str(),"READ");
+    effhisto = (TH2F*)f2.Get("rTotalEff3D_0");
 
 	/*
     edm::FileInPath fip1("Demo/DemoAnalyzer/data/V0_pp13TeV_Efficiency.root");
