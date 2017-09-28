@@ -541,7 +541,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     double phi_ass = pvector_ass.Phi();
                     double pt_ass = pvector_ass.Pt();
 
-                    //double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                    double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                     if(rejectDaughter_)
                     {
@@ -559,7 +559,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         deltaPhi=deltaPhi+2*PI;
 
                     //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks);///effweight_ass);
+                    hSignal_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks/effweight_ass);
                 }
             }
 
@@ -592,9 +592,9 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     TVector3 pvector_ass = (*pVect_ass)[nass];
                     double eta_ass = pvector_ass.Eta();
                     double phi_ass = pvector_ass.Phi();
-                    //double pt_ass = pvector_ass.Pt();
+                    double pt_ass = pvector_ass.Pt();
 
-                    //double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                    double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
 		if(rejectDaughter_)
                 {
@@ -612,7 +612,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         deltaPhi=deltaPhi+2*PI;
 
                     //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla);///effweight_ass);
+                    hSignal_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla/effweight_ass);
                 }
             }
 
@@ -694,9 +694,9 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     TVector3 pvector_ass = (*pVect_ass)[nass];
                     double eta_ass = pvector_ass.Eta();
                     double phi_ass = pvector_ass.Phi();
-                    //double pt_ass = pvector_ass.Pt();
+                    double pt_ass = pvector_ass.Pt();
 
-                    //double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                    double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                     if(rejectDaughter_)
                     {
@@ -714,7 +714,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         deltaPhi=deltaPhi+2*PI;
 
                     //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks);///effweight_ass);
+                    hSignal_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks/effweight_ass);
                 }
             }
 
@@ -747,9 +747,9 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     TVector3 pvector_ass = (*pVect_ass)[nass];
                     double eta_ass = pvector_ass.Eta();
                     double phi_ass = pvector_ass.Phi();
-                    //double pt_ass = pvector_ass.Pt();
+                    double pt_ass = pvector_ass.Pt();
 
-                    //double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                    double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                     if(rejectDaughter_)
                     {
@@ -767,7 +767,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         deltaPhi=deltaPhi+2*PI;
 
                     //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla);///effweight_ass);
+                    hSignal_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla/effweight_ass);
                 }
             }
 
@@ -810,11 +810,11 @@ V0Correlation::beginJob()
 
     TH1::SetDefaultSumw2();
 
-	/*
-    edm::FileInPath fip("Demo/DemoAnalyzer/data/trkEff_pp_all_74X_origin.root");
+    edm::FileInPath fip("XiAnalyzer/XiAnalyzer/data/Hijing_8TeV_dataBS.root");
     TFile f(fip.fullPath().c_str(),"READ");
-    effhisto = (TH2F*)f.Get("rTotalEff3D");
+    effhisto = (TH2F*)f.Get("rTotalEff3D_0");
 
+	/*
     edm::FileInPath fip1("Demo/DemoAnalyzer/data/V0_pp13TeV_Efficiency.root");
     TFile f1(fip1.fullPath().c_str(),"READ");
     effhisto_ks = (TH2D*)f1.Get("ks_eff_1");
@@ -962,9 +962,9 @@ V0Correlation::endJob() {
                         TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
                         double eta_ass = pvectorTmp_ass.Eta();
                         double phi_ass = pvectorTmp_ass.Phi();
-                        //double pt_ass = pvectorTmp_ass.Pt();
+                        double pt_ass = pvectorTmp_ass.Pt();
 
-                        //double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                         if(rejectDaughter_)
                         {
@@ -982,7 +982,7 @@ V0Correlation::endJob() {
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks);///effweight_ass);
+                        hBackground_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks/effweight_ass);
                     }
                 }
             }
@@ -1056,9 +1056,9 @@ V0Correlation::endJob() {
                         TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
                         double eta_ass = pvectorTmp_ass.Eta();
                         double phi_ass = pvectorTmp_ass.Phi();
-                        //double pt_ass = pvectorTmp_ass.Pt();
+                        double pt_ass = pvectorTmp_ass.Pt();
 
-                        //double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                         if(rejectDaughter_)
                         {
@@ -1076,7 +1076,7 @@ V0Correlation::endJob() {
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla);///effweight_ass);
+                        hBackground_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla/effweight_ass);
                     }
                 }
             }
@@ -1156,9 +1156,9 @@ V0Correlation::endJob() {
                         TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
                         double eta_ass = pvectorTmp_ass.Eta();
                         double phi_ass = pvectorTmp_ass.Phi();
-                        //double pt_ass = pvectorTmp_ass.Pt();
+                        double pt_ass = pvectorTmp_ass.Pt();
 
-                        //double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                         if(rejectDaughter_)
                         {
@@ -1176,7 +1176,7 @@ V0Correlation::endJob() {
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks);///effweight_ass);
+                        hBackground_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks/effweight_ass);
                     }
                 }
             }
@@ -1250,9 +1250,9 @@ V0Correlation::endJob() {
                         TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
                         double eta_ass = pvectorTmp_ass.Eta();
                         double phi_ass = pvectorTmp_ass.Phi();
-                        //double pt_ass = pvectorTmp_ass.Pt();
+                        double pt_ass = pvectorTmp_ass.Pt();
 
-                        //double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                         if(rejectDaughter_)
                         {
@@ -1270,7 +1270,7 @@ V0Correlation::endJob() {
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla);///effweight_ass);
+                        hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla/effweight_ass);
                     }
                 }
             }
