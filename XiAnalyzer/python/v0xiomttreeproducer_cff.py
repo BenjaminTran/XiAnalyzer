@@ -3,33 +3,28 @@ import FWCore.ParameterSet.Config as cms
 from XiAnalyzer.XiAnalyzer.v0xiomttreeproducer_cfi import *
 
 KsTreeProducer = TreeProducer.clone(
-        v0CollName = cms.string('generalV0CandidatesNew'),
-        v0IDName   = cms.string('Kshort'),
         multmin = cms.double(185),
-        multmax    = cms.double(250)
+        multmax    = cms.double(250),
+        doKs = cms.bool(True)
         )
 
 LaTreeProducer = TreeProducer.clone(
-        v0CollName   = cms.string('generalV0CandidatesNew'),
-        v0IDName     = cms.string('Lambda'),
         multmin = cms.double(185),
         multmax      = cms.double(250),
-        misIDMassCut = cms.double(0.020)
+        doLa = cms.bool(True)
         )
 
 XiTreeProducer = TreeProducer.clone(
-        v0CollName = cms.string('generalCascadeCandidatesNew'),
-        v0IDName   = cms.string('Xi'),
         multmin = cms.double(185),
-        multmax    = cms.double(250)
+        multmax    = cms.double(250),
+        doXi = cms.bool(True)
         )
 
 OmTreeProducer = TreeProducer.clone(
-        v0CollName   = cms.string('generalCascadeCandidatesNew'),
-        v0IDName     = cms.string('Omega'),
         multmin = cms.double(185),
         multmax      = cms.double(250),
-        misIDMassCut = cms.double(0.020)
+        misIDMassCut = cms.double(0.020),
+        doOm = cms.bool(True)
         )
 
 OmTreeProducerRapidity = OmTreeProducer.clone(

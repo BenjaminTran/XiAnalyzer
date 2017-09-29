@@ -26,6 +26,10 @@ V0XiOmTTreeProducer::V0XiOmTTreeProducer(const edm::ParameterSet& iConfig)
     nHitCut1_       = iConfig.getParameter<int>("nHitCut1");
     nHitCut2_       = iConfig.getParameter<int>("nHitCut2");
     doRap_          = iConfig.getParameter<bool>("doRap");
+    doKs_ = iConfig.getParameter<bool>("doKs");
+    doLa_ = iConfig.getParameter<>ool>("doLa");
+    doXi_ = iConfig.getParameter<>ool>("doXi");
+    doOm_ = iConfig.getParameter<>ool>("doOm");
     useCentrality_  = iConfig.getParameter<bool>("useCentrality");
     //treeName_     = iConfig.getParameter<string>("treeName");
 }
@@ -187,11 +191,10 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 {
                     if(rap < rapMin_ || rap > rapMax_) continue;
                 }
-
-                //if(eta > 2.4 || eta < -2.4){
-                    //cout << "bad eta" << endl;
-                    //continue;
-                //}
+                else
+                {
+                    if(eta > 2.4 || eta < -2.4) continue;
+                }
 
                 //secvz  = CasCand->vz(); << endl;
                 //secvx  = CasCand->vx();
@@ -401,8 +404,8 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     OM.eta_                = eta;
                     OM.nTrkAcc_            = EtaPtCutnTracks;
                     OM.mult_               = nTracks;
-                    OM.misIDMassForward_ = misIDMass_Om_pila;
-                    OM.misIDMassBackward_ = misIDMass_Om_lapi;
+                    //OM.misIDMassForward_ = misIDMass_Om_pila;
+                    //OM.misIDMassBackward_ = misIDMass_Om_lapi;
                     //OM.xVtx_               = bestvx;
                     //OM.yVtx_               = bestvy;
                     //OM.zVtx_               = bestvz;
@@ -662,8 +665,8 @@ V0XiOmTTreeProducer::beginJob()
         OmTree->Branch("rapidity",      &OM.rapidity_,"rapidity/F");
         OmTree->Branch("eta",           &OM.eta_,"eta/F");
         OmTree->Branch("pt",            &OM.pt_,"pt/F");
-        OmTree->Branch("misIDMasspiLa", &OM.misIDMassForward_,"misIDMasspiLa/F");
-        OmTree->Branch("misIDMassLapi", &OM.misIDMassBackward_,"misIDMassLapi/F");
+        //OmTree->Branch("misIDMasspiLa", &OM.misIDMassForward_,"misIDMasspiLa/F");
+        //OmTree->Branch("misIDMassLapi", &OM.misIDMassBackward_,"misIDMassLapi/F");
         //OmTree->Branch("xVtx",          &OM.xVtx_,"xVtx/F");
         //OmTree->Branch("yVtx",          &OM.yVtx_,"yVtx/F");
         //OmTree->Branch("zVtx",          &OM.zVtx_,"zVtx/F");
