@@ -101,9 +101,11 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
     edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
     iEvent.getByToken(_xiCollection, xiCollection);
+    if(!xiCollection.isValid()) return;
 
     edm::Handle<reco::VertexCompositeCandidateCollection> omCollection;
     iEvent.getByToken(_omCollection, omCollection);
+    if(!omCollection.isValid()) return;
 
     edm::Handle<reco::TrackCollection> tracks;
     iEvent.getByToken(_trkSrc, tracks);
