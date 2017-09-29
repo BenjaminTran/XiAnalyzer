@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-from XiAnalyzer.XiAnalyzer.v0correlation_cfi import *
+from XiAnalyzer.XiAnalyzer.v0cascorrelation_cfi import *
 
 v0CasCorrelationRapidity = v0CasCorrelation.clone(
         multHigh       = cms.untracked.double(250),

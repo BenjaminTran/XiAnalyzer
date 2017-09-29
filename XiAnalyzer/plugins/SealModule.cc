@@ -11,6 +11,7 @@
 #include "XiAnalyzer/XiAnalyzer/interface/HadronCorrelationGen.h"
 #include "XiAnalyzer/XiAnalyzer/interface/MassPtProducer.h"
 #include "XiAnalyzer/XiAnalyzer/interface/V0XiOmTTreeProducer.h"
+#include "XiAnalyzer/XiAnalyzer/interface/V0CasCorrelation.h"
 
 DEFINE_FWK_MODULE(GenSelector);
 DEFINE_FWK_MODULE(MatchSelector);
@@ -20,6 +21,7 @@ DEFINE_FWK_MODULE(OmegaSelector);
 DEFINE_FWK_MODULE(XiCorrelation);
 DEFINE_FWK_MODULE(V0Correlation);
 DEFINE_FWK_MODULE(V0CorrelationMC);
+DEFINE_FWK_MODULE(V0CasCorrelation);
 DEFINE_FWK_MODULE(HadronCorrelationGen);
 DEFINE_FWK_MODULE(MassPtProducer);
 DEFINE_FWK_MODULE(V0XiOmTTreeProducer);
