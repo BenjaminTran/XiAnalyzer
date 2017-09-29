@@ -36,18 +36,18 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 #process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(5000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
         #pPb
-        'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_pPb_V0Cascade_FullSkim_v4/170803_222621/0000/pPb_HM_109.root'
+        #'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_pPb_V0Cascade_FullSkim_v4/170803_222621/0000/pPb_HM_109.root'
         #PbPb
-        #'root://cmsxrootd.fnal.gov//store/user/davidlw/HIMinimumBias5/RecoSkim2015_pprereco_V0Cascade_Golden_v2/170302_083114/0000/PbPb_MB_109.root'
-        #),
-        #secondaryFileNames = cms.untracked.vstring(
-        #'root://cmsxrootd.fnal.gov//store/hidata/HIRun2015/HIMinimumBias5/AOD/02May2016-v1/10000/52651877-FC24-E611-8885-003048F316DC.root'
+        'root://cmsxrootd.fnal.gov//store/user/davidlw/HIMinimumBias5/RecoSkim2015_pprereco_V0Cascade_Golden_v2/170302_083114/0000/PbPb_MB_109.root'
+        ),
+        secondaryFileNames = cms.untracked.vstring(
+        'root://cmsxrootd.fnal.gov//store/hidata/HIRun2015/HIMinimumBias5/AOD/02May2016-v1/10000/52651877-FC24-E611-8885-003048F316DC.root'
         )
 )
 
@@ -55,7 +55,7 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
                                         # 'V0CasTreePbPb_Production.root'
-                                        'OmTree2r.root'
+                                        'TreeTimeTest.root'
                                         )
                                   )
 # CORRELATION
@@ -67,7 +67,7 @@ process.TreeProd = cms.Sequence(process.OmTreeProducerRapidityPbPb*process.XiTre
 
 process.OmTreeProd = cms.Sequence(process.OmTreeProducer)
 
-process.p = cms.Path(process.OmTreeProd)
+process.p = cms.Path(process.TreeProd)
 
 process.schedule = cms.Schedule(process.p)
 
