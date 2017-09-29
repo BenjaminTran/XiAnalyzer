@@ -1155,7 +1155,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                 for(int assoc = 0; assoc < nMult_ass; assoc++)
                 {
-                    TVector3 pepVect_ass = (*pepVect_trkass)[assoc];
+                    TVector3 pepVect_ass = (*pVect_ass)[assoc];
                     double eta_ass       = pepVect_ass.Eta();
                     double phi_ass       = pepVect_ass.Phi();
 
@@ -1221,7 +1221,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                 for(int assoc = 0; assoc < nMult_ass; assoc++)
                 {
-                    TVector3 pepVect_ass = (*pepVect_trkass)[assoc];
+                    TVector3 pepVect_ass = (*pVect_ass)[assoc];
                     double eta_ass       = pepVect_ass.Eta();
                     double phi_ass       = pepVect_ass.Phi();
 
