@@ -20,7 +20,7 @@ xiCorrelation          = cms.EDAnalyzer('XiCorrelation',
         trkSrc         = cms.InputTag('generalTracks'),
         vertexCollName = cms.InputTag('offlinePrimaryVertices'),
         #casCollection   = cms.InputTag('selectV0CandidatesLowXi:Xi'),
-        casCollection   = cms.InputTag('selectV0CandidatesLowXiRapidity:Xi'),
+        casCollection   = cms.InputTag('selectV0CandidatesLowXi:Xi'),
         #Parameters
         bkgnum         = cms.double(20.0),
         etaMax_ass     = cms.double(2.4),

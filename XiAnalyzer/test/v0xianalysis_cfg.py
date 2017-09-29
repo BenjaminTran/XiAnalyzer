@@ -75,7 +75,7 @@ process.source = cms.Source("PoolSource",
 # Additional output definition
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
-                                    'V0XiCorrelation.root'
+                                    'V0CasCorrelation.root'
 				    )
                                   )
 # CORRELATION
@@ -84,7 +84,7 @@ process.TFileService = cms.Service("TFileService",
 
 # HM
 #process.XiAnalysis = cms.Sequence(process.hltHM*process.selectV0CandidatesLowXi*process.xiCorrelation)
-process.RapidityAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.v0CorrelationRapidity*process.xiCorrelationRapidity)
+process.RapidityAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
 
 process.p = cms.Path(process.RapidityAnalysis)
 
