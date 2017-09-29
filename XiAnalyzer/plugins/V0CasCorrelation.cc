@@ -484,7 +484,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             xiPEPvector.SetPtEtaPhiE(xi_pT,xi_eta,xi_phi,xi_rap);
             for(int i=0; i<ptbin_n_cas_;i++)
             {
-                if(xi_pT <= ptBin_[i+1] && xi_pT >= ptBin_[i])
+                if(xi_pT <= ptcut_xi_[i+1] && xi_pT >= ptcut_xi_[i])
                 {
                     Mass_xi[i]->Fill(mass);
                     //peak
