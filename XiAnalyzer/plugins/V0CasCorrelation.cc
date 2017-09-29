@@ -99,6 +99,12 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
     iEvent.getByToken(_laCollection,v0candidates_la);
     if(!v0candidates_la.isValid()) return;
 
+    edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
+    iEvent.getByToken(_xiCollection, xiCollection);
+
+    edm::Handle<reco::VertexCompositeCandidateCollection> omCollection;
+    iEvent.getByToken(_omCollection, omCollection);
+
     edm::Handle<reco::TrackCollection> tracks;
     iEvent.getByToken(_trkSrc, tracks);
 
@@ -476,7 +482,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             // Make vector of Xi Candidate parameters
             TLorentzVector xiPEPvector;
             xiPEPvector.SetPtEtaPhiE(xi_pT,xi_eta,xi_phi,xi_rap);
-            for(int i=0; i<PtBinNum_;i++)
+            for(int i=0; i<ptbin_n_cas_;i++)
             {
                 if(xi_pT <= ptBin_[i+1] && xi_pT >= ptBin_[i])
                 {
@@ -553,7 +559,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             omPEPvector.SetPtEtaPhiE(om_pT,om_eta,om_phi,om_rap);
             for(int i=0; i<ptbin_n_cas_;i++)
             {
-                if(om_pT <= ptBin_[i+1] && om_pT >= ptBin_[i])
+                if(om_pT <= ptcut_om_[i+1] && om_pT >= ptcut_om_[i])
                 {
                     Mass_om[i]->Fill(mass);
                     //peak
@@ -950,8 +956,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
         {
             int pepVect_xi_peak_size     = (int)pepVect_xi_peak[i]->size();
             int pepVect_xi_side_size     = (int)pepVect_xi_side[i]->size();
-            int pepVect_trkass_size = (int)pepVect_trkass->size();
-            TrkassPerEvt->Fill(pepVect_trkass_size);
 
             double nMult_trg_eff_xi = 0;
 
@@ -1004,9 +1008,9 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 double eta_trg_dau2 = pepvector_trg_dau2.Eta();
                 double phi_trg_dau2 = pepvector_trg_dau2.Phi();
 
-                for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
+                for(int assoc = 0; assoc < nMult_ass; assoc++)
                 {
-                    TVector3 pepVect_ass = (*pepVect_trkass)[assoc];
+                    TVector3 pepVect_ass = (*pVect_ass)[assoc];
                     double eta_ass       = pepVect_ass.Eta();
                     double phi_ass       = pepVect_ass.Phi();
 
@@ -1070,9 +1074,9 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                 //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
-                for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
+                for(int assoc = 0; assoc < nMult_ass; assoc++)
                 {
-                    TVector3 pepVect_ass = (*pepVect_trkass)[assoc];
+                    TVector3 pepVect_ass = (*nMult_ass)[assoc];
                     double eta_ass       = pepVect_ass.Eta();
                     double phi_ass       = pepVect_ass.Phi();
 
@@ -1097,8 +1101,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
         {
             int pepVect_om_peak_size     = (int)pepVect_om_peak[i]->size();
             int pepVect_om_side_size     = (int)pepVect_om_side[i]->size();
-            int pepVect_trkass_size = (int)pepVect_trkass->size();
-            TrkassPerEvt->Fill(pepVect_trkass_size);
 
             double nMult_trg_eff_om = 0;
 
@@ -1379,8 +1381,8 @@ V0CasCorrelation::beginJob()
         rap_xi_bkg[i]       = fs->make<TH1D>(Form("rap_xi_bkg_pt%d",i),";y",100,-5,5);
         mult_xi[i] = fs->make<TH1D>(Form("mult_xi_pt%d",i),"mult_xi",250,0,250);
         mult_xi_bkg[i] = fs->make<TH1D>(Form("mult_xi_bkg_pt%d",i),"mult_xi_bkg",250,0,250);
-        PepVect2_Xi_peak[i] = new vector< vector<TLorentzVector> >;
-        PepVect2_Xi_side[i] = new vector< vector<TLorentzVector> >;
+        PepVect2_xi_peak[i] = new vector< vector<TLorentzVector> >;
+        PepVect2_xi_side[i] = new vector< vector<TLorentzVector> >;
         PepVect2_dau_xi_peak[i] = new vector<vector<TVector3> >;
         PepVect2_dau_xi_side[i] = new vector<vector<TVector3> >;
 
@@ -1399,8 +1401,8 @@ V0CasCorrelation::beginJob()
         rap_om_bkg[i]       = fs->make<TH1D>(Form("rap_om_bkg_pt%d",i),";y",100,-5,5);
         mult_om[i] = fs->make<TH1D>(Form("mult_om_pt%d",i),"mult_om",250,0,250);
         mult_om_bkg[i] = fs->make<TH1D>(Form("mult_om_bkg_pt%d",i),"mult_om_bkg",250,0,250);
-        PepVect2_Om_peak[i] = new vector< vector<TLorentzVector> >;
-        PepVect2_Om_side[i] = new vector< vector<TLorentzVector> >;
+        PepVect2_om_peak[i] = new vector< vector<TLorentzVector> >;
+        PepVect2_om_side[i] = new vector< vector<TLorentzVector> >;
         PepVect2_dau_om_peak[i] = new vector<vector<TVector3> >;
         PepVect2_dau_om_side[i] = new vector<vector<TVector3> >;
     }
@@ -1823,7 +1825,7 @@ V0CasCorrelation::endJob() {
             int ncount = 0;
             for(int nevt_trg=0; nevt_trg<PepVect2_xi_peak_size; nevt_trg++)
             {
-                int nevt_ass = gRandom->Integer(PepVect2_ass_size);
+                int nevt_ass = gRandom->Integer(nevttotal_ass);
                 if(nevt_trg == nevt_ass)
                 {
                     nevt_trg--;
@@ -1843,7 +1845,7 @@ V0CasCorrelation::endJob() {
 
                 vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_xi_peak[i])[nevt_trg];
                 vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_xi_peak[i])[nevt_trg];
-                vector<TVector3> pepVectTmp_ass = (*PepVect2_ass)[nevt_ass];
+                vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
 
@@ -1922,7 +1924,7 @@ V0CasCorrelation::endJob() {
             int ncount = 0;
             for(int nevt_trg=0; nevt_trg<PepVect2_xi_side_size; nevt_trg++)
             {
-                int nevt_ass = gRandom->Integer(PepVect2_ass_size);
+                int nevt_ass = gRandom->Integer(nevttotal_ass);
                 if(nevt_trg == nevt_ass)
                 {
                     nevt_trg--;
@@ -1942,7 +1944,7 @@ V0CasCorrelation::endJob() {
 
                 vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_xi_side[i])[nevt_trg];
                 vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_xi_side[i])[nevt_trg];
-                vector<TVector3> pepVectTmp_ass = (*PepVect2_ass)[nevt_ass];
+                vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
 
@@ -2028,7 +2030,7 @@ V0CasCorrelation::endJob() {
             int ncount = 0;
             for(int nevt_trg=0; nevt_trg<PepVect2_om_peak_size; nevt_trg++)
             {
-                int nevt_ass = gRandom->Integer(PepVect2_ass_size);
+                int nevt_ass = gRandom->Integer(nevttotal_ass);
                 if(nevt_trg == nevt_ass)
                 {
                     nevt_trg--;
@@ -2048,7 +2050,7 @@ V0CasCorrelation::endJob() {
 
                 vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_om_peak[i])[nevt_trg];
                 vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_om_peak[i])[nevt_trg];
-                vector<TVector3> pepVectTmp_ass = (*PepVect2_ass)[nevt_ass];
+                vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
 
@@ -2127,7 +2129,7 @@ V0CasCorrelation::endJob() {
             int ncount = 0;
             for(int nevt_trg=0; nevt_trg<PepVect2_om_side_size; nevt_trg++)
             {
-                int nevt_ass = gRandom->Integer(PepVect2_ass_size);
+                int nevt_ass = gRandom->Integer(nevttotal_ass);
                 if(nevt_trg == nevt_ass)
                 {
                     nevt_trg--;
@@ -2147,7 +2149,7 @@ V0CasCorrelation::endJob() {
 
                 vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_om_side[i])[nevt_trg];
                 vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_om_side[i])[nevt_trg];
-                vector<TVector3> pepVectTmp_ass = (*PepVect2_ass)[nevt_ass];
+                vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
 
