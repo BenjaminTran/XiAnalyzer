@@ -137,7 +137,7 @@
 //#include "RiceHIG/V0Analysis/interface/V0Validator.h"
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
 
-using namespace std
+using namespace std;
 namespace Utils
 {
     bool VtxCheckIsGood(edm::Handle<reco::VertexCollection> vertices, double zVtxHigh_, double zVtxLow_)

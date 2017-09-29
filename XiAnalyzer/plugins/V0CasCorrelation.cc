@@ -5,6 +5,8 @@
 
 using namespace std;
 
+#define UNUSED(x) (void)(x)
+
 V0CasCorrelation::V0CasCorrelation(const edm::ParameterSet& iConfig)
 {
 
