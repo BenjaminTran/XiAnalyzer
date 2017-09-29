@@ -1153,7 +1153,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 double eta_trg_dau2 = pepvector_trg_dau2.Eta();
                 double phi_trg_dau2 = pepvector_trg_dau2.Phi();
 
-                for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
+                for(int assoc = 0; assoc < nMult_ass; assoc++)
                 {
                     TVector3 pepVect_ass = (*pepVect_trkass)[assoc];
                     double eta_ass       = pepVect_ass.Eta();
@@ -1219,7 +1219,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                 //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
 
-                for(int assoc = 0; assoc < pepVect_trkass_size; assoc++)
+                for(int assoc = 0; assoc < nMult_ass; assoc++)
                 {
                     TVector3 pepVect_ass = (*pepVect_trkass)[assoc];
                     double eta_ass       = pepVect_ass.Eta();
