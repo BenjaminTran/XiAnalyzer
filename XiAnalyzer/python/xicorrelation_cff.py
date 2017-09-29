@@ -51,6 +51,6 @@ xiCorrelationRapidityMC = xiCorrelationRapidity.clone(
         )
 
 xiCorrelationRapidityPeriSub = xiCorrelationRapidity.clone(
-        multHigh = cms.untracked.double(20),
-        multLow = cms.untracked.double(0)
+        multHigh = cms.double(20),
+        multLow = cms.double(0)
         )
