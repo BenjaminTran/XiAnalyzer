@@ -499,7 +499,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         Pt_xi[i]->Fill(xi_pT);//,1.0/effxi);
                         Eta_xi[i]->Fill(xi_eta);//,1.0/effxi);
                         rap_xi[i]->Fill(xi_rap);//,1.0/effxi);
-                        rap_xi_Lorentz[i]->Fill(xiPEPvector.E());//,1.0/effxi);
                     }
                     //sideband
                     if((mass <= (mean_xi_[i] - sideFactor_*sigma_xi_[i]) && mass >= 1.25) || (mass <= 1.40 && mass >= (mean_xi_[i] + sideFactor_*sigma_xi_[i])))
@@ -576,7 +575,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         Pt_om[i]->Fill(om_pT);//,1.0/effom);
                         Eta_om[i]->Fill(om_eta);//,1.0/effom);
                         rap_om[i]->Fill(om_rap);//,1.0/effom);
-                        rap_om_Lorentz[i]->Fill(omPEPvector.E());//,1.0/effom);
                     }
                     //sideband
                     if((mass <= (mean_om_[i] - sideFactor_*sigma_om_[i]) && mass >= 1.6) || (mass <= 1.75 && mass >= (mean_om_[i] + sideFactor_*sigma_om_[i])))
