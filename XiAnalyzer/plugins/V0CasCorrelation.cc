@@ -560,10 +560,8 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             omPEPvector.SetPtEtaPhiE(om_pT,om_eta,om_phi,om_rap);
             for(int i=0; i<ptbin_n_cas_;i++)
             {
-                cout << "beg for loop" << i << endl;
                 if(om_pT <= ptcut_om_[i+1] && om_pT >= ptcut_om_[i])
                 {
-                    cout << "Inside pt bin" << i << endl;
                     Mass_om[i]->Fill(mass);
                     //peak
                     if(mass >= (mean_om_[i] - peakFactor_*sigma_om_[i]) && mass <= (mean_om_[i] + peakFactor_*sigma_om_[i]))
