@@ -155,6 +155,10 @@ struct ParticleData{
     int nHitCut2_;
 
     bool doRap_;
+    bool doKs_;
+    bool doLa_;
+    bool doXi_;
+    bool doOm_;
     bool useCentrality_;
     //std::string treeName_;
 };
