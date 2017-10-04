@@ -139,6 +139,8 @@ struct ParticleData{
     TTree* KsTree;
     TTree* LaTree;
 
+    TH1D* nEv;
+
     std::string v0CollName_;
     std::string v0IDName_;
     double multLow_;
