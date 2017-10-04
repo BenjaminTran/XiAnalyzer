@@ -51,6 +51,7 @@ V0XiOmTTreeProducer::~V0XiOmTTreeProducer()
 void
 V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+    nEv->Fill();
     float piMass              = 0.13957018;
     float piMass_sigma        = piMass*1e-6;
     float piMassSquared       = piMass*piMass;
@@ -653,6 +654,7 @@ V0XiOmTTreeProducer::beginJob()
         LaTree->Branch("cosTheta",    &LA.cosTheta_,"cosTheta/F");
         LaTree->Branch("decayLSig",   &LA.decayLSig_,"decayLSig/F");
     }
+    nEv = fs->make<TH1D>("nEv","nEv",10,0,10);
 }
 
 // ------------ method called once each job just after ending the event
