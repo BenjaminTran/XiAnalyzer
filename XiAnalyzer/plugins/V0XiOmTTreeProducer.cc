@@ -13,25 +13,25 @@ V0XiOmTTreeProducer::V0XiOmTTreeProducer(const edm::ParameterSet& iConfig)
     _v0Collection   = consumes<reco::VertexCompositeCandidateCollection>(edm::InputTag(v0CollName_,v0IDName_,"ANASKIM"));
     _trkSrc         = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("trkSrc"));
     _towerSrc       = consumes<CaloTowerCollection>(iConfig.getParameter<edm::InputTag>("towerSrc"));
-    multmin_        = iConfig.getParameter<double>("multmin");
-    multmax_        = iConfig.getParameter<double>("multmax");
+    multLow_        = iConfig.getParameter<double>("multLow");
+    multHigh_        = iConfig.getParameter<double>("multHigh");
     rapMin_         = iConfig.getParameter<double>("rapMin");
     rapMax_         = iConfig.getParameter<double>("rapMax");
     ptCut1_         = iConfig.getParameter<double>("ptCut1");
     ptCut2_         = iConfig.getParameter<double>("ptCut2");
     misIDMassCut_   = iConfig.getParameter<double>("misIDMassCut");
-    misIDMassCutEE_ = iConfig.getParameter<double>("misIDMassCut");
+    misIDMassCutEE_ = iConfig.getParameter<double>("misIDMassCutEE");
     cent_bin_low_   = iConfig.getParameter<int>("cent_bin_low");
     cent_bin_high_  = iConfig.getParameter<int>("cent_bin_high");
     nHitCut1_       = iConfig.getParameter<int>("nHitCut1");
     nHitCut2_       = iConfig.getParameter<int>("nHitCut2");
     doRap_          = iConfig.getParameter<bool>("doRap");
-    doKs_ = iConfig.getParameter<bool>("doKs");
-    doLa_ = iConfig.getParameter<>ool>("doLa");
-    doXi_ = iConfig.getParameter<>ool>("doXi");
-    doOm_ = iConfig.getParameter<>ool>("doOm");
     useCentrality_  = iConfig.getParameter<bool>("useCentrality");
-    //treeName_     = iConfig.getParameter<string>("treeName");
+
+    if(useCentrality_){
+        multLow_ = 0;
+        multHigh_ = 999999;
+    }
 }
 
 V0XiOmTTreeProducer::~V0XiOmTTreeProducer()
@@ -157,7 +157,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder",theTTB);
 
 
-        if(EtaPtCutnTracks >= multmin_)// && EtaPtCutnTracks < multmax_)
+        if(EtaPtCutnTracks >= multLow_ && EtaPtCutnTracks < multHigh_)
         {
             //Determine number of Xi candidates with no cuts other than track selection
 
@@ -232,13 +232,13 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 vector<RefCountedKinematicParticle> casParticles;
                 if(v0IDName_ == "Xi") casParticles.push_back(pFactory.particle(bat_CasTT,piMass,chi,ndf,piMass_sigma));
                 else if(v0IDName_ == "Omega") casParticles.push_back(pFactory.particle(bat_CasTT,kaonMass,chi,ndf,kaonMass_sigma));
-                else cout << "unexpected boolean option" << endl;
+                else cout << "unexpected particle option" << endl;
                 casParticles.push_back(lamCand);
 
                 RefCountedKinematicTree casFitTree = fitter.fit(casParticles);
                 if(!casFitTree->isValid())
                 {
-                    cout<<"invalid xi kinematic vertex fitting"<<endl;
+                    cout<<"invalid cas kinematic vertex fitting"<<endl;
                     continue;
                 }
                 casFitTree->movePointerToTheTop();
@@ -247,7 +247,7 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 
                 if(!casCand->currentState().isValid())
                 {
-                    cout<<"invalid state from xi cand"<<endl;
+                    cout<<"invalid state from cas cand"<<endl;
                 }
 
                 KinematicState theCurrentXiCandKinematicState = casCand->currentState();
@@ -379,14 +379,6 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     XI.pt_                 = pt;
                     XI.rapidity_           = rap;
                     XI.eta_                = eta;
-                    XI.nTrkAcc_            = EtaPtCutnTracks;
-                    XI.mult_               = nTracks;
-                    //XI.xVtx_               = bestvx;
-                    //XI.yVtx_               = bestvy;
-                    //XI.zVtx_               = bestvz;
-                    //XI.xVtxError_          = bestvxError;
-                    //XI.yVtxError_          = bestvyError;
-                    //XI.zVtxError_          = bestvzError;
 
                     XiTree->Fill();
                 }
@@ -402,27 +394,17 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     OM.pt_                 = pt;
                     OM.rapidity_           = rap;
                     OM.eta_                = eta;
-                    OM.nTrkAcc_            = EtaPtCutnTracks;
-                    OM.mult_               = nTracks;
-                    //OM.misIDMassForward_ = misIDMass_Om_pila;
-                    //OM.misIDMassBackward_ = misIDMass_Om_lapi;
-                    //OM.xVtx_               = bestvx;
-                    //OM.yVtx_               = bestvy;
-                    //OM.zVtx_               = bestvz;
-                    //OM.xVtxError_          = bestvxError;
-                    //OM.yVtxError_          = bestvyError;
-                    //OM.zVtxError_          = bestvzError;
 
                     OmTree->Fill();
                 }
-                else cout << "unexpected boolean option" << endl;
+                else cout << "unexpected particle option" << endl;
             }
         }
     }
 
     if(v0IDName_ == "Kshort" || v0IDName_ == "Lambda")
     {
-        if(EtaPtCutnTracks >= multmin_)// && EtaPtCutnTracks < multmax_)
+        if(EtaPtCutnTracks >= multLow_ && EtaPtCutnTracks < multHigh_)
         {
             edm::Handle<reco::VertexCompositeCandidateCollection> v0candidates;
             iEvent.getByToken(_v0Collection, v0candidates);
@@ -566,8 +548,6 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     KS.mass_              = mass_v0;
                     KS.pt_                = pt_v0;
                     KS.rapidity_          = rapidity_v0;
-                    //KS.nhit1_             = nhit1;
-                    //KS.nhit2_             = nhit2;
                     KS.dzSig1_            = dzos1;
                     KS.dzSig2_            = dzos2;
                     KS.dxySig1_           = dxyos1;
@@ -575,14 +555,6 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     KS.vtxChi2_           = vtxChi2;
                     KS.cosTheta_          = agl;
                     KS.decayLSig_         = dlos;
-                    //KS.nTrkAcc_           = EtaPtCutnTracks;
-                    //KS.mult_              = nTracks;
-                    //KS.xVtx_              = bestvx;
-                    //KS.yVtx_              = bestvy;
-                    //KS.zVtx_              = bestvz;
-                    //KS.xVtxError_         = bestvxError;
-                    //KS.yVtxError_         = bestvyError;
-                    //KS.zVtxError_         = bestvzError;
 
                     KsTree->Fill();
                 }
@@ -593,8 +565,6 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     LA.mass_             = mass_v0;
                     LA.pt_               = pt_v0;
                     LA.rapidity_         = rapidity_v0;
-                    //LA.nhit1_            = nhit1;
-                    //LA.nhit2_            = nhit2;
                     LA.dzSig1_           = dzos1;
                     LA.dzSig2_           = dzos2;
                     LA.dxySig1_          = dxyos1;
@@ -602,14 +572,6 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                     LA.vtxChi2_          = vtxChi2;
                     LA.cosTheta_         = agl;
                     LA.decayLSig_        = dlos;
-                    //LA.nTrkAcc_          = EtaPtCutnTracks;
-                    //LA.mult_             = nTracks;
-                    //LA.xVtx_             = bestvx;
-                    //LA.yVtx_             = bestvy;
-                    //LA.zVtx_             = bestvz;
-                    //LA.xVtxError_        = bestvxError;
-                    //LA.yVtxError_        = bestvyError;
-                    //LA.zVtxError_        = bestvzError;
 
                     LaTree->Fill();
                 }
@@ -642,14 +604,6 @@ V0XiOmTTreeProducer::beginJob()
         XiTree->Branch("rapidity",      &XI.rapidity_,"rapidity/F");
         XiTree->Branch("eta",           &XI.eta_,"eta/F");
         XiTree->Branch("pt",            &XI.pt_,"pt/F");
-        //XiTree->Branch("xVtx",          &XI.xVtx_,"xVtx/F");
-        //XiTree->Branch("yVtx",          &XI.yVtx_,"yVtx/F");
-        //XiTree->Branch("zVtx",          &XI.zVtx_,"zVtx/F");
-        //XiTree->Branch("xVtxError",     &XI.xVtxError_,"xVtxError/F");
-        //XiTree->Branch("yVtxError",     &XI.yVtxError_,"yVtxError/F");
-        //XiTree->Branch("zVtxError",     &XI.zVtxError_,"zVtxError/F");
-        XiTree->Branch("mult",          &XI.mult_,"mult/I");
-        XiTree->Branch("nTrkAcc",       &XI.nTrkAcc_,"nTrkAcc/I");
     }
 
     if(v0IDName_ == "Omega")
@@ -665,16 +619,6 @@ V0XiOmTTreeProducer::beginJob()
         OmTree->Branch("rapidity",      &OM.rapidity_,"rapidity/F");
         OmTree->Branch("eta",           &OM.eta_,"eta/F");
         OmTree->Branch("pt",            &OM.pt_,"pt/F");
-        //OmTree->Branch("misIDMasspiLa", &OM.misIDMassForward_,"misIDMasspiLa/F");
-        //OmTree->Branch("misIDMassLapi", &OM.misIDMassBackward_,"misIDMassLapi/F");
-        //OmTree->Branch("xVtx",          &OM.xVtx_,"xVtx/F");
-        //OmTree->Branch("yVtx",          &OM.yVtx_,"yVtx/F");
-        //OmTree->Branch("zVtx",          &OM.zVtx_,"zVtx/F");
-        //OmTree->Branch("xVtxError",     &OM.xVtxError_,"xVtxError/F");
-        //OmTree->Branch("yVtxError",     &OM.yVtxError_,"yVtxError/F");
-        //OmTree->Branch("zVtxError",     &OM.zVtxError_,"zVtxError/F");
-        OmTree->Branch("mult",          &OM.mult_,"mult/I");
-        OmTree->Branch("nTrkAcc",       &OM.nTrkAcc_,"nTrkAcc/I");
     }
 
 
@@ -692,14 +636,6 @@ V0XiOmTTreeProducer::beginJob()
         KsTree->Branch("vtxChi2",      &KS.vtxChi2_,"vtxChi2/F");
         KsTree->Branch("cosTheta",     &KS.cosTheta_,"cosTheta/F");
         KsTree->Branch("decayLSig",    &KS.decayLSig_,"decayLSig/F");
-        //KsTree->Branch("xVtx",         &KS.xVtx_,"xVtx/F");
-        //KsTree->Branch("yVtx",         &KS.yVtx_,"yVtx/F");
-        //KsTree->Branch("zVtx",         &KS.zVtx_,"zVtx/F");
-        //KsTree->Branch("xVtxError",    &KS.xVtxError_,"xVtxError/F");
-        //KsTree->Branch("yVtxError",    &KS.yVtxError_,"yVtxError/F");
-        //KsTree->Branch("zVtxError",    &KS.zVtxError_,"zVtxError/F");
-        KsTree->Branch("mult",         &KS.mult_,"mult/I");
-        KsTree->Branch("nTrkAcc",      &KS.nTrkAcc_,"nTrkAcc/I");
     }
 
     if(v0IDName_ == "Lambda")
@@ -716,14 +652,6 @@ V0XiOmTTreeProducer::beginJob()
         LaTree->Branch("vtxChi2",     &LA.vtxChi2_,"vtxChi2/F");
         LaTree->Branch("cosTheta",    &LA.cosTheta_,"cosTheta/F");
         LaTree->Branch("decayLSig",   &LA.decayLSig_,"decayLSig/F");
-        //LaTree->Branch("xVtx",        &LA.xVtx_,"xVtx/F");
-        //LaTree->Branch("yVtx",        &LA.yVtx_,"yVtx/F");
-        //LaTree->Branch("zVtx",        &LA.zVtx_,"zVtx/F");
-        //LaTree->Branch("xVtxError",   &LA.xVtxError_,"xVtxError/F");
-        //LaTree->Branch("yVtxError",   &LA.yVtxError_,"yVtxError/F");
-        //LaTree->Branch("zVtxError",   &LA.zVtxError_,"zVtxError/F");
-        LaTree->Branch("mult",        &LA.mult_,"mult/I");
-        LaTree->Branch("nTrkAcc",     &LA.nTrkAcc_,"nTrkAcc/I");
     }
 }
 

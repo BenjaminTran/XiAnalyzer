@@ -3,28 +3,32 @@ import FWCore.ParameterSet.Config as cms
 from XiAnalyzer.XiAnalyzer.v0xiomttreeproducer_cfi import *
 
 KsTreeProducer = TreeProducer.clone(
-        multmin = cms.double(185),
-        multmax    = cms.double(250),
-        doKs = cms.bool(True)
+        V0IDName = cms.string('Kshort')
+        multLow = cms.double(185),
+        multHigh    = cms.double(250),
+        misIDMassCut = cms.double(0.010),
         )
 
 LaTreeProducer = TreeProducer.clone(
-        multmin = cms.double(185),
-        multmax      = cms.double(250),
-        doLa = cms.bool(True)
+        V0IDName = cms.string('Lambda')
+        multLow = cms.double(185),
+        multHigh      = cms.double(250),
+        misIDMassCut = cms.double(0.020),
         )
 
 XiTreeProducer = TreeProducer.clone(
-        multmin = cms.double(185),
-        multmax    = cms.double(250),
-        doXi = cms.bool(True)
+        V0CollName = cms.string('generalCascadeCandidatesNew'),
+        V0IDName = cms.string('Xi')
+        multLow = cms.double(185),
+        multHigh    = cms.double(250),
         )
 
 OmTreeProducer = TreeProducer.clone(
-        multmin = cms.double(185),
-        multmax      = cms.double(250),
+        V0CollName = cms.string('generalCascadeCandidatesNew'),
+        V0IDName = cms.string('Omega')
+        multLow = cms.double(185),
+        multHigh      = cms.double(250),
         misIDMassCut = cms.double(0.020),
-        doOm = cms.bool(True)
         )
 
 OmTreeProducerRapidity = OmTreeProducer.clone(
@@ -44,21 +48,21 @@ LaTreeProducerRapidity = LaTreeProducer.clone(
         )
 
 KsTreeProducerRapidityPbPb = KsTreeProducerRapidity.clone(
-        multmin = cms.double(0),
+        multLow = cms.double(0),
         useCentrality = cms.bool(True)
         )
 
 LaTreeProducerRapidityPbPb = LaTreeProducerRapidity.clone(
-        multmin = cms.double(0),
+        multLow = cms.double(0),
         useCentrality = cms.bool(True)
         )
 
 XiTreeProducerRapidityPbPb = XiTreeProducerRapidity.clone(
-        multmin = cms.double(0),
+        multLow = cms.double(0),
         useCentrality = cms.bool(True)
         )
 
 OmTreeProducerRapidityPbPb = OmTreeProducerRapidity.clone(
-        multmin = cms.double(0),
+        multLow = cms.double(0),
         useCentrality = cms.bool(True)
         )
