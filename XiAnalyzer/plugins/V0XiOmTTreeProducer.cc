@@ -51,7 +51,7 @@ V0XiOmTTreeProducer::~V0XiOmTTreeProducer()
 void
 V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-    nEv->Fill();
+    nEv->Fill(1);
     float piMass              = 0.13957018;
     float piMass_sigma        = piMass*1e-6;
     float piMassSquared       = piMass*piMass;

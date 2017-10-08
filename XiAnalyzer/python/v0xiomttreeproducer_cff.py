@@ -3,32 +3,32 @@ import FWCore.ParameterSet.Config as cms
 from XiAnalyzer.XiAnalyzer.v0xiomttreeproducer_cfi import *
 
 KsTreeProducer = TreeProducer.clone(
-        V0IDName = cms.string('Kshort')
+        v0IDName = cms.string('Kshort'),
         multLow = cms.double(185),
         multHigh    = cms.double(250),
-        misIDMassCut = cms.double(0.010),
+        misIDMassCut = cms.double(0.010)
         )
 
 LaTreeProducer = TreeProducer.clone(
-        V0IDName = cms.string('Lambda')
+        v0IDName = cms.string('Lambda'),
         multLow = cms.double(185),
         multHigh      = cms.double(250),
-        misIDMassCut = cms.double(0.020),
+        misIDMassCut = cms.double(0.020)
         )
 
 XiTreeProducer = TreeProducer.clone(
-        V0CollName = cms.string('generalCascadeCandidatesNew'),
-        V0IDName = cms.string('Xi')
+        v0CollName = cms.string('generalCascadeCandidatesNew'),
+        v0IDName = cms.string('Xi'),
         multLow = cms.double(185),
-        multHigh    = cms.double(250),
+        multHigh    = cms.double(250)
         )
 
 OmTreeProducer = TreeProducer.clone(
-        V0CollName = cms.string('generalCascadeCandidatesNew'),
-        V0IDName = cms.string('Omega')
+        v0CollName = cms.string('generalCascadeCandidatesNew'),
+        v0IDName = cms.string('Omega'),
         multLow = cms.double(185),
         multHigh      = cms.double(250),
-        misIDMassCut = cms.double(0.020),
+        misIDMassCut = cms.double(0.020)
         )
 
 OmTreeProducerRapidity = OmTreeProducer.clone(

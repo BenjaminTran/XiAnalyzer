@@ -8,10 +8,10 @@ except FileNotFoundError:
 
 #To submit edit counter, CollID, inputDataset
 
-PDcounter = 2
+PDcounter = 5
 #collID = 'ppb'
-collID = 'pbp'
-#collID = 'PbPb'
+#collID = 'pbp'
+collID = 'PbPb'
 
 tp.config.General.requestName = 'HLT185_250FlowTree' + collID + '2016PD' + str(PDcounter) + 'JL' + str(counter)
 tp.config.General.workArea = 'crab_dir/HLT185_250FlowTree' + collID +'2016PD' + str(PDcounter) + 'Rap'
@@ -41,13 +41,13 @@ if __name__ == '__main__':
     #tp.config.Data.inputDataset = '/PAHighMultiplicity6/davidlw-RecoSkim2016_pPb_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #Pbp
     #tp.config.Data.inputDataset = '/PAHighMultiplicity1/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
-    tp.config.Data.inputDataset = '/PAHighMultiplicity2/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
+    #tp.config.Data.inputDataset = '/PAHighMultiplicity2/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #tp.config.Data.inputDataset = '/PAHighMultiplicity3/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #tp.config.Data.inputDataset = '/PAHighMultiplicity4/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #tp.config.Data.inputDataset = '/PAHighMultiplicity5/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #tp.config.Data.inputDataset = '/PAHighMultiplicity6/davidlw-RecoSkim2016_Pbp_V0Cascade_v1-97be9aa52ea60cba5455e64649c12464/USER'
     #PbPb
-    #tp.config.Data.inputDataset = '/HIMinimumBias5/davidlw-RecoSkim2015_pprereco_V0Cascade_Golden_v2-a2a36526d6b050b4e6f00846a47a9f83/USER'
+    tp.config.Data.inputDataset = '/HIMinimumBias5/davidlw-RecoSkim2015_pprereco_V0Cascade_Golden_v2-a2a36526d6b050b4e6f00846a47a9f83/USER'
 
     with open( 'TreeVarStore.dat', 'w' ) as fle:
         counter = counter + 1
