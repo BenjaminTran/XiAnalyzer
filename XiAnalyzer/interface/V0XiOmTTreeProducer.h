@@ -120,7 +120,7 @@ struct ParticleData{
                 int n_; //number of candidates
     //Event Parameters
                 int nTrkAcc_; //Number of tracks that pass track selection and eta pT cut
-                int mult_; //Multiplicity
+                int nEvt_; //Multiplicity
                 double xVtx_;
                 double yVtx_;
                 double zVtx_;
@@ -139,10 +139,12 @@ struct ParticleData{
     TTree* KsTree;
     TTree* LaTree;
 
+    TH1D* nEv;
+
     std::string v0CollName_;
     std::string v0IDName_;
-    double multmin_;
-    double multmax_;
+    double multLow_;
+    double multHigh_;
     double rapMin_;
     double rapMax_;
     double ptCut1_;
