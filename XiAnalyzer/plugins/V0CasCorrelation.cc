@@ -1310,6 +1310,7 @@ V0CasCorrelation::beginJob()
     effhisto_la = (TH2D*)f1.Get("la_eff_1");
     */
 
+    //When go back to eta cut then need to add if statement on doRap_
     edm::FileInPath fip("XiAnalyzer/XiAnalyzer/data/Effhisto.root");
     TFile f(fip.fullPath().c_str(),"READ");
     effhisto_ks = (TH2D*)f.Get("EffHistoKs");
