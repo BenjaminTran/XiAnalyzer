@@ -28,7 +28,7 @@ OmTreeProducer = TreeProducer.clone(
         v0IDName = cms.string('Omega'),
         multLow = cms.double(185),
         multHigh      = cms.double(250),
-        misIDMassCut = cms.double(0.020)
+        misIDMassCut = cms.double(0.015)
         )
 
 OmTreeProducerRapidity = OmTreeProducer.clone(
@@ -49,20 +49,24 @@ LaTreeProducerRapidity = LaTreeProducer.clone(
 
 KsTreeProducerRapidityPbPb = KsTreeProducerRapidity.clone(
         multLow = cms.double(0),
+        multHigh = cms.double(999999),
         useCentrality = cms.bool(True)
         )
 
 LaTreeProducerRapidityPbPb = LaTreeProducerRapidity.clone(
         multLow = cms.double(0),
+        multHigh = cms.double(999999),
         useCentrality = cms.bool(True)
         )
 
 XiTreeProducerRapidityPbPb = XiTreeProducerRapidity.clone(
         multLow = cms.double(0),
+        multHigh = cms.double(999999),
         useCentrality = cms.bool(True)
         )
 
 OmTreeProducerRapidityPbPb = OmTreeProducerRapidity.clone(
         multLow = cms.double(0),
+        multHigh = cms.double(999999),
         useCentrality = cms.bool(True)
         )
