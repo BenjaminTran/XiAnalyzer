@@ -188,14 +188,14 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 double pt   = CasCand->pt();
                 double rap  = CasCand->rapidity();
 
-                if(doRap_)
-                {
-                    if(rap < rapMin_ || rap > rapMax_) continue;
-                }
-                else
-                {
-                    if(eta > 2.4 || eta < -2.4) continue;
-                }
+                //if(doRap_)
+                //{
+                    //if(rap < rapMin_ || rap > rapMax_) continue;
+                //}
+                //else
+                //{
+                    //if(eta > 2.4 || eta < -2.4) continue;
+                //}
 
                 //secvz  = CasCand->vz(); << endl;
                 //secvx  = CasCand->vx();
@@ -432,10 +432,10 @@ V0XiOmTTreeProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
                 double rapidity_v0 = v0cand->rapidity();
                 double mass_v0 = v0cand->mass();
 
-                if(doRap_)
-                {
-                    if(rapidity_v0 > rapMax_ || rapidity_v0 < rapMin_) continue;
-                }
+                //if(doRap_)
+                //{
+                    //if(rapidity_v0 > rapMax_ || rapidity_v0 < rapMin_) continue;
+                //}
 
                 secvz = v0cand->vz(); secvx = v0cand->vx(); secvy = v0cand->vy();
 
