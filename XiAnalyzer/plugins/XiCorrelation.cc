@@ -196,7 +196,19 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                         rap_xi_Lorentz[i]->Fill(xiPEPvector.E());//,1.0/effxi);
                     }
                     //sideband
-                    if((mass <= (xiMassMean_[i] - sideFactor_*xiMassSigma_[i]) && mass >= 1.25) || (mass <= 1.40 && mass >= (xiMassMean_[i] + sideFactor_*xiMassSigma_[i])))
+                    double massHistLow = 999999;
+                    double massHistHigh = -999999;
+                    if(v0IDName == "Xi")
+                    {
+                        massHistLow = 1.25;
+                        massHistHigh = 1.40;
+                    }
+                    else if(v0IDName == "Omega")
+                    {
+                        massHistLow = 1.60;
+                        massHistHigh = 1.75;
+                    }
+                    if((mass <= (xiMassMean_[i] - sideFactor_*xiMassSigma_[i]) && mass >= massHistLow) || (mass <= massHistHigh && mass >= (xiMassMean_[i] + sideFactor_*xiMassSigma_[i])))
                     {
                         pepVect_Xi_side[i]->push_back(xiPEPvector);
                         pepVect_dau_xi_side[i]->push_back(dau1PEPvector);

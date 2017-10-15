@@ -4,6 +4,7 @@ selectV0CandidatesNew = cms.EDProducer('V0Selector',
   vertexCollName      = cms.InputTag('offlinePrimaryVertices'),
   v0CollName          = cms.string("generalV0CandidatesNew"),
   v0IDName            = cms.string("Kshort"),
+  towerSrc       = cms.InputTag('towerMaker'),
   etaCutMin           = cms.double(-2.4),
   etaCutMax           = cms.double(2.4),
   ptCut1              = cms.double(0.0),
@@ -21,5 +22,8 @@ selectV0CandidatesNew = cms.EDProducer('V0Selector',
   misIDMassCutEE      = cms.double(0.015),
   dorap               = cms.bool(False),
   rapMax              = cms.double(1.0),
-  rapMin              = cms.double(-1.0)
+  rapMin              = cms.double(-1.0),
+  useCentrality = cms.bool(False),
+  cent_bin_low   = cms.int32(60),
+  cent_bin_high  = cms.int32(100)
 )
