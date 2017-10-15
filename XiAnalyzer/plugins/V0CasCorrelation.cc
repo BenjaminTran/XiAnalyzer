@@ -134,25 +134,37 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
     for(int i=0;i<ptbin_n_;i++)
     {
+        if(doKs_)
+        {
             pVect_trg_ks[i] = new vector<TLorentzVector>;
             pVect_dau_ks[i] = new vector<TVector3>;
             pVect_trg_ks_bkg[i] = new vector<TLorentzVector>;
             pVect_dau_ks_bkg[i] = new vector<TVector3>;
+        }
+        if(doLa_)
+        {
             pVect_trg_la[i] = new vector<TLorentzVector>;
             pVect_dau_la[i] = new vector<TVector3>;
             pVect_trg_la_bkg[i] = new vector<TLorentzVector>;
             pVect_dau_la_bkg[i] = new vector<TVector3>;
+        }
     }
     for(int i=0; i<ptbin_n_cas_; i++)
     {
+        if(doXi_)
+        {
             pepVect_xi_peak[i]    = new vector<TLorentzVector>;
             pepVect_xi_side[i]    = new vector<TLorentzVector>;
             pepVect_dau_xi_peak[i]= new vector<TVector3>;
             pepVect_dau_xi_side[i]= new vector<TVector3>;
+        }
+        if(doOm_)
+        {
             pepVect_om_peak[i]    = new vector<TLorentzVector>;
             pepVect_om_side[i]    = new vector<TLorentzVector>;
             pepVect_dau_om_peak[i]= new vector<TVector3>;
             pepVect_dau_om_side[i]= new vector<TVector3>;
+        }
     }
 
     pVect_ass = new vector<TVector3>;
@@ -668,607 +680,623 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
         for(int i=0; i<ptbin_n_; i++)
         {
-            int nMult_trg_ks = (int)pVect_trg_ks[i]->size();
-            int nMult_trg_la = (int)pVect_trg_la[i]->size();
-
-            double nMult_trg_eff_ks=0;
-            double nMult_trg_eff_la=0;
-
-            for(int ntrg=0;ntrg<nMult_trg_ks;ntrg++)
+            if(doKs_)
             {
-                TLorentzVector pvector_trg = (*pVect_trg_ks[i])[ntrg];
-                double pt_trg = pvector_trg.Pt();
-                double eta_trg = pvector_trg.Eta();
-                double rap_trg = pvector_trg.E();
-                double EffXchoice = 0;
+                int nMult_trg_ks = (int)pVect_trg_ks[i]->size();
 
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
+                double nMult_trg_eff_ks=0;
 
-                double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
-
-                nMult_trg_eff_ks = nMult_trg_eff_ks + 1.0/effks;
-            }
-
-			for(int ntrg=0;ntrg<nMult_trg_la;ntrg++)
-            {
-                TLorentzVector pvector_trg = (*pVect_trg_la[i])[ntrg];
-                double pt_trg = pvector_trg.Pt();
-                double eta_trg = pvector_trg.Eta();
-                double rap_trg = pvector_trg.E();
-                double EffXchoice = 0;
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
-
-                nMult_trg_eff_la = nMult_trg_eff_la + 1.0/effla;
-            }
-
-            hMult_ks[i]->Fill(nMult_trg_ks);
-            hMult_la[i]->Fill(nMult_trg_la);
-
-            for(int ntrg=0;ntrg<nMult_trg_ks;ntrg++)
-            {
-                TLorentzVector pvector_trg = (*pVect_trg_ks[i])[ntrg];
-                double eta_trg = pvector_trg.Eta();
-                double phi_trg = pvector_trg.Phi();
-                double pt_trg = pvector_trg.Pt();
-                double rap_trg = pvector_trg.E();
-                double EffXchoice = 0;
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
-
-                TVector3 pvector_trg_dau1 = (*pVect_dau_ks[i])[2*ntrg];
-                double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                double phi_trg_dau1 = pvector_trg_dau1.Phi();
-
-                TVector3 pvector_trg_dau2 = (*pVect_dau_ks[i])[2*ntrg+1];
-                double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                double phi_trg_dau2 = pvector_trg_dau2.Phi();
-
-                for(int nass=0;nass<nMult_ass;nass++)
+                for(int ntrg=0;ntrg<nMult_trg_ks;ntrg++)
                 {
-                    TVector3 pvector_ass = (*pVect_ass)[nass];
-                    double eta_ass = pvector_ass.Eta();
-                    double phi_ass = pvector_ass.Phi();
-                    double pt_ass = pvector_ass.Pt();
+                    TLorentzVector pvector_trg = (*pVect_trg_ks[i])[ntrg];
+                    double pt_trg = pvector_trg.Pt();
+                    double eta_trg = pvector_trg.Eta();
+                    double rap_trg = pvector_trg.E();
+                    double EffXchoice = 0;
 
-                    double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
 
-                    if(rejectDaughter_)
+                    double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
+
+                    nMult_trg_eff_ks = nMult_trg_eff_ks + 1.0/effks;
+                }
+
+
+                hMult_ks[i]->Fill(nMult_trg_ks);
+
+                for(int ntrg=0;ntrg<nMult_trg_ks;ntrg++)
+                {
+                    TLorentzVector pvector_trg = (*pVect_trg_ks[i])[ntrg];
+                    double eta_trg = pvector_trg.Eta();
+                    double phi_trg = pvector_trg.Phi();
+                    double pt_trg = pvector_trg.Pt();
+                    double rap_trg = pvector_trg.E();
+                    double EffXchoice = 0;
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
+
+                    TVector3 pvector_trg_dau1 = (*pVect_dau_ks[i])[2*ntrg];
+                    double eta_trg_dau1 = pvector_trg_dau1.Eta();
+                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
+
+                    TVector3 pvector_trg_dau2 = (*pVect_dau_ks[i])[2*ntrg+1];
+                    double eta_trg_dau2 = pvector_trg_dau2.Eta();
+                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
+
+                    for(int nass=0;nass<nMult_ass;nass++)
                     {
-                        if(fabs(eta_ass-eta_trg_dau1)<0.03 && fabs(phi_ass-phi_trg_dau1)<0.03) continue;
-                        if(fabs(eta_ass-eta_trg_dau2)<0.03 && fabs(phi_ass-phi_trg_dau2)<0.03) continue;
+                        TVector3 pvector_ass = (*pVect_ass)[nass];
+                        double eta_ass = pvector_ass.Eta();
+                        double phi_ass = pvector_ass.Phi();
+                        double pt_ass = pvector_ass.Pt();
+
+                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+
+                        if(rejectDaughter_)
+                        {
+                            if(fabs(eta_ass-eta_trg_dau1)<0.03 && fabs(phi_ass-phi_trg_dau1)<0.03) continue;
+                            if(fabs(eta_ass-eta_trg_dau2)<0.03 && fabs(phi_ass-phi_trg_dau2)<0.03) continue;
+                        }
+
+                        double deltaEta=eta_ass-eta_trg;
+                        double deltaPhi=phi_ass-phi_trg;
+                        if(deltaPhi>PI)
+                            deltaPhi=deltaPhi-2*PI;
+                        if(deltaPhi<-PI)
+                            deltaPhi=deltaPhi+2*PI;
+                        if(deltaPhi>-PI && deltaPhi<-PI/2.)
+                            deltaPhi=deltaPhi+2*PI;
+
+                        //if(deltaEta==0 && deltaPhi==0) continue;
+                        hSignal_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks/effweight_ass);
                     }
+                }
 
-                    double deltaEta=eta_ass-eta_trg;
-                    double deltaPhi=phi_ass-phi_trg;
-                    if(deltaPhi>PI)
-                        deltaPhi=deltaPhi-2*PI;
-                    if(deltaPhi<-PI)
-                        deltaPhi=deltaPhi+2*PI;
-                    if(deltaPhi>-PI && deltaPhi<-PI/2.)
-                        deltaPhi=deltaPhi+2*PI;
+                nMult_trg_ks = (int)pVect_trg_ks_bkg[i]->size();
 
-                    //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks/effweight_ass);
+                nMult_trg_eff_ks=0;
+
+                for(int ntrg=0;ntrg<nMult_trg_ks;ntrg++)
+                {
+                    TLorentzVector pvector_trg = (*pVect_trg_ks_bkg[i])[ntrg];
+                    double pt_trg = pvector_trg.Pt();
+                    double eta_trg = pvector_trg.Eta();
+                    double rap_trg = pvector_trg.E();
+                    double EffXchoice = 0;
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
+
+                    nMult_trg_eff_ks = nMult_trg_eff_ks + 1.0/effks;
+                }
+
+
+                hMult_ks_bkg[i]->Fill(nMult_trg_ks);
+
+                for(int ntrg=0;ntrg<nMult_trg_ks;ntrg++)
+                {
+                    TLorentzVector pvector_trg = (*pVect_trg_ks_bkg[i])[ntrg];
+                    double eta_trg = pvector_trg.Eta();
+                    double phi_trg = pvector_trg.Phi();
+                    double pt_trg = pvector_trg.Pt();
+                    double rap_trg = pvector_trg.E();
+                    double EffXchoice = 0;
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
+
+                    TVector3 pvector_trg_dau1 = (*pVect_dau_ks_bkg[i])[2*ntrg];
+                    double eta_trg_dau1 = pvector_trg_dau1.Eta();
+                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
+
+                    TVector3 pvector_trg_dau2 = (*pVect_dau_ks_bkg[i])[2*ntrg+1];
+                    double eta_trg_dau2 = pvector_trg_dau2.Eta();
+                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
+
+                    for(int nass=0;nass<nMult_ass;nass++)
+                    {
+                        TVector3 pvector_ass = (*pVect_ass)[nass];
+                        double eta_ass = pvector_ass.Eta();
+                        double phi_ass = pvector_ass.Phi();
+                        double pt_ass = pvector_ass.Pt();
+
+                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+
+                        if(rejectDaughter_)
+                        {
+                            if(fabs(eta_ass-eta_trg_dau1)<0.03 && fabs(phi_ass-phi_trg_dau1)<0.03) continue;
+                            if(fabs(eta_ass-eta_trg_dau2)<0.03 && fabs(phi_ass-phi_trg_dau2)<0.03) continue;
+                        }
+
+                        double deltaEta=eta_ass-eta_trg;
+                        double deltaPhi=phi_ass-phi_trg;
+                        if(deltaPhi>PI)
+                            deltaPhi=deltaPhi-2*PI;
+                        if(deltaPhi<-PI)
+                            deltaPhi=deltaPhi+2*PI;
+                        if(deltaPhi>-PI && deltaPhi<-PI/2.)
+                            deltaPhi=deltaPhi+2*PI;
+
+                        //if(deltaEta==0 && deltaPhi==0) continue;
+                        hSignal_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks/effweight_ass);
+                    }
                 }
             }
 
-            for(int ntrg=0;ntrg<nMult_trg_la;ntrg++)
+            if(doLa_)
             {
-                TLorentzVector pvector_trg = (*pVect_trg_la[i])[ntrg];
-                double eta_trg = pvector_trg.Eta();
-                double phi_trg = pvector_trg.Phi();
-                double pt_trg = pvector_trg.Pt();
-                double rap_trg = pvector_trg.E();
-                double EffXchoice = 0;
+                int nMult_trg_la = (int)pVect_trg_la[i]->size();
 
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
+                double nMult_trg_eff_la=0;
 
-                double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
-
-                TVector3 pvector_trg_dau1 = (*pVect_dau_la[i])[2*ntrg];
-                double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                double phi_trg_dau1 = pvector_trg_dau1.Phi();
-
-                TVector3 pvector_trg_dau2 = (*pVect_dau_la[i])[2*ntrg+1];
-                double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                double phi_trg_dau2 = pvector_trg_dau2.Phi();
-
-                for(int nass=0;nass<nMult_ass;nass++)
+                for(int ntrg=0;ntrg<nMult_trg_la;ntrg++)
                 {
-                    TVector3 pvector_ass = (*pVect_ass)[nass];
-                    double eta_ass = pvector_ass.Eta();
-                    double phi_ass = pvector_ass.Phi();
-                    double pt_ass = pvector_ass.Pt();
+                    TLorentzVector pvector_trg = (*pVect_trg_la[i])[ntrg];
+                    double pt_trg = pvector_trg.Pt();
+                    double eta_trg = pvector_trg.Eta();
+                    double rap_trg = pvector_trg.E();
+                    double EffXchoice = 0;
 
-                    double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
 
-                    if(rejectDaughter_)
+                    double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
+
+                    nMult_trg_eff_la = nMult_trg_eff_la + 1.0/effla;
+                }
+
+                hMult_la[i]->Fill(nMult_trg_la);
+
+                for(int ntrg=0;ntrg<nMult_trg_la;ntrg++)
+                {
+                    TLorentzVector pvector_trg = (*pVect_trg_la[i])[ntrg];
+                    double eta_trg = pvector_trg.Eta();
+                    double phi_trg = pvector_trg.Phi();
+                    double pt_trg = pvector_trg.Pt();
+                    double rap_trg = pvector_trg.E();
+                    double EffXchoice = 0;
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
+
+                    TVector3 pvector_trg_dau1 = (*pVect_dau_la[i])[2*ntrg];
+                    double eta_trg_dau1 = pvector_trg_dau1.Eta();
+                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
+
+                    TVector3 pvector_trg_dau2 = (*pVect_dau_la[i])[2*ntrg+1];
+                    double eta_trg_dau2 = pvector_trg_dau2.Eta();
+                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
+
+                    for(int nass=0;nass<nMult_ass;nass++)
                     {
-                        if(fabs(eta_ass-eta_trg_dau1)<0.03 && fabs(phi_ass-phi_trg_dau1)<0.03) continue;
-                        if(fabs(eta_ass-eta_trg_dau2)<0.03 && fabs(phi_ass-phi_trg_dau2)<0.03) continue;
+                        TVector3 pvector_ass = (*pVect_ass)[nass];
+                        double eta_ass = pvector_ass.Eta();
+                        double phi_ass = pvector_ass.Phi();
+                        double pt_ass = pvector_ass.Pt();
+
+                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+
+                        if(rejectDaughter_)
+                        {
+                            if(fabs(eta_ass-eta_trg_dau1)<0.03 && fabs(phi_ass-phi_trg_dau1)<0.03) continue;
+                            if(fabs(eta_ass-eta_trg_dau2)<0.03 && fabs(phi_ass-phi_trg_dau2)<0.03) continue;
+                        }
+
+                        double deltaEta=eta_ass-eta_trg;
+                        double deltaPhi=phi_ass-phi_trg;
+                        if(deltaPhi>PI)
+                            deltaPhi=deltaPhi-2*PI;
+                        if(deltaPhi<-PI)
+                            deltaPhi=deltaPhi+2*PI;
+                        if(deltaPhi>-PI && deltaPhi<-PI/2.)
+                            deltaPhi=deltaPhi+2*PI;
+
+                        //if(deltaEta==0 && deltaPhi==0) continue;
+                        hSignal_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla/effweight_ass);
                     }
+                }
 
-                    double deltaEta=eta_ass-eta_trg;
-                    double deltaPhi=phi_ass-phi_trg;
-                    if(deltaPhi>PI)
-                        deltaPhi=deltaPhi-2*PI;
-                    if(deltaPhi<-PI)
-                        deltaPhi=deltaPhi+2*PI;
-                    if(deltaPhi>-PI && deltaPhi<-PI/2.)
-                        deltaPhi=deltaPhi+2*PI;
+                nMult_trg_la = (int)pVect_trg_la_bkg[i]->size();
 
-                    //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla/effweight_ass);
+                nMult_trg_eff_la=0;
+
+                for(int ntrg=0;ntrg<nMult_trg_la;ntrg++)
+                {
+                    TLorentzVector pvector_trg = (*pVect_trg_la_bkg[i])[ntrg];
+                    double pt_trg = pvector_trg.Pt();
+                    double eta_trg = pvector_trg.Eta();
+                    double rap_trg = pvector_trg.E();
+                    double EffXchoice = 0;
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
+
+                    nMult_trg_eff_la = nMult_trg_eff_la + 1.0/effla;
+                }
+                hMult_la_bkg[i]->Fill(nMult_trg_la);
+
+                for(int ntrg=0;ntrg<nMult_trg_la;ntrg++)
+                {
+                    TLorentzVector pvector_trg = (*pVect_trg_la_bkg[i])[ntrg];
+                    double eta_trg = pvector_trg.Eta();
+                    double phi_trg = pvector_trg.Phi();
+                    double pt_trg = pvector_trg.Pt();
+                    double rap_trg = pvector_trg.E();
+                    double EffXchoice = 0;
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
+
+                    TVector3 pvector_trg_dau1 = (*pVect_dau_la_bkg[i])[2*ntrg];
+                    double eta_trg_dau1 = pvector_trg_dau1.Eta();
+                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
+
+                    TVector3 pvector_trg_dau2 = (*pVect_dau_la_bkg[i])[2*ntrg+1];
+                    double eta_trg_dau2 = pvector_trg_dau2.Eta();
+                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
+
+                    for(int nass=0;nass<nMult_ass;nass++)
+                    {
+                        TVector3 pvector_ass = (*pVect_ass)[nass];
+                        double eta_ass = pvector_ass.Eta();
+                        double phi_ass = pvector_ass.Phi();
+                        double pt_ass = pvector_ass.Pt();
+
+                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+
+                        if(rejectDaughter_)
+                        {
+                            if(fabs(eta_ass-eta_trg_dau1)<0.03 && fabs(phi_ass-phi_trg_dau1)<0.03) continue;
+                            if(fabs(eta_ass-eta_trg_dau2)<0.03 && fabs(phi_ass-phi_trg_dau2)<0.03) continue;
+                        }
+
+                        double deltaEta=eta_ass-eta_trg;
+                        double deltaPhi=phi_ass-phi_trg;
+                        if(deltaPhi>PI)
+                            deltaPhi=deltaPhi-2*PI;
+                        if(deltaPhi<-PI)
+                            deltaPhi=deltaPhi+2*PI;
+                        if(deltaPhi>-PI && deltaPhi<-PI/2.)
+                            deltaPhi=deltaPhi+2*PI;
+
+                        //if(deltaEta==0 && deltaPhi==0) continue;
+                        hSignal_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla/effweight_ass);
+                    }
                 }
             }
-
         }
+
+        if(doXi_)
+        {
+            for(int i=0; i<ptbin_n_cas_; i++)
+            {
+                int pepVect_xi_peak_size     = (int)pepVect_xi_peak[i]->size();
+                int pepVect_xi_side_size     = (int)pepVect_xi_side[i]->size();
+
+                double nMult_trg_eff_xi = 0;
+
+                for(int xi_ntrg = 0; xi_ntrg<pepVect_xi_peak_size; xi_ntrg++)
+                {
+                    TLorentzVector pepVect_trg = (*pepVect_xi_peak[i])[xi_ntrg];
+                    //double pt_trg     = pepVect_trg.Pt();
+                    double eta_trg    = pepVect_trg.Eta();
+                    double rap_trg    = pepVect_trg.E();
+                    double EffXchoice = 0;
+                    UNUSED(EffXchoice);
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+
+                    //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
+                }
+
+                mult_xi[i]->Fill(nMult_trg_eff_xi);
+
+                // PEAK REGION signal
+                for(int xi_trg = 0; xi_trg < pepVect_xi_peak_size; xi_trg++)
+                {
+                    TLorentzVector pepVect_trg = (*pepVect_xi_peak[i])[xi_trg];
+                    //double pt_trg     = pepVect_trg.Pt();
+                    double eta_trg    = pepVect_trg.Eta();
+                    double phi_trg    = pepVect_trg.Phi();
+                    double rap_trg    = pepVect_trg.E();
+                    double EffXchoice = 0;
+                    UNUSED(EffXchoice);
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+
+                    TVector3 pepvector_trg_dau1 = (*pepVect_dau_xi_peak[i])[2*xi_trg];
+
+                    double eta_trg_dau1 = pepvector_trg_dau1.Eta();
+                    double phi_trg_dau1 = pepvector_trg_dau1.Phi();
+
+                    TVector3 pepvector_trg_dau2 = (*pepVect_dau_xi_peak[i])[2*xi_trg+1];
+
+                    double eta_trg_dau2 = pepvector_trg_dau2.Eta();
+                    double phi_trg_dau2 = pepvector_trg_dau2.Phi();
+
+                    for(int assoc = 0; assoc < nMult_ass; assoc++)
+                    {
+                        TVector3 pepVect_ass = (*pVect_ass)[assoc];
+                        double eta_ass       = pepVect_ass.Eta();
+                        double phi_ass       = pepVect_ass.Phi();
+
+                        if(fabs(eta_ass-eta_trg_dau1) < 0.03 && fabs(phi_ass-phi_trg_dau1) < 0.03) continue;
+                        if(fabs(eta_ass-eta_trg_dau2) < 0.03 && fabs(phi_ass-phi_trg_dau2) < 0.03) continue;
+
+                        double dEta = eta_ass - eta_trg;
+                        double dPhi = phi_ass - phi_trg;
+
+                        if(dPhi > PI)
+                            dPhi=dPhi-2*PI;
+                        if(dPhi < -PI)
+                            dPhi=dPhi+2*PI;
+                        if(dPhi > -PI && dPhi < -PI/2.0)
+                            dPhi=dPhi+2*PI;
+
+                        // To reduce jet fragmentation contributions
+                        if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
+                        SignalXiPeak[i]->Fill(dEta, dPhi);//,1.0/nMult_trg_eff_xi/effxi);
+                    }
+                }
+
+                nMult_trg_eff_xi = 0;
+
+                for(int xi_trg = 0; xi_trg<pepVect_xi_side_size; xi_trg++)
+                {
+                    TLorentzVector pepVect_trg = (*pepVect_xi_side[i])[xi_trg];
+                    //double pt_trg     = pepVect_trg.Pt();
+                    double eta_trg    = pepVect_trg.Eta();
+                    double rap_trg    = pepVect_trg.E();
+                    double EffXchoice = 0;
+                    UNUSED(EffXchoice);
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+
+                    //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
+                }
+
+                mult_xi_bkg[i]->Fill(nMult_trg_eff_xi);
+
+                // SIDEBAND REGION signal
+                for(int xi_trg = 0; xi_trg < pepVect_xi_side_size; xi_trg++)
+                {
+                    TLorentzVector pepVect_trg = (*pepVect_xi_side[i])[xi_trg];
+                    //double pt_trg     = pepVect_trg.Pt();
+                    double eta_trg    = pepVect_trg.Eta();
+                    double phi_trg    = pepVect_trg.Phi();
+                    double rap_trg    = pepVect_trg.E();
+                    double EffXchoice = 0;
+                    UNUSED(EffXchoice);
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+
+                    for(int assoc = 0; assoc < nMult_ass; assoc++)
+                    {
+                        TVector3 pepVect_ass = (*pVect_ass)[assoc];
+                        double eta_ass       = pepVect_ass.Eta();
+                        double phi_ass       = pepVect_ass.Phi();
+
+                        double dEta = eta_ass - eta_trg;
+                        double dPhi = phi_ass - phi_trg;
+
+                        if(dPhi > PI)
+                            dPhi=dPhi-2*PI;
+                        if(dPhi < -PI)
+                            dPhi=dPhi+2*PI;
+                        if(dPhi > -PI && dPhi < -PI/2.0)
+                            dPhi=dPhi+2*PI;
+
+                        // To reduce jet fragmentation contributions
+                        if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
+                        SignalXiSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_xi/effxi);
+                    }
+                }
+            }
+        }
+
+        if(doOm_)
+        {
+            for(int i=0; i<ptbin_n_cas_; i++)
+            {
+                int pepVect_om_peak_size     = (int)pepVect_om_peak[i]->size();
+                int pepVect_om_side_size     = (int)pepVect_om_side[i]->size();
+
+                double nMult_trg_eff_om = 0;
+
+                for(int om_ntrg = 0; om_ntrg<pepVect_om_peak_size; om_ntrg++)
+                {
+                    TLorentzVector pepVect_trg = (*pepVect_om_peak[i])[om_ntrg];
+                    //double pt_trg     = pepVect_trg.Pt();
+                    double eta_trg    = pepVect_trg.Eta();
+                    double rap_trg    = pepVect_trg.E();
+                    double EffXchoice = 0;
+                    UNUSED(EffXchoice);
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
+
+                    //nMult_trg_eff_om = nMult_trg_eff_om + 1.0/effom;
+                }
+
+                mult_om[i]->Fill(nMult_trg_eff_om);
+
+                // PEAK REGION signal
+                for(int om_trg = 0; om_trg < pepVect_om_peak_size; om_trg++)
+                {
+                    TLorentzVector pepVect_trg = (*pepVect_om_peak[i])[om_trg];
+                    //double pt_trg     = pepVect_trg.Pt();
+                    double eta_trg    = pepVect_trg.Eta();
+                    double phi_trg    = pepVect_trg.Phi();
+                    double rap_trg    = pepVect_trg.E();
+                    double EffXchoice = 0;
+                    UNUSED(EffXchoice);
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
+
+                    TVector3 pepvector_trg_dau1 = (*pepVect_dau_om_peak[i])[2*om_trg];
+
+                    double eta_trg_dau1 = pepvector_trg_dau1.Eta();
+                    double phi_trg_dau1 = pepvector_trg_dau1.Phi();
+
+                    TVector3 pepvector_trg_dau2 = (*pepVect_dau_om_peak[i])[2*om_trg+1];
+
+                    double eta_trg_dau2 = pepvector_trg_dau2.Eta();
+                    double phi_trg_dau2 = pepvector_trg_dau2.Phi();
+
+                    for(int assoc = 0; assoc < nMult_ass; assoc++)
+                    {
+                        TVector3 pepVect_ass = (*pVect_ass)[assoc];
+                        double eta_ass       = pepVect_ass.Eta();
+                        double phi_ass       = pepVect_ass.Phi();
+
+                        if(fabs(eta_ass-eta_trg_dau1) < 0.03 && fabs(phi_ass-phi_trg_dau1) < 0.03) continue;
+                        if(fabs(eta_ass-eta_trg_dau2) < 0.03 && fabs(phi_ass-phi_trg_dau2) < 0.03) continue;
+
+                        double dEta = eta_ass - eta_trg;
+                        double dPhi = phi_ass - phi_trg;
+
+                        if(dPhi > PI)
+                            dPhi=dPhi-2*PI;
+                        if(dPhi < -PI)
+                            dPhi=dPhi+2*PI;
+                        if(dPhi > -PI && dPhi < -PI/2.0)
+                            dPhi=dPhi+2*PI;
+
+                        // To reduce jet fragmentation contributions
+                        if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
+                        SignalOmPeak[i]->Fill(dEta, dPhi);//,1.0/nMult_trg_eff_om/effom);
+                    }
+                }
+
+                nMult_trg_eff_om = 0;
+
+                for(int om_trg = 0; om_trg<pepVect_om_side_size; om_trg++)
+                {
+                    TLorentzVector pepVect_trg = (*pepVect_om_side[i])[om_trg];
+                    //double pt_trg     = pepVect_trg.Pt();
+                    double eta_trg    = pepVect_trg.Eta();
+                    double rap_trg    = pepVect_trg.E();
+                    double EffXchoice = 0;
+                    UNUSED(EffXchoice);
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
+
+                    //nMult_trg_eff_om = nMult_trg_eff_om + 1.0/effom;
+                }
+
+                mult_om_bkg[i]->Fill(nMult_trg_eff_om);
+
+                // SIDEBAND REGION signal
+                for(int om_trg = 0; om_trg < pepVect_om_side_size; om_trg++)
+                {
+                    TLorentzVector pepVect_trg = (*pepVect_om_side[i])[om_trg];
+                    //double pt_trg     = pepVect_trg.Pt();
+                    double eta_trg    = pepVect_trg.Eta();
+                    double phi_trg    = pepVect_trg.Phi();
+                    double rap_trg    = pepVect_trg.E();
+                    double EffXchoice = 0;
+                    UNUSED(EffXchoice);
+
+                    if(doRap_)
+                        EffXchoice = rap_trg;
+                    else
+                        EffXchoice = eta_trg;
+
+                    //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
+
+                    for(int assoc = 0; assoc < nMult_ass; assoc++)
+                    {
+                        TVector3 pepVect_ass = (*pVect_ass)[assoc];
+                        double eta_ass       = pepVect_ass.Eta();
+                        double phi_ass       = pepVect_ass.Phi();
+
+                        double dEta = eta_ass - eta_trg;
+                        double dPhi = phi_ass - phi_trg;
+
+                        if(dPhi > PI)
+                            dPhi=dPhi-2*PI;
+                        if(dPhi < -PI)
+                            dPhi=dPhi+2*PI;
+                        if(dPhi > -PI && dPhi < -PI/2.0)
+                            dPhi=dPhi+2*PI;
+
+                        // To reduce jet fragmentation contributions
+                        if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
+                        SignalOmSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_om/effom);
+                    }
+                }
+            }
+        }
+
 
         for(int i=0; i<ptbin_n_; i++)
         {
-            int nMult_trg_ks = (int)pVect_trg_ks_bkg[i]->size();
-            int nMult_trg_la = (int)pVect_trg_la_bkg[i]->size();
-
-            double nMult_trg_eff_ks=0;
-            double nMult_trg_eff_la=0;
-
-            for(int ntrg=0;ntrg<nMult_trg_ks;ntrg++)
+            if(doKs_)
             {
-                TLorentzVector pvector_trg = (*pVect_trg_ks_bkg[i])[ntrg];
-                double pt_trg = pvector_trg.Pt();
-                double eta_trg = pvector_trg.Eta();
-                double rap_trg = pvector_trg.E();
-                double EffXchoice = 0;
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
-
-                nMult_trg_eff_ks = nMult_trg_eff_ks + 1.0/effks;
-            }
-
-            for(int ntrg=0;ntrg<nMult_trg_la;ntrg++)
-            {
-                TLorentzVector pvector_trg = (*pVect_trg_la_bkg[i])[ntrg];
-                double pt_trg = pvector_trg.Pt();
-                double eta_trg = pvector_trg.Eta();
-                double rap_trg = pvector_trg.E();
-                double EffXchoice = 0;
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
-
-                nMult_trg_eff_la = nMult_trg_eff_la + 1.0/effla;
-            }
-
-            hMult_ks_bkg[i]->Fill(nMult_trg_ks);
-            hMult_la_bkg[i]->Fill(nMult_trg_la);
-
-            for(int ntrg=0;ntrg<nMult_trg_ks;ntrg++)
-            {
-                TLorentzVector pvector_trg = (*pVect_trg_ks_bkg[i])[ntrg];
-                double eta_trg = pvector_trg.Eta();
-                double phi_trg = pvector_trg.Phi();
-                double pt_trg = pvector_trg.Pt();
-                double rap_trg = pvector_trg.E();
-                double EffXchoice = 0;
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
-
-                TVector3 pvector_trg_dau1 = (*pVect_dau_ks_bkg[i])[2*ntrg];
-                double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                double phi_trg_dau1 = pvector_trg_dau1.Phi();
-
-                TVector3 pvector_trg_dau2 = (*pVect_dau_ks_bkg[i])[2*ntrg+1];
-                double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                double phi_trg_dau2 = pvector_trg_dau2.Phi();
-
-                for(int nass=0;nass<nMult_ass;nass++)
-                {
-                    TVector3 pvector_ass = (*pVect_ass)[nass];
-                    double eta_ass = pvector_ass.Eta();
-                    double phi_ass = pvector_ass.Phi();
-                    double pt_ass = pvector_ass.Pt();
-
-                    double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
-
-                    if(rejectDaughter_)
-                    {
-                        if(fabs(eta_ass-eta_trg_dau1)<0.03 && fabs(phi_ass-phi_trg_dau1)<0.03) continue;
-                        if(fabs(eta_ass-eta_trg_dau2)<0.03 && fabs(phi_ass-phi_trg_dau2)<0.03) continue;
-                    }
-
-                    double deltaEta=eta_ass-eta_trg;
-                    double deltaPhi=phi_ass-phi_trg;
-                    if(deltaPhi>PI)
-                        deltaPhi=deltaPhi-2*PI;
-                    if(deltaPhi<-PI)
-                        deltaPhi=deltaPhi+2*PI;
-                    if(deltaPhi>-PI && deltaPhi<-PI/2.)
-                        deltaPhi=deltaPhi+2*PI;
-
-                    //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks/effweight_ass);
-                }
-            }
-
-            for(int ntrg=0;ntrg<nMult_trg_la;ntrg++)
-            {
-                TLorentzVector pvector_trg = (*pVect_trg_la_bkg[i])[ntrg];
-                double eta_trg = pvector_trg.Eta();
-                double phi_trg = pvector_trg.Phi();
-                double pt_trg = pvector_trg.Pt();
-                double rap_trg = pvector_trg.E();
-                double EffXchoice = 0;
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
-
-                TVector3 pvector_trg_dau1 = (*pVect_dau_la_bkg[i])[2*ntrg];
-                double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                double phi_trg_dau1 = pvector_trg_dau1.Phi();
-
-                TVector3 pvector_trg_dau2 = (*pVect_dau_la_bkg[i])[2*ntrg+1];
-                double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                double phi_trg_dau2 = pvector_trg_dau2.Phi();
-
-                for(int nass=0;nass<nMult_ass;nass++)
-                {
-                    TVector3 pvector_ass = (*pVect_ass)[nass];
-                    double eta_ass = pvector_ass.Eta();
-                    double phi_ass = pvector_ass.Phi();
-                    double pt_ass = pvector_ass.Pt();
-
-                    double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
-
-                    if(rejectDaughter_)
-                    {
-                        if(fabs(eta_ass-eta_trg_dau1)<0.03 && fabs(phi_ass-phi_trg_dau1)<0.03) continue;
-                        if(fabs(eta_ass-eta_trg_dau2)<0.03 && fabs(phi_ass-phi_trg_dau2)<0.03) continue;
-                    }
-
-                    double deltaEta=eta_ass-eta_trg;
-                    double deltaPhi=phi_ass-phi_trg;
-                    if(deltaPhi>PI)
-                        deltaPhi=deltaPhi-2*PI;
-                    if(deltaPhi<-PI)
-                        deltaPhi=deltaPhi+2*PI;
-                    if(deltaPhi>-PI && deltaPhi<-PI/2.)
-                        deltaPhi=deltaPhi+2*PI;
-
-                    //if(deltaEta==0 && deltaPhi==0) continue;
-                    hSignal_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla/effweight_ass);
-                }
-            }
-
-        }
-
-        for(int i=0; i<ptbin_n_cas_; i++)
-        {
-            int pepVect_xi_peak_size     = (int)pepVect_xi_peak[i]->size();
-            int pepVect_xi_side_size     = (int)pepVect_xi_side[i]->size();
-
-            double nMult_trg_eff_xi = 0;
-
-            for(int xi_ntrg = 0; xi_ntrg<pepVect_xi_peak_size; xi_ntrg++)
-            {
-                TLorentzVector pepVect_trg = (*pepVect_xi_peak[i])[xi_ntrg];
-                //double pt_trg     = pepVect_trg.Pt();
-                double eta_trg    = pepVect_trg.Eta();
-                double rap_trg    = pepVect_trg.E();
-                double EffXchoice = 0;
-                UNUSED(EffXchoice);
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
-
-                //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
-            }
-
-            mult_xi[i]->Fill(nMult_trg_eff_xi);
-
-            // PEAK REGION signal
-            for(int xi_trg = 0; xi_trg < pepVect_xi_peak_size; xi_trg++)
-            {
-                TLorentzVector pepVect_trg = (*pepVect_xi_peak[i])[xi_trg];
-                //double pt_trg     = pepVect_trg.Pt();
-                double eta_trg    = pepVect_trg.Eta();
-                double phi_trg    = pepVect_trg.Phi();
-                double rap_trg    = pepVect_trg.E();
-                double EffXchoice = 0;
-                UNUSED(EffXchoice);
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
-
-                TVector3 pepvector_trg_dau1 = (*pepVect_dau_xi_peak[i])[2*xi_trg];
-
-                double eta_trg_dau1 = pepvector_trg_dau1.Eta();
-                double phi_trg_dau1 = pepvector_trg_dau1.Phi();
-
-                TVector3 pepvector_trg_dau2 = (*pepVect_dau_xi_peak[i])[2*xi_trg+1];
-
-                double eta_trg_dau2 = pepvector_trg_dau2.Eta();
-                double phi_trg_dau2 = pepvector_trg_dau2.Phi();
-
-                for(int assoc = 0; assoc < nMult_ass; assoc++)
-                {
-                    TVector3 pepVect_ass = (*pVect_ass)[assoc];
-                    double eta_ass       = pepVect_ass.Eta();
-                    double phi_ass       = pepVect_ass.Phi();
-
-                    if(fabs(eta_ass-eta_trg_dau1) < 0.03 && fabs(phi_ass-phi_trg_dau1) < 0.03) continue;
-                    if(fabs(eta_ass-eta_trg_dau2) < 0.03 && fabs(phi_ass-phi_trg_dau2) < 0.03) continue;
-
-                    double dEta = eta_ass - eta_trg;
-                    double dPhi = phi_ass - phi_trg;
-
-                    if(dPhi > PI)
-                        dPhi=dPhi-2*PI;
-                    if(dPhi < -PI)
-                        dPhi=dPhi+2*PI;
-                    if(dPhi > -PI && dPhi < -PI/2.0)
-                        dPhi=dPhi+2*PI;
-
-                    // To reduce jet fragmentation contributions
-                    if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                    SignalXiPeak[i]->Fill(dEta, dPhi);//,1.0/nMult_trg_eff_xi/effxi);
-                }
-            }
-
-            nMult_trg_eff_xi = 0;
-
-            for(int xi_trg = 0; xi_trg<pepVect_xi_side_size; xi_trg++)
-            {
-                TLorentzVector pepVect_trg = (*pepVect_xi_side[i])[xi_trg];
-                //double pt_trg     = pepVect_trg.Pt();
-                double eta_trg    = pepVect_trg.Eta();
-                double rap_trg    = pepVect_trg.E();
-                double EffXchoice = 0;
-                UNUSED(EffXchoice);
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
-
-                //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
-            }
-
-            mult_xi_bkg[i]->Fill(nMult_trg_eff_xi);
-
-            // SIDEBAND REGION signal
-            for(int xi_trg = 0; xi_trg < pepVect_xi_side_size; xi_trg++)
-            {
-                TLorentzVector pepVect_trg = (*pepVect_xi_side[i])[xi_trg];
-                //double pt_trg     = pepVect_trg.Pt();
-                double eta_trg    = pepVect_trg.Eta();
-                double phi_trg    = pepVect_trg.Phi();
-                double rap_trg    = pepVect_trg.E();
-                double EffXchoice = 0;
-                UNUSED(EffXchoice);
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
-
-                for(int assoc = 0; assoc < nMult_ass; assoc++)
-                {
-                    TVector3 pepVect_ass = (*pVect_ass)[assoc];
-                    double eta_ass       = pepVect_ass.Eta();
-                    double phi_ass       = pepVect_ass.Phi();
-
-                    double dEta = eta_ass - eta_trg;
-                    double dPhi = phi_ass - phi_trg;
-
-                    if(dPhi > PI)
-                        dPhi=dPhi-2*PI;
-                    if(dPhi < -PI)
-                        dPhi=dPhi+2*PI;
-                    if(dPhi > -PI && dPhi < -PI/2.0)
-                        dPhi=dPhi+2*PI;
-
-                    // To reduce jet fragmentation contributions
-                    if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                    SignalXiSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_xi/effxi);
-                }
-            }
-        }
-
-        for(int i=0; i<ptbin_n_cas_; i++)
-        {
-            int pepVect_om_peak_size     = (int)pepVect_om_peak[i]->size();
-            int pepVect_om_side_size     = (int)pepVect_om_side[i]->size();
-
-            double nMult_trg_eff_om = 0;
-
-            for(int om_ntrg = 0; om_ntrg<pepVect_om_peak_size; om_ntrg++)
-            {
-                TLorentzVector pepVect_trg = (*pepVect_om_peak[i])[om_ntrg];
-                //double pt_trg     = pepVect_trg.Pt();
-                double eta_trg    = pepVect_trg.Eta();
-                double rap_trg    = pepVect_trg.E();
-                double EffXchoice = 0;
-                UNUSED(EffXchoice);
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
-
-                //nMult_trg_eff_om = nMult_trg_eff_om + 1.0/effom;
-            }
-
-            mult_om[i]->Fill(nMult_trg_eff_om);
-
-            // PEAK REGION signal
-            for(int om_trg = 0; om_trg < pepVect_om_peak_size; om_trg++)
-            {
-                TLorentzVector pepVect_trg = (*pepVect_om_peak[i])[om_trg];
-                //double pt_trg     = pepVect_trg.Pt();
-                double eta_trg    = pepVect_trg.Eta();
-                double phi_trg    = pepVect_trg.Phi();
-                double rap_trg    = pepVect_trg.E();
-                double EffXchoice = 0;
-                UNUSED(EffXchoice);
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
-
-                TVector3 pepvector_trg_dau1 = (*pepVect_dau_om_peak[i])[2*om_trg];
-
-                double eta_trg_dau1 = pepvector_trg_dau1.Eta();
-                double phi_trg_dau1 = pepvector_trg_dau1.Phi();
-
-                TVector3 pepvector_trg_dau2 = (*pepVect_dau_om_peak[i])[2*om_trg+1];
-
-                double eta_trg_dau2 = pepvector_trg_dau2.Eta();
-                double phi_trg_dau2 = pepvector_trg_dau2.Phi();
-
-                for(int assoc = 0; assoc < nMult_ass; assoc++)
-                {
-                    TVector3 pepVect_ass = (*pVect_ass)[assoc];
-                    double eta_ass       = pepVect_ass.Eta();
-                    double phi_ass       = pepVect_ass.Phi();
-
-                    if(fabs(eta_ass-eta_trg_dau1) < 0.03 && fabs(phi_ass-phi_trg_dau1) < 0.03) continue;
-                    if(fabs(eta_ass-eta_trg_dau2) < 0.03 && fabs(phi_ass-phi_trg_dau2) < 0.03) continue;
-
-                    double dEta = eta_ass - eta_trg;
-                    double dPhi = phi_ass - phi_trg;
-
-                    if(dPhi > PI)
-                        dPhi=dPhi-2*PI;
-                    if(dPhi < -PI)
-                        dPhi=dPhi+2*PI;
-                    if(dPhi > -PI && dPhi < -PI/2.0)
-                        dPhi=dPhi+2*PI;
-
-                    // To reduce jet fragmentation contributions
-                    if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                    SignalOmPeak[i]->Fill(dEta, dPhi);//,1.0/nMult_trg_eff_om/effom);
-                }
-            }
-
-            nMult_trg_eff_om = 0;
-
-            for(int om_trg = 0; om_trg<pepVect_om_side_size; om_trg++)
-            {
-                TLorentzVector pepVect_trg = (*pepVect_om_side[i])[om_trg];
-                //double pt_trg     = pepVect_trg.Pt();
-                double eta_trg    = pepVect_trg.Eta();
-                double rap_trg    = pepVect_trg.E();
-                double EffXchoice = 0;
-                UNUSED(EffXchoice);
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
-
-                //nMult_trg_eff_om = nMult_trg_eff_om + 1.0/effom;
-            }
-
-            mult_om_bkg[i]->Fill(nMult_trg_eff_om);
-
-            // SIDEBAND REGION signal
-            for(int om_trg = 0; om_trg < pepVect_om_side_size; om_trg++)
-            {
-                TLorentzVector pepVect_trg = (*pepVect_om_side[i])[om_trg];
-                //double pt_trg     = pepVect_trg.Pt();
-                double eta_trg    = pepVect_trg.Eta();
-                double phi_trg    = pepVect_trg.Phi();
-                double rap_trg    = pepVect_trg.E();
-                double EffXchoice = 0;
-                UNUSED(EffXchoice);
-
-                if(doRap_)
-                    EffXchoice = rap_trg;
-                else
-                    EffXchoice = eta_trg;
-
-                //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
-
-                for(int assoc = 0; assoc < nMult_ass; assoc++)
-                {
-                    TVector3 pepVect_ass = (*pVect_ass)[assoc];
-                    double eta_ass       = pepVect_ass.Eta();
-                    double phi_ass       = pepVect_ass.Phi();
-
-                    double dEta = eta_ass - eta_trg;
-                    double dPhi = phi_ass - phi_trg;
-
-                    if(dPhi > PI)
-                        dPhi=dPhi-2*PI;
-                    if(dPhi < -PI)
-                        dPhi=dPhi+2*PI;
-                    if(dPhi > -PI && dPhi < -PI/2.0)
-                        dPhi=dPhi+2*PI;
-
-                    // To reduce jet fragmentation contributions
-                    if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                    SignalOmSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_om/effom);
-                }
-            }
-        }
-
-
-        for(int i=0; i<ptbin_n_; i++)
-        {
                 pVectVect_trg_ks[i]->push_back(*pVect_trg_ks[i]);
                 pVectVect_dau_ks[i]->push_back(*pVect_dau_ks[i]);
                 pVectVect_trg_ks_bkg[i]->push_back(*pVect_trg_ks_bkg[i]);
@@ -1277,7 +1305,10 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 delete pVect_dau_ks[i];
                 delete pVect_trg_ks_bkg[i];
                 delete pVect_dau_ks_bkg[i];
+            }
 
+            if(doLa_)
+            {
                 pVectVect_trg_la[i]->push_back(*pVect_trg_la[i]);
                 pVectVect_dau_la[i]->push_back(*pVect_dau_la[i]);
                 pVectVect_trg_la_bkg[i]->push_back(*pVect_trg_la_bkg[i]);
@@ -1286,9 +1317,14 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 delete pVect_dau_la[i];
                 delete pVect_trg_la_bkg[i];
                 delete pVect_dau_la_bkg[i];
+            }
         }
+
         for(int i=0 ; i<ptbin_n_cas_; i++)
         {
+
+            if(doXi_)
+            {
                 PepVect2_xi_peak[i]->push_back(*pepVect_xi_peak[i]);
                 PepVect2_xi_side[i]->push_back(*pepVect_xi_side[i]);
                 PepVect2_dau_xi_peak[i]->push_back(*pepVect_dau_xi_peak[i]);
@@ -1297,7 +1333,10 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 delete pepVect_xi_side[i];
                 delete pepVect_dau_xi_peak[i];
                 delete pepVect_dau_xi_side[i];
+            }
 
+            if(doOm_)
+            {
                 PepVect2_om_peak[i]->push_back(*pepVect_om_peak[i]);
                 PepVect2_om_side[i]->push_back(*pepVect_om_side[i]);
                 PepVect2_dau_om_peak[i]->push_back(*pepVect_dau_om_peak[i]);
@@ -1306,6 +1345,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 delete pepVect_om_side[i];
                 delete pepVect_dau_om_peak[i];
                 delete pepVect_dau_om_side[i];
+            }
         }
 
         pVectVect_ass->push_back(*pVect_ass);
@@ -1351,88 +1391,108 @@ V0CasCorrelation::beginJob()
     hMult_ass = fs->make<TH1D>("mult_ass",";N",600,0,600);
     hMult_accept = fs->make<TH1D>("mult_acc",";N",600,0,600);
 
-    for(int i=0; i<ptbin_n_; i++)
+    if(doKs_)
     {
-        hKET_ks[i] = fs->make<TH1D>(Form("KETkshort_pt%d",i),";GeV",50000,0,25);
-        hKET_la[i] = fs->make<TH1D>(Form("KETlambda_pt%d",i),";GeV",50000,0,25);
-        hPt_ks[i] = fs->make<TH1D>(Form("Ptkshort_pt%d",i),";GeV",50000,0,25);
-        hPt_la[i] = fs->make<TH1D>(Form("Ptlambda_pt%d",i),";GeV",50000,0,25);
-        hEta_ks[i] = fs->make<TH1D>(Form("Etakshort_pt%d",i),";eta",24,-2.4,2.4);
-        hEta_la[i] = fs->make<TH1D>(Form("Etalambda_pt%d",i),";eta",24,-2.4,2.4);
-        hRap_ks[i] = fs->make<TH1D>(Form("Rapkshort_pt%d",i),";y",30,-1.5,1.5);
-        hRap_la[i] = fs->make<TH1D>(Form("Raplambda_pt%d",i),";y",30,-1.5,1.5);
-        hMass_ks[i] = fs->make<TH1D>(Form("masskshort_pt%d",i),";GeV",2000,0,1.0);
-        hMass_la[i] = fs->make<TH1D>(Form("masslambda_pt%d",i),";GeV",2000,0.5,1.5);
-        hMult_ks[i] = fs->make<TH1D>(Form("mult_ks_pt%d",i),";N",250,0,250);
-        hMult_la[i] = fs->make<TH1D>(Form("mult_la_pt%d",i),";N",250,0,250);
-        hSignal_ks[i] = fs->make<TH2D>(Form("signalkshort_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
-        hSignal_la[i] = fs->make<TH2D>(Form("signallambda_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
-        hBackground_ks[i] = fs->make<TH2D>(Form("backgroundkshort_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
-        hBackground_la[i] = fs->make<TH2D>(Form("backgroundlambda_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
-        pVectVect_trg_ks[i] = new vector< vector<TLorentzVector> >;
-        pVectVect_trg_la[i] = new vector< vector<TLorentzVector> >;
-        pVectVect_dau_ks[i] = new vector< vector<TVector3> >;
-        pVectVect_dau_la[i] = new vector< vector<TVector3> >;
-        hKET_ks_bkg[i] = fs->make<TH1D>(Form("KETkshort_bkg_pt%d",i),";GeV",50000,0,25);
-        hKET_la_bkg[i] = fs->make<TH1D>(Form("KETlambda_bkg_pt%d",i),";GeV",50000,0,25);
-        hPt_ks_bkg[i] = fs->make<TH1D>(Form("Ptkshort_bkg_pt%d",i),";GeV",50000,0,25);
-        hPt_la_bkg[i] = fs->make<TH1D>(Form("Ptlambda_bkg_pt%d",i),";GeV",50000,0,25);
-        hEta_ks_bkg[i] = fs->make<TH1D>(Form("Etakshort_bkg_pt%d",i),";GeV",24,-2.4,2.4);
-        hEta_la_bkg[i] = fs->make<TH1D>(Form("Etalambda_bkg_pt%d",i),";GeV",24,-2.4,2.4);
-        hRap_ks_bkg[i] = fs->make<TH1D>(Form("Rapkshort_bkg_pt%d",i),";y",30,-1.5,1.5);
-        hRap_la_bkg[i] = fs->make<TH1D>(Form("Raplambda_bkg_pt%d",i),";y",30,-1.5,1.5);
-        hMult_ks_bkg[i] = fs->make<TH1D>(Form("mult_ks_bkg_pt%d",i),";N",250,0,250);
-        hMult_la_bkg[i] = fs->make<TH1D>(Form("mult_la_bkg_pt%d",i),";N",250,0,250);
-        hSignal_ks_bkg[i] = fs->make<TH2D>(Form("signalkshort_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
-        hSignal_la_bkg[i] = fs->make<TH2D>(Form("signallambda_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
-        hBackground_ks_bkg[i] = fs->make<TH2D>(Form("backgroundkshort_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
-        hBackground_la_bkg[i] = fs->make<TH2D>(Form("backgroundlambda_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
-        pVectVect_trg_ks_bkg[i] = new vector< vector<TLorentzVector> >;
-        pVectVect_trg_la_bkg[i] = new vector< vector<TLorentzVector> >;
-        pVectVect_dau_ks_bkg[i] = new vector< vector<TVector3> >;
-        pVectVect_dau_la_bkg[i] = new vector< vector<TVector3> >;
+        for(int i=0; i<ptbin_n_; i++)
+        {
+            hKET_ks[i] = fs->make<TH1D>(Form("KETkshort_pt%d",i),";GeV",50000,0,25);
+            hPt_ks[i] = fs->make<TH1D>(Form("Ptkshort_pt%d",i),";GeV",50000,0,25);
+            hEta_ks[i] = fs->make<TH1D>(Form("Etakshort_pt%d",i),";eta",24,-2.4,2.4);
+            hRap_ks[i] = fs->make<TH1D>(Form("Rapkshort_pt%d",i),";y",30,-1.5,1.5);
+            hMass_ks[i] = fs->make<TH1D>(Form("masskshort_pt%d",i),";GeV",2000,0,1.0);
+            hMult_ks[i] = fs->make<TH1D>(Form("mult_ks_pt%d",i),";N",250,0,250);
+            hSignal_ks[i] = fs->make<TH2D>(Form("signalkshort_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
+            hBackground_ks[i] = fs->make<TH2D>(Form("backgroundkshort_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
+            pVectVect_trg_ks[i] = new vector< vector<TLorentzVector> >;
+            pVectVect_dau_ks[i] = new vector< vector<TVector3> >;
+            hKET_ks_bkg[i] = fs->make<TH1D>(Form("KETkshort_bkg_pt%d",i),";GeV",50000,0,25);
+            hPt_ks_bkg[i] = fs->make<TH1D>(Form("Ptkshort_bkg_pt%d",i),";GeV",50000,0,25);
+            hEta_ks_bkg[i] = fs->make<TH1D>(Form("Etakshort_bkg_pt%d",i),";GeV",24,-2.4,2.4);
+            hRap_ks_bkg[i] = fs->make<TH1D>(Form("Rapkshort_bkg_pt%d",i),";y",30,-1.5,1.5);
+            hMult_ks_bkg[i] = fs->make<TH1D>(Form("mult_ks_bkg_pt%d",i),";N",250,0,250);
+            hSignal_ks_bkg[i] = fs->make<TH2D>(Form("signalkshort_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
+            hBackground_ks_bkg[i] = fs->make<TH2D>(Form("backgroundkshort_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
+            pVectVect_trg_ks_bkg[i] = new vector< vector<TLorentzVector> >;
+            pVectVect_dau_ks_bkg[i] = new vector< vector<TVector3> >;
+        }
     }
 
-    for(int i=0; i<ptbin_n_cas_; i++)
+    if(doLa_)
     {
-        BackgroundXiPeak[i] = fs->make<TH2D>(Form("BackgroundXiPeak_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        BackgroundOmPeak[i] = fs->make<TH2D>(Form("BackgroundOmPeak_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        BackgroundXiSide[i] = fs->make<TH2D>(Form("BackgroundXiSide_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        BackgroundOmSide[i] = fs->make<TH2D>(Form("BackgroundOmSide_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        SignalXiPeak[i]     = fs->make<TH2D>(Form("SignalXiPeak_pt%d",i), ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        SignalOmPeak[i]     = fs->make<TH2D>(Form("SignalOmPeak_pt%d",i), ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        SignalXiSide[i]     = fs->make<TH2D>(Form("SignalXiSide_pt%d",i), ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        SignalOmSide[i]     = fs->make<TH2D>(Form("SignalOmSide_pt%d",i), ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-        KET_xi[i]           = fs->make<TH1D>(Form("KET_xi_pt%d",i),";GeV",40000,0,20);
-        KET_om[i]           = fs->make<TH1D>(Form("KET_om_pt%d",i),";GeV",40000,0,20);
-        KET_xi_bkg[i]       = fs->make<TH1D>(Form("KET_xi_bkg_pt%d",i),";GeV",40000,0,20);
-        KET_om_bkg[i]       = fs->make<TH1D>(Form("KET_om_bkg_pt%d",i),";GeV",40000,0,20);
-        Mass_xi[i]          = fs->make<TH1D>(Form("Mass_xi_pt%d",i),";GeV",2000,0.8,2.0);
-        Mass_om[i]          = fs->make<TH1D>(Form("Mass_om_pt%d",i),";GeV",2000,0.8,2.0);
-        Pt_xi[i]            = fs->make<TH1D>(Form("Pt_xi_pt%d",i),";GeV",40000,0,20);
-        Pt_om[i]            = fs->make<TH1D>(Form("Pt_om_pt%d",i),";GeV",40000,0,20);
-        Pt_xi_bkg[i]        = fs->make<TH1D>(Form("Pt_xi_bkg_pt%d",i),";GeV",40000,0,20);
-        Pt_om_bkg[i]        = fs->make<TH1D>(Form("Pt_om_bkg_pt%d",i),";GeV",40000,0,20);
-        Eta_xi[i]           = fs->make<TH1D>(Form("Eta_xi_pt%d",i),";#eta",30,-3.0,3.0);
-        Eta_om[i]           = fs->make<TH1D>(Form("Eta_om_pt%d",i),";#eta",30,-3.0,3.0);
-        Eta_xi_bkg[i]       = fs->make<TH1D>(Form("Eta_xi_bkg_pt%d",i),";#eta",30,-3.0,3.0);
-        Eta_om_bkg[i]       = fs->make<TH1D>(Form("Eta_om_bkg_pt%d",i),";#eta",30,-3.0,3.0);
-        rap_xi[i]           = fs->make<TH1D>(Form("rap_xi_pt%d",i),";y",100,-5,5);
-        rap_om[i]           = fs->make<TH1D>(Form("rap_om_pt%d",i),";y",100,-5,5);
-        rap_xi_bkg[i]       = fs->make<TH1D>(Form("rap_xi_bkg_pt%d",i),";y",100,-5,5);
-        rap_om_bkg[i]       = fs->make<TH1D>(Form("rap_om_bkg_pt%d",i),";y",100,-5,5);
-        mult_xi[i] = fs->make<TH1D>(Form("mult_xi_pt%d",i),"mult_xi",250,0,250);
-        mult_om[i] = fs->make<TH1D>(Form("mult_om_pt%d",i),"mult_om",250,0,250);
-        mult_xi_bkg[i] = fs->make<TH1D>(Form("mult_xi_bkg_pt%d",i),"mult_xi_bkg",250,0,250);
-        mult_om_bkg[i] = fs->make<TH1D>(Form("mult_om_bkg_pt%d",i),"mult_om_bkg",250,0,250);
-        PepVect2_xi_peak[i] = new vector< vector<TLorentzVector> >;
-        PepVect2_om_peak[i] = new vector< vector<TLorentzVector> >;
-        PepVect2_xi_side[i] = new vector< vector<TLorentzVector> >;
-        PepVect2_om_side[i] = new vector< vector<TLorentzVector> >;
-        PepVect2_dau_xi_peak[i] = new vector<vector<TVector3> >;
-        PepVect2_dau_om_peak[i] = new vector<vector<TVector3> >;
-        PepVect2_dau_xi_side[i] = new vector<vector<TVector3> >;
-        PepVect2_dau_om_side[i] = new vector<vector<TVector3> >;
+        for(int i=0; i<ptbin_n_; i++)
+        {
+            hKET_la[i] = fs->make<TH1D>(Form("KETlambda_pt%d",i),";GeV",50000,0,25);
+            hPt_la[i] = fs->make<TH1D>(Form("Ptlambda_pt%d",i),";GeV",50000,0,25);
+            hEta_la[i] = fs->make<TH1D>(Form("Etalambda_pt%d",i),";eta",24,-2.4,2.4);
+            hRap_la[i] = fs->make<TH1D>(Form("Raplambda_pt%d",i),";y",30,-1.5,1.5);
+            hMass_la[i] = fs->make<TH1D>(Form("masslambda_pt%d",i),";GeV",2000,0.5,1.5);
+            hMult_la[i] = fs->make<TH1D>(Form("mult_la_pt%d",i),";N",250,0,250);
+            hSignal_la[i] = fs->make<TH2D>(Form("signallambda_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
+            hBackground_la[i] = fs->make<TH2D>(Form("backgroundlambda_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
+            pVectVect_trg_la[i] = new vector< vector<TLorentzVector> >;
+            pVectVect_dau_la[i] = new vector< vector<TVector3> >;
+            hKET_la_bkg[i] = fs->make<TH1D>(Form("KETlambda_bkg_pt%d",i),";GeV",50000,0,25);
+            hPt_la_bkg[i] = fs->make<TH1D>(Form("Ptlambda_bkg_pt%d",i),";GeV",50000,0,25);
+            hEta_la_bkg[i] = fs->make<TH1D>(Form("Etalambda_bkg_pt%d",i),";GeV",24,-2.4,2.4);
+            hRap_la_bkg[i] = fs->make<TH1D>(Form("Raplambda_bkg_pt%d",i),";y",30,-1.5,1.5);
+            hMult_la_bkg[i] = fs->make<TH1D>(Form("mult_la_bkg_pt%d",i),";N",250,0,250);
+            hSignal_la_bkg[i] = fs->make<TH2D>(Form("signallambda_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
+            hBackground_la_bkg[i] = fs->make<TH2D>(Form("backgroundlambda_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
+            pVectVect_trg_la_bkg[i] = new vector< vector<TLorentzVector> >;
+            pVectVect_dau_la_bkg[i] = new vector< vector<TVector3> >;
+        }
+    }
+
+    if(doXi_)
+    {
+        for(int i=0; i<ptbin_n_cas_; i++)
+        {
+            BackgroundXiPeak[i] = fs->make<TH2D>(Form("BackgroundXiPeak_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+            BackgroundXiSide[i] = fs->make<TH2D>(Form("BackgroundXiSide_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+            SignalXiPeak[i]     = fs->make<TH2D>(Form("SignalXiPeak_pt%d",i), ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+            SignalXiSide[i]     = fs->make<TH2D>(Form("SignalXiSide_pt%d",i), ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+            KET_xi[i]           = fs->make<TH1D>(Form("KET_xi_pt%d",i),";GeV",40000,0,20);
+            KET_xi_bkg[i]       = fs->make<TH1D>(Form("KET_xi_bkg_pt%d",i),";GeV",40000,0,20);
+            Mass_xi[i]          = fs->make<TH1D>(Form("Mass_xi_pt%d",i),";GeV",2000,0.8,2.0);
+            Pt_xi[i]            = fs->make<TH1D>(Form("Pt_xi_pt%d",i),";GeV",40000,0,20);
+            Pt_xi_bkg[i]        = fs->make<TH1D>(Form("Pt_xi_bkg_pt%d",i),";GeV",40000,0,20);
+            Eta_xi[i]           = fs->make<TH1D>(Form("Eta_xi_pt%d",i),";#eta",30,-3.0,3.0);
+            Eta_xi_bkg[i]       = fs->make<TH1D>(Form("Eta_xi_bkg_pt%d",i),";#eta",30,-3.0,3.0);
+            rap_xi[i]           = fs->make<TH1D>(Form("rap_xi_pt%d",i),";y",100,-5,5);
+            rap_xi_bkg[i]       = fs->make<TH1D>(Form("rap_xi_bkg_pt%d",i),";y",100,-5,5);
+            mult_xi[i] = fs->make<TH1D>(Form("mult_xi_pt%d",i),"mult_xi",250,0,250);
+            mult_xi_bkg[i] = fs->make<TH1D>(Form("mult_xi_bkg_pt%d",i),"mult_xi_bkg",250,0,250);
+            PepVect2_xi_peak[i] = new vector< vector<TLorentzVector> >;
+            PepVect2_xi_side[i] = new vector< vector<TLorentzVector> >;
+            PepVect2_dau_xi_peak[i] = new vector<vector<TVector3> >;
+            PepVect2_dau_xi_side[i] = new vector<vector<TVector3> >;
+        }
+    }
+
+    if(doOm_)
+    {
+        for(int i=0; i<ptbin_n_cas_; i++)
+        {
+            BackgroundOmPeak[i] = fs->make<TH2D>(Form("BackgroundOmPeak_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+            BackgroundOmSide[i] = fs->make<TH2D>(Form("BackgroundOmSide_pt%d",i), ";#Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+            SignalOmPeak[i]     = fs->make<TH2D>(Form("SignalOmPeak_pt%d",i), ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+            SignalOmSide[i]     = fs->make<TH2D>(Form("SignalOmSide_pt%d",i), ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+            KET_om[i]           = fs->make<TH1D>(Form("KET_om_pt%d",i),";GeV",40000,0,20);
+            KET_om_bkg[i]       = fs->make<TH1D>(Form("KET_om_bkg_pt%d",i),";GeV",40000,0,20);
+            Mass_om[i]          = fs->make<TH1D>(Form("Mass_om_pt%d",i),";GeV",2000,0.8,2.0);
+            Pt_om[i]            = fs->make<TH1D>(Form("Pt_om_pt%d",i),";GeV",40000,0,20);
+            Pt_om_bkg[i]        = fs->make<TH1D>(Form("Pt_om_bkg_pt%d",i),";GeV",40000,0,20);
+            Eta_om[i]           = fs->make<TH1D>(Form("Eta_om_pt%d",i),";#eta",30,-3.0,3.0);
+            Eta_om_bkg[i]       = fs->make<TH1D>(Form("Eta_om_bkg_pt%d",i),";#eta",30,-3.0,3.0);
+            rap_om[i]           = fs->make<TH1D>(Form("rap_om_pt%d",i),";y",100,-5,5);
+            rap_om_bkg[i]       = fs->make<TH1D>(Form("rap_om_bkg_pt%d",i),";y",100,-5,5);
+            mult_om[i] = fs->make<TH1D>(Form("mult_om_pt%d",i),"mult_om",250,0,250);
+            mult_om_bkg[i] = fs->make<TH1D>(Form("mult_om_bkg_pt%d",i),"mult_om_bkg",250,0,250);
+            PepVect2_om_peak[i] = new vector< vector<TLorentzVector> >;
+            PepVect2_om_side[i] = new vector< vector<TLorentzVector> >;
+            PepVect2_dau_om_peak[i] = new vector<vector<TVector3> >;
+            PepVect2_dau_om_side[i] = new vector<vector<TVector3> >;
+        }
     }
 
     pVectVect_ass = new vector< vector<TVector3> >;
@@ -1456,32 +1516,34 @@ V0CasCorrelation::endJob() {
         int nevttotal_trg_ks = (int)pVectVect_trg_ks[i]->size();
         int nevttotal_trg_la = (int)pVectVect_trg_la[i]->size();
 
-        for(int nround=0;nround<bkgnum_;nround++)
+        if(doKs_)
         {
-            int ncount = 0;
-            for(int nevt_trg=0; nevt_trg<nevttotal_trg_ks; nevt_trg++)
+            for(int nround=0;nround<bkgnum_;nround++)
             {
-                int nevt_ass = gRandom->Integer(nevttotal_ass);
-                if(nevt_trg == nevt_ass) { nevt_trg--; continue; }
-                if(fabs((*zvtxVect)[nevt_trg]-(*zvtxVect)[nevt_ass])>0.5) {
-                    nevt_trg--;
-                    ncount++;
-                    if(ncount>5000) {nevt_trg++; ncount = 0;}
-                    continue; }
+                int ncount = 0;
+                for(int nevt_trg=0; nevt_trg<nevttotal_trg_ks; nevt_trg++)
+                {
+                    int nevt_ass = gRandom->Integer(nevttotal_ass);
+                    if(nevt_trg == nevt_ass) { nevt_trg--; continue; }
+                    if(fabs((*zvtxVect)[nevt_trg]-(*zvtxVect)[nevt_ass])>0.5) {
+                        nevt_trg--;
+                        ncount++;
+                        if(ncount>5000) {nevt_trg++; ncount = 0;}
+                        continue; }
 
-                vector<TLorentzVector> pVectTmp_trg = (*pVectVect_trg_ks[i])[nevt_trg];
-                vector<TVector3> pVectTmp_dau = (*pVectVect_dau_ks[i])[nevt_trg];
-                vector<TVector3> pVectTmp_ass = (*pVectVect_ass)[nevt_ass];
-                int nMult_trg = pVectTmp_trg.size();
-                int nMult_ass = pVectTmp_ass.size();
+                    vector<TLorentzVector> pVectTmp_trg = (*pVectVect_trg_ks[i])[nevt_trg];
+                    vector<TVector3> pVectTmp_dau = (*pVectVect_dau_ks[i])[nevt_trg];
+                    vector<TVector3> pVectTmp_ass = (*pVectVect_ass)[nevt_ass];
+                    int nMult_trg = pVectTmp_trg.size();
+                    int nMult_ass = pVectTmp_ass.size();
 
-                double nMult_trg_eff=0;
+                    double nMult_trg_eff=0;
 
-				for(int ntrg=0;ntrg<nMult_trg;ntrg++)
-				{
-						TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
-						double pt_trg = pvectorTmp_trg.Pt();
-						double eta_trg = pvectorTmp_trg.Eta();
+                    for(int ntrg=0;ntrg<nMult_trg;ntrg++)
+                    {
+                        TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
+                        double pt_trg = pvectorTmp_trg.Pt();
+                        double eta_trg = pvectorTmp_trg.Eta();
                         double rap_trg = pvectorTmp_trg.E();
                         double EffXchoice = 0;
 
@@ -1490,160 +1552,163 @@ V0CasCorrelation::endJob() {
                         else
                             EffXchoice = eta_trg;
 
-						double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
+                        double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
 
-						nMult_trg_eff = nMult_trg_eff + 1.0/effks;
-				}
+                        nMult_trg_eff = nMult_trg_eff + 1.0/effks;
+                    }
 
-                for(int ntrg=0;ntrg<nMult_trg;ntrg++)
-                {
-                    TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double phi_trg = pvectorTmp_trg.Phi();
-                    double pt_trg = pvectorTmp_trg.Pt();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
-
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
-
-                    double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
-
-                    TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
-                    double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
-
-                    TVector3 pvector_trg_dau2 = pVectTmp_dau[2*ntrg+1];
-                    double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
-
-                    for(int nass=0;nass<nMult_ass;nass++)
+                    for(int ntrg=0;ntrg<nMult_trg;ntrg++)
                     {
-                        TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
-                        double eta_ass = pvectorTmp_ass.Eta();
-                        double phi_ass = pvectorTmp_ass.Phi();
-                        double pt_ass = pvectorTmp_ass.Pt();
+                        TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double phi_trg = pvectorTmp_trg.Phi();
+                        double pt_trg = pvectorTmp_trg.Pt();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
 
-                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
 
-                        if(rejectDaughter_)
+                        double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
+
+                        TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
+                        double eta_trg_dau1 = pvector_trg_dau1.Eta();
+                        double phi_trg_dau1 = pvector_trg_dau1.Phi();
+
+                        TVector3 pvector_trg_dau2 = pVectTmp_dau[2*ntrg+1];
+                        double eta_trg_dau2 = pvector_trg_dau2.Eta();
+                        double phi_trg_dau2 = pvector_trg_dau2.Phi();
+
+                        for(int nass=0;nass<nMult_ass;nass++)
                         {
-                            if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
-                            if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
+                            TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
+                            double eta_ass = pvectorTmp_ass.Eta();
+                            double phi_ass = pvectorTmp_ass.Phi();
+                            double pt_ass = pvectorTmp_ass.Pt();
+
+                            double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+
+                            if(rejectDaughter_)
+                            {
+                                if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
+                                if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
+                            }
+
+                            double deltaEta=eta_ass-eta_trg;
+                            double deltaPhi=phi_ass-phi_trg;
+                            if(deltaPhi>PI)
+                                deltaPhi=deltaPhi-2*PI;
+                            if(deltaPhi<-PI)
+                                deltaPhi=deltaPhi+2*PI;
+                            if(deltaPhi>-PI && deltaPhi<-PI/2.)
+                                deltaPhi=deltaPhi+2*PI;
+
+                            //if(deltaEta==0 && deltaPhi==0) continue;
+                            hBackground_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks/effweight_ass);
                         }
-
-                        double deltaEta=eta_ass-eta_trg;
-                        double deltaPhi=phi_ass-phi_trg;
-                        if(deltaPhi>PI)
-                            deltaPhi=deltaPhi-2*PI;
-                        if(deltaPhi<-PI)
-                            deltaPhi=deltaPhi+2*PI;
-                        if(deltaPhi>-PI && deltaPhi<-PI/2.)
-                            deltaPhi=deltaPhi+2*PI;
-
-                        //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks/effweight_ass);
                     }
                 }
             }
         }
 
-        for(int nround=0;nround<bkgnum_;nround++)
+        if(doLa_)
         {
-            int ncount = 0;
-            for(int nevt_trg=0; nevt_trg<nevttotal_trg_la; nevt_trg++)
+            for(int nround=0;nround<bkgnum_;nround++)
             {
-                int nevt_ass = gRandom->Integer(nevttotal_ass);
-                if(nevt_trg == nevt_ass) { nevt_trg--; continue; }
-                if(fabs((*zvtxVect)[nevt_trg]-(*zvtxVect)[nevt_ass])>0.5) {
-                    nevt_trg--;
-                    ncount++;
-                    if(ncount>5000) {nevt_trg++; ncount = 0;}
-                    continue; }
-
-                vector<TLorentzVector> pVectTmp_trg = (*pVectVect_trg_la[i])[nevt_trg];
-                vector<TVector3> pVectTmp_dau = (*pVectVect_dau_la[i])[nevt_trg];
-                vector<TVector3> pVectTmp_ass = (*pVectVect_ass)[nevt_ass];
-                int nMult_trg = pVectTmp_trg.size();
-                int nMult_ass = pVectTmp_ass.size();
-
-                double nMult_trg_eff=0;
-
-                for(int ntrg=0;ntrg<nMult_trg;ntrg++)
+                int ncount = 0;
+                for(int nevt_trg=0; nevt_trg<nevttotal_trg_la; nevt_trg++)
                 {
-                    TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
-                    double pt_trg = pvectorTmp_trg.Pt();
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
+                    int nevt_ass = gRandom->Integer(nevttotal_ass);
+                    if(nevt_trg == nevt_ass) { nevt_trg--; continue; }
+                    if(fabs((*zvtxVect)[nevt_trg]-(*zvtxVect)[nevt_ass])>0.5) {
+                        nevt_trg--;
+                        ncount++;
+                        if(ncount>5000) {nevt_trg++; ncount = 0;}
+                        continue; }
 
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
+                    vector<TLorentzVector> pVectTmp_trg = (*pVectVect_trg_la[i])[nevt_trg];
+                    vector<TVector3> pVectTmp_dau = (*pVectVect_dau_la[i])[nevt_trg];
+                    vector<TVector3> pVectTmp_ass = (*pVectVect_ass)[nevt_ass];
+                    int nMult_trg = pVectTmp_trg.size();
+                    int nMult_ass = pVectTmp_ass.size();
 
-                    double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
+                    double nMult_trg_eff=0;
 
-                    nMult_trg_eff = nMult_trg_eff + 1.0/effla;
-                }
-
-                for(int ntrg=0;ntrg<nMult_trg;ntrg++)
-                {
-                    TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double phi_trg = pvectorTmp_trg.Phi();
-                    double pt_trg = pvectorTmp_trg.Pt();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
-
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
-
-                    double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
-
-                    TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
-                    double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
-
-                    TVector3 pvector_trg_dau2 = pVectTmp_dau[2*ntrg+1];
-                    double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
-
-                    for(int nass=0;nass<nMult_ass;nass++)
+                    for(int ntrg=0;ntrg<nMult_trg;ntrg++)
                     {
-                        TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
-                        double eta_ass = pvectorTmp_ass.Eta();
-                        double phi_ass = pvectorTmp_ass.Phi();
-                        double pt_ass = pvectorTmp_ass.Pt();
+                        TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
+                        double pt_trg = pvectorTmp_trg.Pt();
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
 
-                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
 
-                        if(rejectDaughter_)
+                        double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
+
+                        nMult_trg_eff = nMult_trg_eff + 1.0/effla;
+                    }
+
+                    for(int ntrg=0;ntrg<nMult_trg;ntrg++)
+                    {
+                        TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double phi_trg = pvectorTmp_trg.Phi();
+                        double pt_trg = pvectorTmp_trg.Pt();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
+
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
+
+                        double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
+
+                        TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
+                        double eta_trg_dau1 = pvector_trg_dau1.Eta();
+                        double phi_trg_dau1 = pvector_trg_dau1.Phi();
+
+                        TVector3 pvector_trg_dau2 = pVectTmp_dau[2*ntrg+1];
+                        double eta_trg_dau2 = pvector_trg_dau2.Eta();
+                        double phi_trg_dau2 = pvector_trg_dau2.Phi();
+
+                        for(int nass=0;nass<nMult_ass;nass++)
                         {
-                            if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
-                            if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
+                            TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
+                            double eta_ass = pvectorTmp_ass.Eta();
+                            double phi_ass = pvectorTmp_ass.Phi();
+                            double pt_ass = pvectorTmp_ass.Pt();
+
+                            double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+
+                            if(rejectDaughter_)
+                            {
+                                if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
+                                if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
+                            }
+
+                            double deltaEta=eta_ass-eta_trg;
+                            double deltaPhi=phi_ass-phi_trg;
+                            if(deltaPhi>PI)
+                                deltaPhi=deltaPhi-2*PI;
+                            if(deltaPhi<-PI)
+                                deltaPhi=deltaPhi+2*PI;
+                            if(deltaPhi>-PI && deltaPhi<-PI/2.)
+                                deltaPhi=deltaPhi+2*PI;
+
+                            //if(deltaEta==0 && deltaPhi==0) continue;
+                            hBackground_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla/effweight_ass);
                         }
-
-                        double deltaEta=eta_ass-eta_trg;
-                        double deltaPhi=phi_ass-phi_trg;
-                        if(deltaPhi>PI)
-                            deltaPhi=deltaPhi-2*PI;
-                        if(deltaPhi<-PI)
-                            deltaPhi=deltaPhi+2*PI;
-                        if(deltaPhi>-PI && deltaPhi<-PI/2.)
-                            deltaPhi=deltaPhi+2*PI;
-
-                        //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla/effweight_ass);
                     }
                 }
             }
         }
-
     }
 
     for(int i=0;i<ptbin_n_;i++)
@@ -1651,188 +1716,194 @@ V0CasCorrelation::endJob() {
         int nevttotal_trg_ks = (int)pVectVect_trg_ks_bkg[i]->size();
         int nevttotal_trg_la = (int)pVectVect_trg_la_bkg[i]->size();
 
-        for(int nround=0;nround<bkgnum_;nround++)
+        if(doKs_)
         {
-            int ncount = 0;
-            for(int nevt_trg=0; nevt_trg<nevttotal_trg_ks; nevt_trg++)
+            for(int nround=0;nround<bkgnum_;nround++)
             {
-                int nevt_ass = gRandom->Integer(nevttotal_ass);
-                if(nevt_trg == nevt_ass) { nevt_trg--; continue; }
-                if(fabs((*zvtxVect)[nevt_trg]-(*zvtxVect)[nevt_ass])>0.5) {
-                    nevt_trg--;
-                    ncount++;
-                    if(ncount>5000) {nevt_trg++; ncount = 0;}
-                    continue; }
-
-                vector<TLorentzVector> pVectTmp_trg = (*pVectVect_trg_ks_bkg[i])[nevt_trg];
-                vector<TVector3> pVectTmp_dau = (*pVectVect_dau_ks_bkg[i])[nevt_trg];
-                vector<TVector3> pVectTmp_ass = (*pVectVect_ass)[nevt_ass];
-                int nMult_trg = pVectTmp_trg.size();
-                int nMult_ass = pVectTmp_ass.size();
-
-                double nMult_trg_eff=0;
-
-                for(int ntrg=0;ntrg<nMult_trg;ntrg++)
+                int ncount = 0;
+                for(int nevt_trg=0; nevt_trg<nevttotal_trg_ks; nevt_trg++)
                 {
-                    TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
-                    double pt_trg = pvectorTmp_trg.Pt();
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
+                    int nevt_ass = gRandom->Integer(nevttotal_ass);
+                    if(nevt_trg == nevt_ass) { nevt_trg--; continue; }
+                    if(fabs((*zvtxVect)[nevt_trg]-(*zvtxVect)[nevt_ass])>0.5) {
+                        nevt_trg--;
+                        ncount++;
+                        if(ncount>5000) {nevt_trg++; ncount = 0;}
+                        continue; }
 
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
+                    vector<TLorentzVector> pVectTmp_trg = (*pVectVect_trg_ks_bkg[i])[nevt_trg];
+                    vector<TVector3> pVectTmp_dau = (*pVectVect_dau_ks_bkg[i])[nevt_trg];
+                    vector<TVector3> pVectTmp_ass = (*pVectVect_ass)[nevt_ass];
+                    int nMult_trg = pVectTmp_trg.size();
+                    int nMult_ass = pVectTmp_ass.size();
 
-                    double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
-                    nMult_trg_eff = nMult_trg_eff + 1.0/effks;
-                }
+                    double nMult_trg_eff=0;
 
-                for(int ntrg=0;ntrg<nMult_trg;ntrg++)
-                {
-                    TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double phi_trg = pvectorTmp_trg.Phi();
-                    double pt_trg = pvectorTmp_trg.Pt();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
-
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
-
-                    double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
-
-                    TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
-                    double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
-
-                    TVector3 pvector_trg_dau2 = pVectTmp_dau[2*ntrg+1];
-                    double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
-
-                    for(int nass=0;nass<nMult_ass;nass++)
+                    for(int ntrg=0;ntrg<nMult_trg;ntrg++)
                     {
-                        TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
-                        double eta_ass = pvectorTmp_ass.Eta();
-                        double phi_ass = pvectorTmp_ass.Phi();
-                        double pt_ass = pvectorTmp_ass.Pt();
+                        TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
+                        double pt_trg = pvectorTmp_trg.Pt();
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
 
-                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
 
-                        if(rejectDaughter_)
+                        double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
+                        nMult_trg_eff = nMult_trg_eff + 1.0/effks;
+                    }
+
+                    for(int ntrg=0;ntrg<nMult_trg;ntrg++)
+                    {
+                        TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double phi_trg = pvectorTmp_trg.Phi();
+                        double pt_trg = pvectorTmp_trg.Pt();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
+
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
+
+                        double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
+
+                        TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
+                        double eta_trg_dau1 = pvector_trg_dau1.Eta();
+                        double phi_trg_dau1 = pvector_trg_dau1.Phi();
+
+                        TVector3 pvector_trg_dau2 = pVectTmp_dau[2*ntrg+1];
+                        double eta_trg_dau2 = pvector_trg_dau2.Eta();
+                        double phi_trg_dau2 = pvector_trg_dau2.Phi();
+
+                        for(int nass=0;nass<nMult_ass;nass++)
                         {
-                            if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
-                            if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
+                            TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
+                            double eta_ass = pvectorTmp_ass.Eta();
+                            double phi_ass = pvectorTmp_ass.Phi();
+                            double pt_ass = pvectorTmp_ass.Pt();
+
+                            double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+
+                            if(rejectDaughter_)
+                            {
+                                if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
+                                if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
+                            }
+
+                            double deltaEta=eta_ass-eta_trg;
+                            double deltaPhi=phi_ass-phi_trg;
+                            if(deltaPhi>PI)
+                                deltaPhi=deltaPhi-2*PI;
+                            if(deltaPhi<-PI)
+                                deltaPhi=deltaPhi+2*PI;
+                            if(deltaPhi>-PI && deltaPhi<-PI/2.)
+                                deltaPhi=deltaPhi+2*PI;
+
+                            //if(deltaEta==0 && deltaPhi==0) continue;
+                            hBackground_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks/effweight_ass);
                         }
-
-                        double deltaEta=eta_ass-eta_trg;
-                        double deltaPhi=phi_ass-phi_trg;
-                        if(deltaPhi>PI)
-                            deltaPhi=deltaPhi-2*PI;
-                        if(deltaPhi<-PI)
-                            deltaPhi=deltaPhi+2*PI;
-                        if(deltaPhi>-PI && deltaPhi<-PI/2.)
-                            deltaPhi=deltaPhi+2*PI;
-
-                        //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks/effweight_ass);
                     }
                 }
             }
         }
 
-        for(int nround=0;nround<bkgnum_;nround++)
+        if(doLa_)
         {
-            int ncount = 0;
-            for(int nevt_trg=0; nevt_trg<nevttotal_trg_la; nevt_trg++)
+            for(int nround=0;nround<bkgnum_;nround++)
             {
-                int nevt_ass = gRandom->Integer(nevttotal_ass);
-                if(nevt_trg == nevt_ass) { nevt_trg--; continue; }
-                if(fabs((*zvtxVect)[nevt_trg]-(*zvtxVect)[nevt_ass])>0.5) {
-                    nevt_trg--;
-                    ncount++;
-                    if(ncount>5000) {nevt_trg++; ncount = 0;}
-                    continue; }
-
-                vector<TLorentzVector> pVectTmp_trg = (*pVectVect_trg_la_bkg[i])[nevt_trg];
-                vector<TVector3> pVectTmp_dau = (*pVectVect_dau_la_bkg[i])[nevt_trg];
-                vector<TVector3> pVectTmp_ass = (*pVectVect_ass)[nevt_ass];
-                int nMult_trg = pVectTmp_trg.size();
-                int nMult_ass = pVectTmp_ass.size();
-
-                double nMult_trg_eff=0;
-
-                for(int ntrg=0;ntrg<nMult_trg;ntrg++)
+                int ncount = 0;
+                for(int nevt_trg=0; nevt_trg<nevttotal_trg_la; nevt_trg++)
                 {
-                    TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
-                    double pt_trg = pvectorTmp_trg.Pt();
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
+                    int nevt_ass = gRandom->Integer(nevttotal_ass);
+                    if(nevt_trg == nevt_ass) { nevt_trg--; continue; }
+                    if(fabs((*zvtxVect)[nevt_trg]-(*zvtxVect)[nevt_ass])>0.5) {
+                        nevt_trg--;
+                        ncount++;
+                        if(ncount>5000) {nevt_trg++; ncount = 0;}
+                        continue; }
 
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
+                    vector<TLorentzVector> pVectTmp_trg = (*pVectVect_trg_la_bkg[i])[nevt_trg];
+                    vector<TVector3> pVectTmp_dau = (*pVectVect_dau_la_bkg[i])[nevt_trg];
+                    vector<TVector3> pVectTmp_ass = (*pVectVect_ass)[nevt_ass];
+                    int nMult_trg = pVectTmp_trg.size();
+                    int nMult_ass = pVectTmp_ass.size();
 
-                    double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
+                    double nMult_trg_eff=0;
 
-                    nMult_trg_eff = nMult_trg_eff + 1.0/effla;
-                }
-
-                for(int ntrg=0;ntrg<nMult_trg;ntrg++)
-                {
-                    TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double phi_trg = pvectorTmp_trg.Phi();
-                    double pt_trg = pvectorTmp_trg.Pt();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
-
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
-
-                    double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
-
-                    TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
-                    double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
-
-                    TVector3 pvector_trg_dau2 = pVectTmp_dau[2*ntrg+1];
-                    double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
-
-                    for(int nass=0;nass<nMult_ass;nass++)
+                    for(int ntrg=0;ntrg<nMult_trg;ntrg++)
                     {
-                        TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
-                        double eta_ass = pvectorTmp_ass.Eta();
-                        double phi_ass = pvectorTmp_ass.Phi();
-                        double pt_ass = pvectorTmp_ass.Pt();
+                        TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
+                        double pt_trg = pvectorTmp_trg.Pt();
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
 
-                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
 
-                        if(rejectDaughter_)
+                        double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
+
+                        nMult_trg_eff = nMult_trg_eff + 1.0/effla;
+                    }
+
+                    for(int ntrg=0;ntrg<nMult_trg;ntrg++)
+                    {
+                        TLorentzVector pvectorTmp_trg = pVectTmp_trg[ntrg];
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double phi_trg = pvectorTmp_trg.Phi();
+                        double pt_trg = pvectorTmp_trg.Pt();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
+
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
+
+                        double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
+
+                        TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
+                        double eta_trg_dau1 = pvector_trg_dau1.Eta();
+                        double phi_trg_dau1 = pvector_trg_dau1.Phi();
+
+                        TVector3 pvector_trg_dau2 = pVectTmp_dau[2*ntrg+1];
+                        double eta_trg_dau2 = pvector_trg_dau2.Eta();
+                        double phi_trg_dau2 = pvector_trg_dau2.Phi();
+
+                        for(int nass=0;nass<nMult_ass;nass++)
                         {
-                            if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
-                            if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
+                            TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
+                            double eta_ass = pvectorTmp_ass.Eta();
+                            double phi_ass = pvectorTmp_ass.Phi();
+                            double pt_ass = pvectorTmp_ass.Pt();
+
+                            double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+
+                            if(rejectDaughter_)
+                            {
+                                if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
+                                if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
+                            }
+
+                            double deltaEta=eta_ass-eta_trg;
+                            double deltaPhi=phi_ass-phi_trg;
+                            if(deltaPhi>PI)
+                                deltaPhi=deltaPhi-2*PI;
+                            if(deltaPhi<-PI)
+                                deltaPhi=deltaPhi+2*PI;
+                            if(deltaPhi>-PI && deltaPhi<-PI/2.)
+                                deltaPhi=deltaPhi+2*PI;
+
+                            //if(deltaEta==0 && deltaPhi==0) continue;
+                            hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla/effweight_ass);
                         }
-
-                        double deltaEta=eta_ass-eta_trg;
-                        double deltaPhi=phi_ass-phi_trg;
-                        if(deltaPhi>PI)
-                            deltaPhi=deltaPhi-2*PI;
-                        if(deltaPhi<-PI)
-                            deltaPhi=deltaPhi+2*PI;
-                        if(deltaPhi>-PI && deltaPhi<-PI/2.)
-                            deltaPhi=deltaPhi+2*PI;
-
-                        //if(deltaEta==0 && deltaPhi==0) continue;
-                        hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla/effweight_ass);
                     }
                 }
             }
@@ -1840,410 +1911,416 @@ V0CasCorrelation::endJob() {
 
     }
 
-    for(int i=0; i<ptbin_n_cas_; i++)
+    if(doXi_)
     {
-        // Make background histograms
-        // Xi paired with hadron
-        int PepVect2_xi_peak_size = (int)PepVect2_xi_peak[i]->size();
-        int PepVect2_xi_side_size = (int)PepVect2_xi_side[i]->size();
-
-        // PEAK REGION Background
-        for(int bkgnum = 0; bkgnum<bkgnum_; bkgnum++)
+        for(int i=0; i<ptbin_n_cas_; i++)
         {
-            int ncount = 0;
-            for(int nevt_trg=0; nevt_trg<PepVect2_xi_peak_size; nevt_trg++)
+            // Make background histograms
+            // Xi paired with hadron
+            int PepVect2_xi_peak_size = (int)PepVect2_xi_peak[i]->size();
+            int PepVect2_xi_side_size = (int)PepVect2_xi_side[i]->size();
+
+            // PEAK REGION Background
+            for(int bkgnum = 0; bkgnum<bkgnum_; bkgnum++)
             {
-                int nevt_ass = gRandom->Integer(nevttotal_ass);
-                if(nevt_trg == nevt_ass)
+                int ncount = 0;
+                for(int nevt_trg=0; nevt_trg<PepVect2_xi_peak_size; nevt_trg++)
                 {
-                    nevt_trg--;
-                    continue;
-                }
-                if(fabs((*zvtxVect)[nevt_trg] - (*zvtxVect)[nevt_ass]) > 0.5)
-                {
-                    nevt_trg--;
-                    ncount++;
-                    if(ncount > 5000)
+                    int nevt_ass = gRandom->Integer(nevttotal_ass);
+                    if(nevt_trg == nevt_ass)
                     {
-                        nevt_trg++;
-                        ncount=0;
+                        nevt_trg--;
+                        continue;
                     }
-                    continue;
-                }
-
-                vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_xi_peak[i])[nevt_trg];
-                vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_xi_peak[i])[nevt_trg];
-                vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
-                int nMult_trg = pepVectTmp_trg.size();
-                int nMult_ass = pepVectTmp_ass.size();
-
-                //double nMult_trg_eff_xi = 0;
-
-                for(int ntrg=0; ntrg<nMult_trg; ntrg++)
-                {
-                    TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    //double pt_trg = pvectorTmp_trg.Pt();
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
-                    UNUSED(EffXchoice);
-
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
-
-                    //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
-
-                    //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
-                }
-
-                for(int ntrg=0; ntrg<nMult_trg; ntrg++)
-                {
-                    TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    //double pt_trg = pvectorTmp_trg.Pt();
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double phi_trg = pvectorTmp_trg.Phi();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
-                    UNUSED(EffXchoice);
-
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
-
-                    //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
-
-                    TVector3 pvectorTmp_dau1_trg = pepVectTmp_dau[2*ntrg];
-                    double eta_trg_dau1 = pvectorTmp_dau1_trg.Eta();
-                    double phi_trg_dau1 = pvectorTmp_dau1_trg.Phi();
-                    TVector3 pvectorTmp_dau2_trg = pepVectTmp_dau[2*ntrg+1];
-                    double eta_trg_dau2 = pvectorTmp_dau2_trg.Eta();
-                    double phi_trg_dau2 = pvectorTmp_dau2_trg.Phi();
-
-
-                    for(int nass=0; nass<nMult_ass; nass++)
+                    if(fabs((*zvtxVect)[nevt_trg] - (*zvtxVect)[nevt_ass]) > 0.5)
                     {
-                        TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
-                        double eta_ass = pvectorTmp_ass.Eta();
-                        double phi_ass = pvectorTmp_ass.Phi();
+                        nevt_trg--;
+                        ncount++;
+                        if(ncount > 5000)
+                        {
+                            nevt_trg++;
+                            ncount=0;
+                        }
+                        continue;
+                    }
+
+                    vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_xi_peak[i])[nevt_trg];
+                    vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_xi_peak[i])[nevt_trg];
+                    vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
+                    int nMult_trg = pepVectTmp_trg.size();
+                    int nMult_ass = pepVectTmp_ass.size();
+
+                    //double nMult_trg_eff_xi = 0;
+
+                    for(int ntrg=0; ntrg<nMult_trg; ntrg++)
+                    {
+                        TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                        //double pt_trg = pvectorTmp_trg.Pt();
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
+                        UNUSED(EffXchoice);
+
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
+
+                        //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+
+                        //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
+                    }
+
+                    for(int ntrg=0; ntrg<nMult_trg; ntrg++)
+                    {
+                        TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                        //double pt_trg = pvectorTmp_trg.Pt();
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double phi_trg = pvectorTmp_trg.Phi();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
+                        UNUSED(EffXchoice);
+
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
+
+                        //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+
+                        TVector3 pvectorTmp_dau1_trg = pepVectTmp_dau[2*ntrg];
+                        double eta_trg_dau1 = pvectorTmp_dau1_trg.Eta();
+                        double phi_trg_dau1 = pvectorTmp_dau1_trg.Phi();
+                        TVector3 pvectorTmp_dau2_trg = pepVectTmp_dau[2*ntrg+1];
+                        double eta_trg_dau2 = pvectorTmp_dau2_trg.Eta();
+                        double phi_trg_dau2 = pvectorTmp_dau2_trg.Phi();
+
+
+                        for(int nass=0; nass<nMult_ass; nass++)
+                        {
+                            TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
+                            double eta_ass = pvectorTmp_ass.Eta();
+                            double phi_ass = pvectorTmp_ass.Phi();
                             if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
                             if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
 
-                        double dEta = eta_ass - eta_trg;
-                        double dPhi = phi_ass - phi_trg;
+                            double dEta = eta_ass - eta_trg;
+                            double dPhi = phi_ass - phi_trg;
 
-                        if(dPhi > PI)                    dPhi=dPhi-2*PI;
-                        if(dPhi < -PI)                   dPhi=dPhi+2*PI;
-                        if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
+                            if(dPhi > PI)                    dPhi=dPhi-2*PI;
+                            if(dPhi < -PI)                   dPhi=dPhi+2*PI;
+                            if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
 
-                        if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
+                            if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                        BackgroundXiPeak[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_xi/effxi);
+                            BackgroundXiPeak[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_xi/effxi);
+                        }
                     }
                 }
             }
-        }
 
-        // SIDEBAND REGION Background
-        for(int bkgnum = 0; bkgnum<bkgnum_; bkgnum++)
-        {
-            int ncount = 0;
-            for(int nevt_trg=0; nevt_trg<PepVect2_xi_side_size; nevt_trg++)
+            // SIDEBAND REGION Background
+            for(int bkgnum = 0; bkgnum<bkgnum_; bkgnum++)
             {
-                int nevt_ass = gRandom->Integer(nevttotal_ass);
-                if(nevt_trg == nevt_ass)
+                int ncount = 0;
+                for(int nevt_trg=0; nevt_trg<PepVect2_xi_side_size; nevt_trg++)
                 {
-                    nevt_trg--;
-                    continue;
-                }
-                if(fabs((*zvtxVect)[nevt_trg] - (*zvtxVect)[nevt_ass]) > 0.5)
-                {
-                    nevt_trg--;
-                    ncount++;
-                    if(ncount > 5000)
+                    int nevt_ass = gRandom->Integer(nevttotal_ass);
+                    if(nevt_trg == nevt_ass)
                     {
-                        nevt_trg++;
-                        ncount=0;
+                        nevt_trg--;
+                        continue;
                     }
-                    continue;
-                }
-
-                vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_xi_side[i])[nevt_trg];
-                vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_xi_side[i])[nevt_trg];
-                vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
-                int nMult_trg = pepVectTmp_trg.size();
-                int nMult_ass = pepVectTmp_ass.size();
-
-                //double nMult_trg_eff_xi = 0;
-
-                for(int ntrg=0; ntrg<nMult_trg; ntrg++)
-                {
-                    TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    //double pt_trg = pvectorTmp_trg.Pt();
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
-                    UNUSED(EffXchoice);
-
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
-
-                    //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
-                    //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
-                }
-
-                for(int ntrg=0; ntrg<nMult_trg; ntrg++)
-                {
-                    TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double phi_trg = pvectorTmp_trg.Phi();
-                    //double pt_trg = pvectorTmp_trg.Pt();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
-                    UNUSED(EffXchoice);
-
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
-
-                    //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
-
-                    TVector3 pvectorTmp_dau1_trg = pepVectTmp_dau[2*ntrg];
-                    double eta_trg_dau1 = pvectorTmp_dau1_trg.Eta();
-                    double phi_trg_dau1 = pvectorTmp_dau1_trg.Phi();
-                    TVector3 pvectorTmp_dau2_trg = pepVectTmp_dau[2*ntrg+1];
-                    double eta_trg_dau2 = pvectorTmp_dau2_trg.Eta();
-                    double phi_trg_dau2 = pvectorTmp_dau2_trg.Phi();
-
-                    for(int nass=0; nass<nMult_ass; nass++)
+                    if(fabs((*zvtxVect)[nevt_trg] - (*zvtxVect)[nevt_ass]) > 0.5)
                     {
-                        TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
-                        double eta_ass = pvectorTmp_ass.Eta();
-                        double phi_ass = pvectorTmp_ass.Phi();
+                        nevt_trg--;
+                        ncount++;
+                        if(ncount > 5000)
+                        {
+                            nevt_trg++;
+                            ncount=0;
+                        }
+                        continue;
+                    }
+
+                    vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_xi_side[i])[nevt_trg];
+                    vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_xi_side[i])[nevt_trg];
+                    vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
+                    int nMult_trg = pepVectTmp_trg.size();
+                    int nMult_ass = pepVectTmp_ass.size();
+
+                    //double nMult_trg_eff_xi = 0;
+
+                    for(int ntrg=0; ntrg<nMult_trg; ntrg++)
+                    {
+                        TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                        //double pt_trg = pvectorTmp_trg.Pt();
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
+                        UNUSED(EffXchoice);
+
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
+
+                        //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+                        //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
+                    }
+
+                    for(int ntrg=0; ntrg<nMult_trg; ntrg++)
+                    {
+                        TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double phi_trg = pvectorTmp_trg.Phi();
+                        //double pt_trg = pvectorTmp_trg.Pt();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
+                        UNUSED(EffXchoice);
+
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
+
+                        //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
+
+                        TVector3 pvectorTmp_dau1_trg = pepVectTmp_dau[2*ntrg];
+                        double eta_trg_dau1 = pvectorTmp_dau1_trg.Eta();
+                        double phi_trg_dau1 = pvectorTmp_dau1_trg.Phi();
+                        TVector3 pvectorTmp_dau2_trg = pepVectTmp_dau[2*ntrg+1];
+                        double eta_trg_dau2 = pvectorTmp_dau2_trg.Eta();
+                        double phi_trg_dau2 = pvectorTmp_dau2_trg.Phi();
+
+                        for(int nass=0; nass<nMult_ass; nass++)
+                        {
+                            TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
+                            double eta_ass = pvectorTmp_ass.Eta();
+                            double phi_ass = pvectorTmp_ass.Phi();
 
                             if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
                             if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
 
-                        double dEta = eta_ass - eta_trg;
-                        double dPhi = phi_ass - phi_trg;
+                            double dEta = eta_ass - eta_trg;
+                            double dPhi = phi_ass - phi_trg;
 
-                        if(dPhi > PI)                    dPhi=dPhi-2*PI;
-                        if(dPhi < -PI)                   dPhi=dPhi+2*PI;
-                        if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
+                            if(dPhi > PI)                    dPhi=dPhi-2*PI;
+                            if(dPhi < -PI)                   dPhi=dPhi+2*PI;
+                            if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
 
-                        if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
+                            if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                        BackgroundXiSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_xi/effxi);
+                            BackgroundXiSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_xi/effxi);
+                        }
                     }
                 }
             }
         }
     }
 
-    for(int i=0; i<ptbin_n_cas_; i++)
+    if(doOm_)
     {
-        // Make background histograms
-        // Xi paired with hadron
-        int PepVect2_om_peak_size = (int)PepVect2_om_peak[i]->size();
-        int PepVect2_om_side_size = (int)PepVect2_om_side[i]->size();
-
-        // PEAK REGION Background
-        for(int bkgnum = 0; bkgnum<bkgnum_; bkgnum++)
+        for(int i=0; i<ptbin_n_cas_; i++)
         {
-            int ncount = 0;
-            for(int nevt_trg=0; nevt_trg<PepVect2_om_peak_size; nevt_trg++)
+            // Make background histograms
+            // Xi paired with hadron
+            int PepVect2_om_peak_size = (int)PepVect2_om_peak[i]->size();
+            int PepVect2_om_side_size = (int)PepVect2_om_side[i]->size();
+
+            // PEAK REGION Background
+            for(int bkgnum = 0; bkgnum<bkgnum_; bkgnum++)
             {
-                int nevt_ass = gRandom->Integer(nevttotal_ass);
-                if(nevt_trg == nevt_ass)
+                int ncount = 0;
+                for(int nevt_trg=0; nevt_trg<PepVect2_om_peak_size; nevt_trg++)
                 {
-                    nevt_trg--;
-                    continue;
-                }
-                if(fabs((*zvtxVect)[nevt_trg] - (*zvtxVect)[nevt_ass]) > 0.5)
-                {
-                    nevt_trg--;
-                    ncount++;
-                    if(ncount > 5000)
+                    int nevt_ass = gRandom->Integer(nevttotal_ass);
+                    if(nevt_trg == nevt_ass)
                     {
-                        nevt_trg++;
-                        ncount=0;
+                        nevt_trg--;
+                        continue;
                     }
-                    continue;
-                }
-
-                vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_om_peak[i])[nevt_trg];
-                vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_om_peak[i])[nevt_trg];
-                vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
-                int nMult_trg = pepVectTmp_trg.size();
-                int nMult_ass = pepVectTmp_ass.size();
-
-                //double nMult_trg_eff_om = 0;
-
-                for(int ntrg=0; ntrg<nMult_trg; ntrg++)
-                {
-                    TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    //double pt_trg = pvectorTmp_trg.Pt();
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
-                    UNUSED(EffXchoice);
-
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
-
-                    //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
-
-                    //nMult_trg_eff_om = nMult_trg_eff_om + 1.0/effom;
-                }
-
-                for(int ntrg=0; ntrg<nMult_trg; ntrg++)
-                {
-                    TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    //double pt_trg = pvectorTmp_trg.Pt();
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double phi_trg = pvectorTmp_trg.Phi();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
-                    UNUSED(EffXchoice);
-
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
-
-                    //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
-
-                    TVector3 pvectorTmp_dau1_trg = pepVectTmp_dau[2*ntrg];
-                    double eta_trg_dau1 = pvectorTmp_dau1_trg.Eta();
-                    double phi_trg_dau1 = pvectorTmp_dau1_trg.Phi();
-                    TVector3 pvectorTmp_dau2_trg = pepVectTmp_dau[2*ntrg+1];
-                    double eta_trg_dau2 = pvectorTmp_dau2_trg.Eta();
-                    double phi_trg_dau2 = pvectorTmp_dau2_trg.Phi();
-
-
-                    for(int nass=0; nass<nMult_ass; nass++)
+                    if(fabs((*zvtxVect)[nevt_trg] - (*zvtxVect)[nevt_ass]) > 0.5)
                     {
-                        TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
-                        double eta_ass = pvectorTmp_ass.Eta();
-                        double phi_ass = pvectorTmp_ass.Phi();
+                        nevt_trg--;
+                        ncount++;
+                        if(ncount > 5000)
+                        {
+                            nevt_trg++;
+                            ncount=0;
+                        }
+                        continue;
+                    }
+
+                    vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_om_peak[i])[nevt_trg];
+                    vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_om_peak[i])[nevt_trg];
+                    vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
+                    int nMult_trg = pepVectTmp_trg.size();
+                    int nMult_ass = pepVectTmp_ass.size();
+
+                    //double nMult_trg_eff_om = 0;
+
+                    for(int ntrg=0; ntrg<nMult_trg; ntrg++)
+                    {
+                        TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                        //double pt_trg = pvectorTmp_trg.Pt();
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
+                        UNUSED(EffXchoice);
+
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
+
+                        //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
+
+                        //nMult_trg_eff_om = nMult_trg_eff_om + 1.0/effom;
+                    }
+
+                    for(int ntrg=0; ntrg<nMult_trg; ntrg++)
+                    {
+                        TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                        //double pt_trg = pvectorTmp_trg.Pt();
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double phi_trg = pvectorTmp_trg.Phi();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
+                        UNUSED(EffXchoice);
+
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
+
+                        //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
+
+                        TVector3 pvectorTmp_dau1_trg = pepVectTmp_dau[2*ntrg];
+                        double eta_trg_dau1 = pvectorTmp_dau1_trg.Eta();
+                        double phi_trg_dau1 = pvectorTmp_dau1_trg.Phi();
+                        TVector3 pvectorTmp_dau2_trg = pepVectTmp_dau[2*ntrg+1];
+                        double eta_trg_dau2 = pvectorTmp_dau2_trg.Eta();
+                        double phi_trg_dau2 = pvectorTmp_dau2_trg.Phi();
+
+
+                        for(int nass=0; nass<nMult_ass; nass++)
+                        {
+                            TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
+                            double eta_ass = pvectorTmp_ass.Eta();
+                            double phi_ass = pvectorTmp_ass.Phi();
                             if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
                             if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
 
-                        double dEta = eta_ass - eta_trg;
-                        double dPhi = phi_ass - phi_trg;
+                            double dEta = eta_ass - eta_trg;
+                            double dPhi = phi_ass - phi_trg;
 
-                        if(dPhi > PI)                    dPhi=dPhi-2*PI;
-                        if(dPhi < -PI)                   dPhi=dPhi+2*PI;
-                        if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
+                            if(dPhi > PI)                    dPhi=dPhi-2*PI;
+                            if(dPhi < -PI)                   dPhi=dPhi+2*PI;
+                            if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
 
-                        if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
+                            if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                        BackgroundOmPeak[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_om/effom);
+                            BackgroundOmPeak[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_om/effom);
+                        }
                     }
                 }
             }
-        }
 
-        // SIDEBAND REGION Background
-        for(int bkgnum = 0; bkgnum<bkgnum_; bkgnum++)
-        {
-            int ncount = 0;
-            for(int nevt_trg=0; nevt_trg<PepVect2_om_side_size; nevt_trg++)
+            // SIDEBAND REGION Background
+            for(int bkgnum = 0; bkgnum<bkgnum_; bkgnum++)
             {
-                int nevt_ass = gRandom->Integer(nevttotal_ass);
-                if(nevt_trg == nevt_ass)
+                int ncount = 0;
+                for(int nevt_trg=0; nevt_trg<PepVect2_om_side_size; nevt_trg++)
                 {
-                    nevt_trg--;
-                    continue;
-                }
-                if(fabs((*zvtxVect)[nevt_trg] - (*zvtxVect)[nevt_ass]) > 0.5)
-                {
-                    nevt_trg--;
-                    ncount++;
-                    if(ncount > 5000)
+                    int nevt_ass = gRandom->Integer(nevttotal_ass);
+                    if(nevt_trg == nevt_ass)
                     {
-                        nevt_trg++;
-                        ncount=0;
+                        nevt_trg--;
+                        continue;
                     }
-                    continue;
-                }
-
-                vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_om_side[i])[nevt_trg];
-                vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_om_side[i])[nevt_trg];
-                vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
-                int nMult_trg = pepVectTmp_trg.size();
-                int nMult_ass = pepVectTmp_ass.size();
-
-                //double nMult_trg_eff_om = 0;
-
-                for(int ntrg=0; ntrg<nMult_trg; ntrg++)
-                {
-                    TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    //double pt_trg = pvectorTmp_trg.Pt();
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
-                    UNUSED(EffXchoice);
-
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
-
-                    //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
-                    //nMult_trg_eff_om = nMult_trg_eff_om + 1.0/effom;
-                }
-
-                for(int ntrg=0; ntrg<nMult_trg; ntrg++)
-                {
-                    TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double phi_trg = pvectorTmp_trg.Phi();
-                    //double pt_trg = pvectorTmp_trg.Pt();
-                    double rap_trg = pvectorTmp_trg.E();
-                    double EffXchoice = 0;
-                    UNUSED(EffXchoice);
-
-                    if(doRap_)
-                        EffXchoice = rap_trg;
-                    else
-                        EffXchoice = eta_trg;
-
-                    //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
-
-                    TVector3 pvectorTmp_dau1_trg = pepVectTmp_dau[2*ntrg];
-                    double eta_trg_dau1 = pvectorTmp_dau1_trg.Eta();
-                    double phi_trg_dau1 = pvectorTmp_dau1_trg.Phi();
-                    TVector3 pvectorTmp_dau2_trg = pepVectTmp_dau[2*ntrg+1];
-                    double eta_trg_dau2 = pvectorTmp_dau2_trg.Eta();
-                    double phi_trg_dau2 = pvectorTmp_dau2_trg.Phi();
-
-                    for(int nass=0; nass<nMult_ass; nass++)
+                    if(fabs((*zvtxVect)[nevt_trg] - (*zvtxVect)[nevt_ass]) > 0.5)
                     {
-                        TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
-                        double eta_ass = pvectorTmp_ass.Eta();
-                        double phi_ass = pvectorTmp_ass.Phi();
+                        nevt_trg--;
+                        ncount++;
+                        if(ncount > 5000)
+                        {
+                            nevt_trg++;
+                            ncount=0;
+                        }
+                        continue;
+                    }
+
+                    vector<TLorentzVector> pepVectTmp_trg = (*PepVect2_om_side[i])[nevt_trg];
+                    vector<TVector3> pepVectTmp_dau = (*PepVect2_dau_om_side[i])[nevt_trg];
+                    vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
+                    int nMult_trg = pepVectTmp_trg.size();
+                    int nMult_ass = pepVectTmp_ass.size();
+
+                    //double nMult_trg_eff_om = 0;
+
+                    for(int ntrg=0; ntrg<nMult_trg; ntrg++)
+                    {
+                        TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                        //double pt_trg = pvectorTmp_trg.Pt();
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
+                        UNUSED(EffXchoice);
+
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
+
+                        //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
+                        //nMult_trg_eff_om = nMult_trg_eff_om + 1.0/effom;
+                    }
+
+                    for(int ntrg=0; ntrg<nMult_trg; ntrg++)
+                    {
+                        TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double phi_trg = pvectorTmp_trg.Phi();
+                        //double pt_trg = pvectorTmp_trg.Pt();
+                        double rap_trg = pvectorTmp_trg.E();
+                        double EffXchoice = 0;
+                        UNUSED(EffXchoice);
+
+                        if(doRap_)
+                            EffXchoice = rap_trg;
+                        else
+                            EffXchoice = eta_trg;
+
+                        //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
+
+                        TVector3 pvectorTmp_dau1_trg = pepVectTmp_dau[2*ntrg];
+                        double eta_trg_dau1 = pvectorTmp_dau1_trg.Eta();
+                        double phi_trg_dau1 = pvectorTmp_dau1_trg.Phi();
+                        TVector3 pvectorTmp_dau2_trg = pepVectTmp_dau[2*ntrg+1];
+                        double eta_trg_dau2 = pvectorTmp_dau2_trg.Eta();
+                        double phi_trg_dau2 = pvectorTmp_dau2_trg.Phi();
+
+                        for(int nass=0; nass<nMult_ass; nass++)
+                        {
+                            TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
+                            double eta_ass = pvectorTmp_ass.Eta();
+                            double phi_ass = pvectorTmp_ass.Phi();
 
                             if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
                             if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
 
-                        double dEta = eta_ass - eta_trg;
-                        double dPhi = phi_ass - phi_trg;
+                            double dEta = eta_ass - eta_trg;
+                            double dPhi = phi_ass - phi_trg;
 
-                        if(dPhi > PI)                    dPhi=dPhi-2*PI;
-                        if(dPhi < -PI)                   dPhi=dPhi+2*PI;
-                        if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
+                            if(dPhi > PI)                    dPhi=dPhi-2*PI;
+                            if(dPhi < -PI)                   dPhi=dPhi+2*PI;
+                            if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
 
-                        if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
+                            if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                        BackgroundOmSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_om/effom);
+                            BackgroundOmSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_om/effom);
+                        }
                     }
                 }
             }
