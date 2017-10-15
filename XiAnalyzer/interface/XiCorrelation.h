@@ -185,6 +185,8 @@ class XiCorrelation : public edm::EDAnalyzer {
         edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
         edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _casCollection;
 
+        std::string v0IDName_;
+
         double bkgnum_;
         double etaMax_ass_;
         double etaMin_ass_;

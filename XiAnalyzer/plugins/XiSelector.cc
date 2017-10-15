@@ -36,6 +36,8 @@ float electronMass        = 0.000511;
 float electronMassSquared = electronMass*electronMass;
 float lambdaMass          = 1.115683;
 float lambdaMass_sigma    = 0.000006;
+float kaonMass            = 0.493677;
+float kaonMass_sigma      = kaonMass*1.e-6;
 
 // Constructor
 XiSelector::XiSelector(const edm::ParameterSet& iConfig)
@@ -106,15 +108,15 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     iEvent.getByToken(_vertexCollName,vertices);
     //double bestvz = -999.9, bestvx = -999.9, bestvy = -999.9;
     //double bestvzError = -999.9, bestvxError = -999.9, bestvyError = -999.9;
-    const reco::Vertex & bestvtx = (*vertices)[0];
-    //bestvz = bestvtx.z(); bestvx = bestvtx.x(); bestvy = bestvtx.y();
-    //bestvzError = bestvtx.zError(); bestvxError = bestvtx.xError(); bestvyError = bestvtx.yError();
+    const reco::Vertex & vtx = (*vertices)[0];
+    //bestvz = vtx.z(); bestvx = vtx.x(); bestvy = vtx.y();
+    //bestvzError = vtx.zError(); bestvxError = vtx.xError(); bestvyError = vtx.yError();
 
     // Z Vertex cut
     //if(bestvz > zVertexHigh_ || bestvz < zVertexLow_ ) return;
 
-    edm::Handle< reco::VertexCompositeCandidateCollection > v0candidates;
-    iEvent.getByToken(_XiCollection, v0candidates);
+    edm::Handle< reco::VertexCompositeCandidateCollection > CascadeCandidates;
+    iEvent.getByToken(_XiCollection, CascadeCandidates);
     if(!v0candidates.isValid()) return;
 
     // Create auto_ptr for each collection to be stored in the Event
@@ -147,14 +149,14 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         double pt   = CasCand->pt();
         double rap  = CasCand->rapidity();
 
-        //if(doRap_)
-        //{
-        //if(rap < rapMin_ || rap > rapMax_) continue;
-        //}
-        //else
-        //{
-        //if(eta > 2.4 || eta < -2.4) continue;
-        //}
+        if(doRap_)
+        {
+        if(rap < rapMin_ || rap > rapMax_) continue;
+        }
+        else
+        {
+        if(eta > 2.4 || eta < -2.4) continue;
+        }
 
         //secvz  = CasCand->vz(); << endl;
         //secvx  = CasCand->vx();
@@ -335,7 +337,7 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
             if(fabs(misIDMass_Om_lapi) < misIDMassCut_) continue;
         }
 
-        theNewXiCands->push_back( *v0cand );
+        theNewCasCands->push_back( *CasCand );
 
     }
 

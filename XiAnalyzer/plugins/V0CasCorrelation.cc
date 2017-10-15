@@ -45,6 +45,10 @@ V0CasCorrelation::V0CasCorrelation(const edm::ParameterSet& iConfig)
     rejectDaughter_ = iConfig.getUntrackedParameter<bool>("rejectDaughter");
     doRap_          = iConfig.getUntrackedParameter<bool>("doRap");
     doGenRef_       = iConfig.getUntrackedParameter<bool>("doGenRef");
+    doKs_ = iConfig.getUntrackedParameter<bool>("doKs");
+    doLa_ = iConfig.getUntrackedParameter<bool>("doLa");
+    doXi_ = iConfig.getUntrackedParameter<bool>("doXi");
+    doOm_ = iConfig.getUntrackedParameter<bool>("doOm");
 
     _vertexCollName = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexCollName"));
     _trkSrc         = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("trkSrc"));
@@ -92,20 +96,32 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
     if(bestvz < -15.0 || bestvz>15.0) return;
 
     edm::Handle<reco::VertexCompositeCandidateCollection> v0candidates_ks;
-    iEvent.getByToken(_ksCollection,v0candidates_ks);
-    if(!v0candidates_ks.isValid()) return;
+    if(doKs_)
+    {
+        iEvent.getByToken(_ksCollection,v0candidates_ks);
+        if(!v0candidates_ks.isValid()) return;
+    }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> v0candidates_la;
-    iEvent.getByToken(_laCollection,v0candidates_la);
-    if(!v0candidates_la.isValid()) return;
+    if(doLa_)
+    {
+        iEvent.getByToken(_laCollection,v0candidates_la);
+        if(!v0candidates_la.isValid()) return;
+    }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
-    iEvent.getByToken(_xiCollection, xiCollection);
-    if(!xiCollection.isValid()) return;
+    if(doXi_)
+    {
+        iEvent.getByToken(_xiCollection, xiCollection);
+        if(!xiCollection.isValid()) return;
+    }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> omCollection;
-    iEvent.getByToken(_omCollection, omCollection);
-    if(!omCollection.isValid()) return;
+    if(doOm_)
+    {
+        iEvent.getByToken(_omCollection, omCollection);
+        if(!omCollection.isValid()) return;
+    }
 
     edm::Handle<reco::TrackCollection> tracks;
     iEvent.getByToken(_trkSrc, tracks);
@@ -118,26 +134,39 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
     for(int i=0;i<ptbin_n_;i++)
     {
-        pVect_trg_ks[i] = new vector<TLorentzVector>;
-        pVect_trg_la[i] = new vector<TLorentzVector>;
-        pVect_dau_ks[i] = new vector<TVector3>;
-        pVect_dau_la[i] = new vector<TVector3>;
-        pVect_trg_ks_bkg[i] = new vector<TLorentzVector>;
-        pVect_trg_la_bkg[i] = new vector<TLorentzVector>;
-        pVect_dau_ks_bkg[i] = new vector<TVector3>;
-        pVect_dau_la_bkg[i] = new vector<TVector3>;
+        if(doKs_)
+        {
+            pVect_trg_ks[i] = new vector<TLorentzVector>;
+            pVect_dau_ks[i] = new vector<TVector3>;
+            pVect_trg_ks_bkg[i] = new vector<TLorentzVector>;
+            pVect_dau_ks_bkg[i] = new vector<TVector3>;
+        }
+
+        if(doLa_)
+        {
+            pVect_trg_la[i] = new vector<TLorentzVector>;
+            pVect_dau_la[i] = new vector<TVector3>;
+            pVect_trg_la_bkg[i] = new vector<TLorentzVector>;
+            pVect_dau_la_bkg[i] = new vector<TVector3>;
+        }
     }
     for(int i=0; i<ptbin_n_cas_; i++)
     {
-        pepVect_xi_peak[i]    = new vector<TLorentzVector>;
-        pepVect_xi_side[i]    = new vector<TLorentzVector>;
-        pepVect_dau_xi_peak[i]= new vector<TVector3>;
-        pepVect_dau_xi_side[i]= new vector<TVector3>;
+        if(doXi_)
+        {
+            pepVect_xi_peak[i]    = new vector<TLorentzVector>;
+            pepVect_xi_side[i]    = new vector<TLorentzVector>;
+            pepVect_dau_xi_peak[i]= new vector<TVector3>;
+            pepVect_dau_xi_side[i]= new vector<TVector3>;
+        }
 
-        pepVect_om_peak[i]    = new vector<TLorentzVector>;
-        pepVect_om_side[i]    = new vector<TLorentzVector>;
-        pepVect_dau_om_peak[i]= new vector<TVector3>;
-        pepVect_dau_om_side[i]= new vector<TVector3>;
+        if(doOm_)
+        {
+            pepVect_om_peak[i]    = new vector<TLorentzVector>;
+            pepVect_om_side[i]    = new vector<TLorentzVector>;
+            pepVect_dau_om_peak[i]= new vector<TVector3>;
+            pepVect_dau_om_side[i]= new vector<TVector3>;
+        }
     }
 
     pVect_ass = new vector<TVector3>;
@@ -172,418 +201,430 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
     if(nMult_ass_good<multMax_ && nMult_ass_good>=multMin_){
         hMult_accept->Fill(nMult_ass_good);
-        for(unsigned it=0; it<v0candidates_ks->size(); ++it){
+        if(doKs_)
+        {
+            for(unsigned it=0; it<v0candidates_ks->size(); ++it){
 
-            const reco::VertexCompositeCandidate & trk = (*v0candidates_ks)[it];
+                const reco::VertexCompositeCandidate & trk = (*v0candidates_ks)[it];
 
-            double secvz=-999.9, secvx=-999.9, secvy=-999.9;
-            //double secvzError=-999.9, secvxError=-999.9, secvyError=-999.9;
+                double secvz=-999.9, secvx=-999.9, secvy=-999.9;
+                //double secvzError=-999.9, secvxError=-999.9, secvyError=-999.9;
 
-            secvz = trk.vz(); secvx = trk.vx(); secvy = trk.vy();
-            //secvzError = trk.vertexCovariance(2,2); secvxError = trk.vertexCovariance(0,0); secvyError = trk.vertexCovariance(1,1);
+                secvz = trk.vz(); secvx = trk.vx(); secvy = trk.vy();
+                //secvzError = trk.vertexCovariance(2,2); secvxError = trk.vertexCovariance(0,0); secvyError = trk.vertexCovariance(1,1);
 
-            double eta = trk.eta();
-            double phi = trk.phi();
-            double pt  = trk.pt();
-            double mass = trk.mass();
-            double px = trk.px();
-            double py = trk.py();
-            double pz = trk.pz();
-            double rapidity = trk.rapidity();
-            double EffXchoice = 0;
-
-            if(doRap_)
-                EffXchoice = rapidity;
-            else
-                EffXchoice = eta;
-
-            TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
-            TVector3 secvec(px,py,pz);
-
-            double agl = cos(secvec.Angle(ptosvec));
-
-            if(!doGenRef_)
-            {
-                if(agl<=0.999) continue;
-            }
-
-            typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
-            typedef ROOT::Math::SVector<double, 3> SVector3;
-
-            SMatrixSym3D totalCov = vtx.covariance() + trk.vertexCovariance();
-            SVector3 distanceVector(secvx-bestvx,secvy-bestvy,secvz-bestvz);
-
-            double dl = ROOT::Math::Mag(distanceVector);
-            double dlerror = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/dl;
-
-            double dlos = dl/dlerror;
-
-            if(!doGenRef_)
-            {
-                if(dlos<=5) continue;
-            }
-
-            const reco::Candidate * dau1 = trk.daughter(0);
-            const reco::Candidate * dau2 = trk.daughter(1);
-
-            double pxd1 = dau1->px();
-            double pyd1 = dau1->py();
-            double pzd1 = dau1->pz();
-            double pd1 = dau1->p();
-            double pxd2 = dau2->px();
-            double pyd2 = dau2->py();
-            double pzd2 = dau2->pz();
-            double pd2 = dau2->p();
-
-            TVector3 dauvec1(pxd1,pyd1,pzd1);
-            TVector3 dauvec2(pxd2,pyd2,pzd2);
-
-            TVector3 dauvecsum(dauvec1+dauvec2);
-            double v0masspiproton1 = sqrt((sqrt(0.93827*0.93827+pd1*pd1)+sqrt(0.13957*0.13957+pd2*pd2))*(sqrt(0.93827*0.93827+pd1*pd1)+sqrt(0.13957*0.13957+pd2*pd2))-dauvecsum.Mag2());
-
-            double v0masspiproton2 = sqrt((sqrt(0.13957*0.13957+pd1*pd1)+sqrt(0.93827*0.93827+pd2*pd2))*(sqrt(0.13957*0.13957+pd1*pd1)+sqrt(0.93827*0.93827+pd2*pd2))-dauvecsum.Mag2());
-
-            if(!doGenRef_)
-            {
-                if((v0masspiproton1>=(1.115683-mis_la_range_) && v0masspiproton1<=(1.115683+mis_la_range_)) || (v0masspiproton2>=(1.115683-mis_la_range_) && v0masspiproton2<=(1.115683+mis_la_range_)) ) continue;
-            }
-
-            //efficiency
-            double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt));
-
-            double eta_dau1 = dau1->eta();
-            double phi_dau1 = dau1->phi();
-            double pt_dau1 = dau1->pt();
-
-            double eta_dau2 = dau2->eta();
-            double phi_dau2 = dau2->phi();
-            double pt_dau2 = dau2->pt();
-
-            TLorentzVector pvector;
-            pvector.SetPtEtaPhiE(pt,eta,phi,rapidity);
-
-            TVector3 pvector_dau1;
-            pvector_dau1.SetPtEtaPhi(pt_dau1,eta_dau1,phi_dau1);
-
-            TVector3 pvector_dau2;
-            pvector_dau2.SetPtEtaPhi(pt_dau2,eta_dau2,phi_dau2);
-
-            for(int i=0;i<ptbin_n_;i++)
-            {
-                double rapOrEtaMaxCut = etaMax_trg_;
-                double rapOrEtaMinCut = etaMin_trg_;
-                double rapOrEta = eta;
+                double eta = trk.eta();
+                double phi = trk.phi();
+                double pt  = trk.pt();
+                double mass = trk.mass();
+                double px = trk.px();
+                double py = trk.py();
+                double pz = trk.pz();
+                double rapidity = trk.rapidity();
+                double EffXchoice = 0;
 
                 if(doRap_)
+                    EffXchoice = rapidity;
+                else
+                    EffXchoice = eta;
+
+                TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
+                TVector3 secvec(px,py,pz);
+
+                double agl = cos(secvec.Angle(ptosvec));
+
+                if(!doGenRef_)
                 {
-                    rapOrEtaMaxCut = 1.0;
-                    rapOrEtaMinCut = -1.0;
-                    rapOrEta = rapidity;
+                    if(agl<=0.999) continue;
                 }
-                if(rapOrEta<=rapOrEtaMaxCut && rapOrEta>=rapOrEtaMinCut && pt<=ptcut_ks_[i+1] && pt>=ptcut_ks_[i]){
-                    hMass_ks[i]->Fill(mass);
-                    if(mass<=(mean_ks_[i]+peakFactor_*sigma_ks_[i]) && mass>=(mean_ks_[i]-peakFactor_*sigma_ks_[i])){
-                        pVect_trg_ks[i]->push_back(pvector);
-                        pVect_dau_ks[i]->push_back(pvector_dau1);
-                        pVect_dau_ks[i]->push_back(pvector_dau2);
-                        hPt_ks[i]->Fill(pt,1.0/effks);
-						hEta_ks[i]->Fill(eta,1.0/effks);
-                        hRap_ks[i]->Fill(rapidity);
-                        hRap_ks_Lorentz[i]->Fill(pvector.E());
-                        double KET = sqrt(mass*mass + pt*pt) - mass;
-                        hKET_ks[i]->Fill(KET,1.0/effks);
+
+                typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
+                typedef ROOT::Math::SVector<double, 3> SVector3;
+
+                SMatrixSym3D totalCov = vtx.covariance() + trk.vertexCovariance();
+                SVector3 distanceVector(secvx-bestvx,secvy-bestvy,secvz-bestvz);
+
+                double dl = ROOT::Math::Mag(distanceVector);
+                double dlerror = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/dl;
+
+                double dlos = dl/dlerror;
+
+                if(!doGenRef_)
+                {
+                    if(dlos<=5) continue;
+                }
+
+                const reco::Candidate * dau1 = trk.daughter(0);
+                const reco::Candidate * dau2 = trk.daughter(1);
+
+                double pxd1 = dau1->px();
+                double pyd1 = dau1->py();
+                double pzd1 = dau1->pz();
+                double pd1 = dau1->p();
+                double pxd2 = dau2->px();
+                double pyd2 = dau2->py();
+                double pzd2 = dau2->pz();
+                double pd2 = dau2->p();
+
+                TVector3 dauvec1(pxd1,pyd1,pzd1);
+                TVector3 dauvec2(pxd2,pyd2,pzd2);
+
+                TVector3 dauvecsum(dauvec1+dauvec2);
+                double v0masspiproton1 = sqrt((sqrt(0.93827*0.93827+pd1*pd1)+sqrt(0.13957*0.13957+pd2*pd2))*(sqrt(0.93827*0.93827+pd1*pd1)+sqrt(0.13957*0.13957+pd2*pd2))-dauvecsum.Mag2());
+
+                double v0masspiproton2 = sqrt((sqrt(0.13957*0.13957+pd1*pd1)+sqrt(0.93827*0.93827+pd2*pd2))*(sqrt(0.13957*0.13957+pd1*pd1)+sqrt(0.93827*0.93827+pd2*pd2))-dauvecsum.Mag2());
+
+                if(!doGenRef_)
+                {
+                    if((v0masspiproton1>=(1.115683-mis_la_range_) && v0masspiproton1<=(1.115683+mis_la_range_)) || (v0masspiproton2>=(1.115683-mis_la_range_) && v0masspiproton2<=(1.115683+mis_la_range_)) ) continue;
+                }
+
+                //efficiency
+                double effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt));
+
+                double eta_dau1 = dau1->eta();
+                double phi_dau1 = dau1->phi();
+                double pt_dau1 = dau1->pt();
+
+                double eta_dau2 = dau2->eta();
+                double phi_dau2 = dau2->phi();
+                double pt_dau2 = dau2->pt();
+
+                TLorentzVector pvector;
+                pvector.SetPtEtaPhiE(pt,eta,phi,rapidity);
+
+                TVector3 pvector_dau1;
+                pvector_dau1.SetPtEtaPhi(pt_dau1,eta_dau1,phi_dau1);
+
+                TVector3 pvector_dau2;
+                pvector_dau2.SetPtEtaPhi(pt_dau2,eta_dau2,phi_dau2);
+
+                for(int i=0;i<ptbin_n_;i++)
+                {
+                    double rapOrEtaMaxCut = etaMax_trg_;
+                    double rapOrEtaMinCut = etaMin_trg_;
+                    double rapOrEta = eta;
+
+                    if(doRap_)
+                    {
+                        rapOrEtaMaxCut = 1.0;
+                        rapOrEtaMinCut = -1.0;
+                        rapOrEta = rapidity;
                     }
-                    if((mass<=(mean_ks_[i]-sideFactor_*sigma_ks_[i]) && mass>=0.425) || (mass<=0.57 && mass>=(mean_ks_[i]+sideFactor_*sigma_ks_[i]))){
-                        pVect_trg_ks_bkg[i]->push_back(pvector);
-                        pVect_dau_ks_bkg[i]->push_back(pvector_dau1);
-                        pVect_dau_ks_bkg[i]->push_back(pvector_dau2);
-                        hPt_ks_bkg[i]->Fill(pt,1.0/effks);
-						hEta_ks_bkg[i]->Fill(eta,1.0/effks);
-                        hRap_ks_bkg[i]->Fill(rapidity);
-                        double KET = sqrt(mass*mass + pt*pt) - mass;
-                        hKET_ks_bkg[i]->Fill(KET,1.0/effks);
+                    if(rapOrEta<=rapOrEtaMaxCut && rapOrEta>=rapOrEtaMinCut && pt<=ptcut_ks_[i+1] && pt>=ptcut_ks_[i]){
+                        hMass_ks[i]->Fill(mass);
+                        if(mass<=(mean_ks_[i]+peakFactor_*sigma_ks_[i]) && mass>=(mean_ks_[i]-peakFactor_*sigma_ks_[i])){
+                            pVect_trg_ks[i]->push_back(pvector);
+                            pVect_dau_ks[i]->push_back(pvector_dau1);
+                            pVect_dau_ks[i]->push_back(pvector_dau2);
+                            hPt_ks[i]->Fill(pt,1.0/effks);
+                            hEta_ks[i]->Fill(eta,1.0/effks);
+                            hRap_ks[i]->Fill(rapidity);
+                            hRap_ks_Lorentz[i]->Fill(pvector.E());
+                            double KET = sqrt(mass*mass + pt*pt) - mass;
+                            hKET_ks[i]->Fill(KET,1.0/effks);
+                        }
+                        if((mass<=(mean_ks_[i]-sideFactor_*sigma_ks_[i]) && mass>=0.425) || (mass<=0.57 && mass>=(mean_ks_[i]+sideFactor_*sigma_ks_[i]))){
+                            pVect_trg_ks_bkg[i]->push_back(pvector);
+                            pVect_dau_ks_bkg[i]->push_back(pvector_dau1);
+                            pVect_dau_ks_bkg[i]->push_back(pvector_dau2);
+                            hPt_ks_bkg[i]->Fill(pt,1.0/effks);
+                            hEta_ks_bkg[i]->Fill(eta,1.0/effks);
+                            hRap_ks_bkg[i]->Fill(rapidity);
+                            double KET = sqrt(mass*mass + pt*pt) - mass;
+                            hKET_ks_bkg[i]->Fill(KET,1.0/effks);
+                        }
                     }
                 }
             }
         }
 
-        for(unsigned it=0; it<v0candidates_la->size(); ++it){
+        if(doLa_)
+        {
+            for(unsigned it=0; it<v0candidates_la->size(); ++it){
 
-            const reco::VertexCompositeCandidate & trk = (*v0candidates_la)[it];
+                const reco::VertexCompositeCandidate & trk = (*v0candidates_la)[it];
 
-            double secvz=-999.9, secvx=-999.9, secvy=-999.9;
-            //double secvzError=-999.9, secvxError=-999.9, secvyError=-999.9;
+                double secvz=-999.9, secvx=-999.9, secvy=-999.9;
+                //double secvzError=-999.9, secvxError=-999.9, secvyError=-999.9;
 
-            secvz = trk.vz(); secvx = trk.vx(); secvy = trk.vy();
-            //secvzError = trk.vertexCovariance(2,2); secvxError = trk.vertexCovariance(0,0); secvyError = trk.vertexCovariance(1,1);
+                secvz = trk.vz(); secvx = trk.vx(); secvy = trk.vy();
+                //secvzError = trk.vertexCovariance(2,2); secvxError = trk.vertexCovariance(0,0); secvyError = trk.vertexCovariance(1,1);
 
-            double eta = trk.eta();
-            double phi = trk.phi();
-            double pt  = trk.pt();
-            double mass = trk.mass();
-            double px = trk.px();
-            double py = trk.py();
-            double pz = trk.pz();
-            double rapidity = trk.rapidity();
-            double EffXchoice = 0;
-
-            if(doRap_)
-                EffXchoice = rapidity;
-            else
-                EffXchoice = eta;
-
-            TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
-            TVector3 secvec(px,py,pz);
-
-            double agl = cos(secvec.Angle(ptosvec));
-
-            if(!doGenRef_)
-            {
-                if(agl<=0.999) continue;
-            }
-
-            typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
-            typedef ROOT::Math::SVector<double, 3> SVector3;
-
-            SMatrixSym3D totalCov = vtx.covariance() + trk.vertexCovariance();
-            SVector3 distanceVector(secvx-bestvx,secvy-bestvy,secvz-bestvz);
-
-            double dl = ROOT::Math::Mag(distanceVector);
-            double dlerror = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/dl;
-
-            double dlos = dl/dlerror;
-
-            if(!doGenRef_)
-            {
-                if(dlos<=5) continue;
-            }
-
-            const reco::Candidate * dau1 = trk.daughter(0);
-            const reco::Candidate * dau2 = trk.daughter(1);
-
-            double pxd1 = dau1->px();
-            double pyd1 = dau1->py();
-            double pzd1 = dau1->pz();
-            double pd1 = dau1->p();
-            double pxd2 = dau2->px();
-            double pyd2 = dau2->py();
-            double pzd2 = dau2->pz();
-            double pd2 = dau2->p();
-
-            TVector3 dauvec1(pxd1,pyd1,pzd1);
-            TVector3 dauvec2(pxd2,pyd2,pzd2);
-
-            TVector3 dauvecsum(dauvec1+dauvec2);
-            double v0masspipi = sqrt((sqrt(0.13957*0.13957+pd1*pd1)+sqrt(0.13957*0.13957+pd2*pd2))*(sqrt(0.13957*0.13957+pd1*pd1)+sqrt(0.13957*0.13957+pd2*pd2))-dauvecsum.Mag2());
-            double v0massee = sqrt((sqrt(0.000511*0.000511+pd1*pd1)+sqrt(0.000511*0.000511+pd2*pd2))*(sqrt(0.000511*0.000511+pd1*pd1)+sqrt(0.000511*0.000511+pd2*pd2))-dauvecsum.Mag2());
-
-            if(!doGenRef_)
-            {
-                if( (v0masspipi>=(0.497614-mis_ks_range_) && v0masspipi<=(0.497614+mis_ks_range_)) || v0massee <= mis_ph_range_ ) continue;
-            }
-
-            //efficiency
-            double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt));
-
-            double eta_dau1 = dau1->eta();
-            double phi_dau1 = dau1->phi();
-            double pt_dau1 = dau1->pt();
-
-            double eta_dau2 = dau2->eta();
-            double phi_dau2 = dau2->phi();
-            double pt_dau2 = dau2->pt();
-
-
-            TLorentzVector pvector;
-            pvector.SetPtEtaPhiE(pt,eta,phi,rapidity);
-
-            TVector3 pvector_dau1;
-            pvector_dau1.SetPtEtaPhi(pt_dau1,eta_dau1,phi_dau1);
-
-            TVector3 pvector_dau2;
-            pvector_dau2.SetPtEtaPhi(pt_dau2,eta_dau2,phi_dau2);
-
-            for(int i=0;i<ptbin_n_;i++)
-            {
-                double rapOrEtaMaxCut = etaMax_trg_;
-                double rapOrEtaMinCut = etaMin_trg_;
-                double rapOrEta = eta;
+                double eta = trk.eta();
+                double phi = trk.phi();
+                double pt  = trk.pt();
+                double mass = trk.mass();
+                double px = trk.px();
+                double py = trk.py();
+                double pz = trk.pz();
+                double rapidity = trk.rapidity();
+                double EffXchoice = 0;
 
                 if(doRap_)
+                    EffXchoice = rapidity;
+                else
+                    EffXchoice = eta;
+
+                TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
+                TVector3 secvec(px,py,pz);
+
+                double agl = cos(secvec.Angle(ptosvec));
+
+                if(!doGenRef_)
                 {
-                    rapOrEtaMaxCut = 1.0;
-                    rapOrEtaMinCut = -1.0;
-                    rapOrEta = rapidity;
+                    if(agl<=0.999) continue;
                 }
-                if(rapOrEta<=rapOrEtaMaxCut && rapOrEta>=rapOrEtaMinCut && pt<=ptcut_la_[i+1] && pt>=ptcut_la_[i]){
-                    hMass_la[i]->Fill(mass);
-                    if(mass<=(mean_la_[i]+peakFactor_*sigma_la_[i]) && mass>=(mean_la_[i]-peakFactor_*sigma_la_[i])){
-                        pVect_trg_la[i]->push_back(pvector);
-                        pVect_dau_la[i]->push_back(pvector_dau1);
-                        pVect_dau_la[i]->push_back(pvector_dau2);
-                        hPt_la[i]->Fill(pt,1.0/effla);
-                        hEta_la[i]->Fill(eta,1.0/effla);
-                        hRap_la[i]->Fill(rapidity);
-                        double KET = sqrt(mass*mass + pt*pt) - mass;
-                        hKET_la[i]->Fill(KET,1.0/effla);
+
+                typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
+                typedef ROOT::Math::SVector<double, 3> SVector3;
+
+                SMatrixSym3D totalCov = vtx.covariance() + trk.vertexCovariance();
+                SVector3 distanceVector(secvx-bestvx,secvy-bestvy,secvz-bestvz);
+
+                double dl = ROOT::Math::Mag(distanceVector);
+                double dlerror = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/dl;
+
+                double dlos = dl/dlerror;
+
+                if(!doGenRef_)
+                {
+                    if(dlos<=5) continue;
+                }
+
+                const reco::Candidate * dau1 = trk.daughter(0);
+                const reco::Candidate * dau2 = trk.daughter(1);
+
+                double pxd1 = dau1->px();
+                double pyd1 = dau1->py();
+                double pzd1 = dau1->pz();
+                double pd1 = dau1->p();
+                double pxd2 = dau2->px();
+                double pyd2 = dau2->py();
+                double pzd2 = dau2->pz();
+                double pd2 = dau2->p();
+
+                TVector3 dauvec1(pxd1,pyd1,pzd1);
+                TVector3 dauvec2(pxd2,pyd2,pzd2);
+
+                TVector3 dauvecsum(dauvec1+dauvec2);
+                double v0masspipi = sqrt((sqrt(0.13957*0.13957+pd1*pd1)+sqrt(0.13957*0.13957+pd2*pd2))*(sqrt(0.13957*0.13957+pd1*pd1)+sqrt(0.13957*0.13957+pd2*pd2))-dauvecsum.Mag2());
+                double v0massee = sqrt((sqrt(0.000511*0.000511+pd1*pd1)+sqrt(0.000511*0.000511+pd2*pd2))*(sqrt(0.000511*0.000511+pd1*pd1)+sqrt(0.000511*0.000511+pd2*pd2))-dauvecsum.Mag2());
+
+                if(!doGenRef_)
+                {
+                    if( (v0masspipi>=(0.497614-mis_ks_range_) && v0masspipi<=(0.497614+mis_ks_range_)) || v0massee <= mis_ph_range_ ) continue;
+                }
+
+                //efficiency
+                double effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt));
+
+                double eta_dau1 = dau1->eta();
+                double phi_dau1 = dau1->phi();
+                double pt_dau1 = dau1->pt();
+
+                double eta_dau2 = dau2->eta();
+                double phi_dau2 = dau2->phi();
+                double pt_dau2 = dau2->pt();
+
+
+                TLorentzVector pvector;
+                pvector.SetPtEtaPhiE(pt,eta,phi,rapidity);
+
+                TVector3 pvector_dau1;
+                pvector_dau1.SetPtEtaPhi(pt_dau1,eta_dau1,phi_dau1);
+
+                TVector3 pvector_dau2;
+                pvector_dau2.SetPtEtaPhi(pt_dau2,eta_dau2,phi_dau2);
+
+                for(int i=0;i<ptbin_n_;i++)
+                {
+                    double rapOrEtaMaxCut = etaMax_trg_;
+                    double rapOrEtaMinCut = etaMin_trg_;
+                    double rapOrEta = eta;
+
+                    if(doRap_)
+                    {
+                        rapOrEtaMaxCut = 1.0;
+                        rapOrEtaMinCut = -1.0;
+                        rapOrEta = rapidity;
                     }
-                    if((mass<=1.165 && mass>=(mean_la_[i]+sideFactor_*sigma_la_[i])) || (mass<=(mean_la_[i]-sideFactor_*sigma_la_[i]) && mass>=1.075)){
-                        pVect_trg_la_bkg[i]->push_back(pvector);
-                        pVect_dau_la_bkg[i]->push_back(pvector_dau1);
-                        pVect_dau_la_bkg[i]->push_back(pvector_dau2);
-                        hPt_la_bkg[i]->Fill(pt,1.0/effla);
-                        hEta_la_bkg[i]->Fill(eta,1.0/effla);
-                        hRap_la_bkg[i]->Fill(rapidity);
-                        double KET = sqrt(mass*mass + pt*pt) - mass;
-                        hKET_la_bkg[i]->Fill(KET,1.0/effla);
+                    if(rapOrEta<=rapOrEtaMaxCut && rapOrEta>=rapOrEtaMinCut && pt<=ptcut_la_[i+1] && pt>=ptcut_la_[i]){
+                        hMass_la[i]->Fill(mass);
+                        if(mass<=(mean_la_[i]+peakFactor_*sigma_la_[i]) && mass>=(mean_la_[i]-peakFactor_*sigma_la_[i])){
+                            pVect_trg_la[i]->push_back(pvector);
+                            pVect_dau_la[i]->push_back(pvector_dau1);
+                            pVect_dau_la[i]->push_back(pvector_dau2);
+                            hPt_la[i]->Fill(pt,1.0/effla);
+                            hEta_la[i]->Fill(eta,1.0/effla);
+                            hRap_la[i]->Fill(rapidity);
+                            double KET = sqrt(mass*mass + pt*pt) - mass;
+                            hKET_la[i]->Fill(KET,1.0/effla);
+                        }
+                        if((mass<=1.165 && mass>=(mean_la_[i]+sideFactor_*sigma_la_[i])) || (mass<=(mean_la_[i]-sideFactor_*sigma_la_[i]) && mass>=1.075)){
+                            pVect_trg_la_bkg[i]->push_back(pvector);
+                            pVect_dau_la_bkg[i]->push_back(pvector_dau1);
+                            pVect_dau_la_bkg[i]->push_back(pvector_dau2);
+                            hPt_la_bkg[i]->Fill(pt,1.0/effla);
+                            hEta_la_bkg[i]->Fill(eta,1.0/effla);
+                            hRap_la_bkg[i]->Fill(rapidity);
+                            double KET = sqrt(mass*mass + pt*pt) - mass;
+                            hKET_la_bkg[i]->Fill(KET,1.0/effla);
+                        }
                     }
                 }
             }
         }
 
-        for(reco::VertexCompositeCandidateCollection::const_iterator xiCand =
-                xiCollection->begin(); xiCand != xiCollection->end(); xiCand++)
+        if(doXi_)
         {
-            // Make 2D Mass v Pt
-            double xi_eta = xiCand->eta();
-            double xi_phi = xiCand->phi();
-            double mass   = xiCand->mass();
-            double xi_pT  = xiCand->pt();
-            double xi_rap = xiCand->rapidity();
-
-            MassPtXi->Fill(mass,xi_pT);
-            double Ket = sqrt(mass*mass + xi_pT*xi_pT) - mass;
-            double EffXchoice = 0;
-            UNUSED(EffXchoice);
-
-            const reco::Candidate *dau1 = xiCand->daughter(0);
-            const reco::Candidate *dau2 = xiCand->daughter(1);
-
-            double pt_dau1 = dau1->pt();
-            double eta_dau1 = dau1->eta();
-            double phi_dau1 = dau1->phi();
-
-            double pt_dau2 = dau2->pt();
-            double eta_dau2 = dau2->eta();
-            double phi_dau2 = dau2->phi();
-
-            TVector3 dau1PEPvector;
-            dau1PEPvector.SetPtEtaPhi(pt_dau1,eta_dau1,phi_dau1);
-
-            TVector3 dau2PEPvector;
-            dau2PEPvector.SetPtEtaPhi(pt_dau2,eta_dau2,phi_dau2);
-
-            if(doRap_)
-                EffXchoice = xi_rap;
-            else
-                EffXchoice = xi_eta;
-
-            //efficiency
-            //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,xi_pT));
-
-            // Make vector of Xi Candidate parameters
-            TLorentzVector xiPEPvector;
-            xiPEPvector.SetPtEtaPhiE(xi_pT,xi_eta,xi_phi,xi_rap);
-            for(int i=0; i<ptbin_n_cas_;i++)
+            for(reco::VertexCompositeCandidateCollection::const_iterator xiCand =
+                    xiCollection->begin(); xiCand != xiCollection->end(); xiCand++)
             {
-                if(xi_pT <= ptcut_xi_[i+1] && xi_pT >= ptcut_xi_[i])
+                // Make 2D Mass v Pt
+                double xi_eta = xiCand->eta();
+                double xi_phi = xiCand->phi();
+                double mass   = xiCand->mass();
+                double xi_pT  = xiCand->pt();
+                double xi_rap = xiCand->rapidity();
+
+                MassPtXi->Fill(mass,xi_pT);
+                double Ket = sqrt(mass*mass + xi_pT*xi_pT) - mass;
+                double EffXchoice = 0;
+                UNUSED(EffXchoice);
+
+                const reco::Candidate *dau1 = xiCand->daughter(0);
+                const reco::Candidate *dau2 = xiCand->daughter(1);
+
+                double pt_dau1 = dau1->pt();
+                double eta_dau1 = dau1->eta();
+                double phi_dau1 = dau1->phi();
+
+                double pt_dau2 = dau2->pt();
+                double eta_dau2 = dau2->eta();
+                double phi_dau2 = dau2->phi();
+
+                TVector3 dau1PEPvector;
+                dau1PEPvector.SetPtEtaPhi(pt_dau1,eta_dau1,phi_dau1);
+
+                TVector3 dau2PEPvector;
+                dau2PEPvector.SetPtEtaPhi(pt_dau2,eta_dau2,phi_dau2);
+
+                if(doRap_)
+                    EffXchoice = xi_rap;
+                else
+                    EffXchoice = xi_eta;
+
+                //efficiency
+                //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,xi_pT));
+
+                // Make vector of Xi Candidate parameters
+                TLorentzVector xiPEPvector;
+                xiPEPvector.SetPtEtaPhiE(xi_pT,xi_eta,xi_phi,xi_rap);
+                for(int i=0; i<ptbin_n_cas_;i++)
                 {
-                    Mass_xi[i]->Fill(mass);
-                    //peak
-                    if(mass >= (mean_xi_[i] - peakFactor_*sigma_xi_[i]) && mass <= (mean_xi_[i] + peakFactor_*sigma_xi_[i]))
+                    if(xi_pT <= ptcut_xi_[i+1] && xi_pT >= ptcut_xi_[i])
                     {
-                        pepVect_xi_peak[i]->push_back(xiPEPvector);
-                        pepVect_dau_xi_peak[i]->push_back(dau1PEPvector);
-                        pepVect_dau_xi_peak[i]->push_back(dau2PEPvector);
-                        KET_xi[i]->Fill(Ket);//,1.0/effxi);
-                        Pt_xi[i]->Fill(xi_pT);//,1.0/effxi);
-                        Eta_xi[i]->Fill(xi_eta);//,1.0/effxi);
-                        rap_xi[i]->Fill(xi_rap);//,1.0/effxi);
-                    }
-                    //sideband
-                    if((mass <= (mean_xi_[i] - sideFactor_*sigma_xi_[i]) && mass >= 1.25) || (mass <= 1.40 && mass >= (mean_xi_[i] + sideFactor_*sigma_xi_[i])))
-                    {
-                        pepVect_xi_side[i]->push_back(xiPEPvector);
-                        pepVect_dau_xi_side[i]->push_back(dau1PEPvector);
-                        pepVect_dau_xi_side[i]->push_back(dau2PEPvector);
-                        KET_xi_bkg[i]->Fill(Ket);//,1.0/effxi);
-                        Pt_xi_bkg[i]->Fill(xi_pT);//,1.0/effxi);
-                        Eta_xi_bkg[i]->Fill(xi_eta);//,1.0/effxi);
-                        rap_xi_bkg[i]->Fill(xi_rap);//,1.0/effxi);
+                        Mass_xi[i]->Fill(mass);
+                        //peak
+                        if(mass >= (mean_xi_[i] - peakFactor_*sigma_xi_[i]) && mass <= (mean_xi_[i] + peakFactor_*sigma_xi_[i]))
+                        {
+                            pepVect_xi_peak[i]->push_back(xiPEPvector);
+                            pepVect_dau_xi_peak[i]->push_back(dau1PEPvector);
+                            pepVect_dau_xi_peak[i]->push_back(dau2PEPvector);
+                            KET_xi[i]->Fill(Ket);//,1.0/effxi);
+                            Pt_xi[i]->Fill(xi_pT);//,1.0/effxi);
+                            Eta_xi[i]->Fill(xi_eta);//,1.0/effxi);
+                            rap_xi[i]->Fill(xi_rap);//,1.0/effxi);
+                        }
+                        //sideband
+                        if((mass <= (mean_xi_[i] - sideFactor_*sigma_xi_[i]) && mass >= 1.25) || (mass <= 1.40 && mass >= (mean_xi_[i] + sideFactor_*sigma_xi_[i])))
+                        {
+                            pepVect_xi_side[i]->push_back(xiPEPvector);
+                            pepVect_dau_xi_side[i]->push_back(dau1PEPvector);
+                            pepVect_dau_xi_side[i]->push_back(dau2PEPvector);
+                            KET_xi_bkg[i]->Fill(Ket);//,1.0/effxi);
+                            Pt_xi_bkg[i]->Fill(xi_pT);//,1.0/effxi);
+                            Eta_xi_bkg[i]->Fill(xi_eta);//,1.0/effxi);
+                            rap_xi_bkg[i]->Fill(xi_rap);//,1.0/effxi);
+                        }
                     }
                 }
             }
         }
 
-        for(reco::VertexCompositeCandidateCollection::const_iterator omCand =
-                omCollection->begin(); omCand != omCollection->end(); omCand++)
+        if(doOm_)
         {
-            // Make 2D Mass v Pt
-            double om_eta = omCand->eta();
-            double om_phi = omCand->phi();
-            double mass   = omCand->mass();
-            double om_pT  = omCand->pt();
-            double om_rap = omCand->rapidity();
-
-            MassPtOm->Fill(mass,om_pT);
-            double Ket = sqrt(mass*mass + om_pT*om_pT) - mass;
-            double EffXchoice = 0;
-            UNUSED(EffXchoice);
-
-            const reco::Candidate *dau1 = omCand->daughter(0);
-            const reco::Candidate *dau2 = omCand->daughter(1);
-
-            double pt_dau1 = dau1->pt();
-            double eta_dau1 = dau1->eta();
-            double phi_dau1 = dau1->phi();
-
-            double pt_dau2 = dau2->pt();
-            double eta_dau2 = dau2->eta();
-            double phi_dau2 = dau2->phi();
-
-            TVector3 dau1PEPvector;
-            dau1PEPvector.SetPtEtaPhi(pt_dau1,eta_dau1,phi_dau1);
-
-            TVector3 dau2PEPvector;
-            dau2PEPvector.SetPtEtaPhi(pt_dau2,eta_dau2,phi_dau2);
-
-            if(doRap_)
-                EffXchoice = om_rap;
-            else
-                EffXchoice = om_eta;
-
-            //efficiency
-            //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,om_pT));
-
-            // Make vector of Om Candidate parameters
-            TLorentzVector omPEPvector;
-            omPEPvector.SetPtEtaPhiE(om_pT,om_eta,om_phi,om_rap);
-            for(int i=0; i<ptbin_n_cas_;i++)
+            for(reco::VertexCompositeCandidateCollection::const_iterator omCand =
+                    omCollection->begin(); omCand != omCollection->end(); omCand++)
             {
-                if(om_pT <= ptcut_om_[i+1] && om_pT >= ptcut_om_[i])
+                // Make 2D Mass v Pt
+                double om_eta = omCand->eta();
+                double om_phi = omCand->phi();
+                double mass   = omCand->mass();
+                double om_pT  = omCand->pt();
+                double om_rap = omCand->rapidity();
+
+                MassPtOm->Fill(mass,om_pT);
+                double Ket = sqrt(mass*mass + om_pT*om_pT) - mass;
+                double EffXchoice = 0;
+                UNUSED(EffXchoice);
+
+                const reco::Candidate *dau1 = omCand->daughter(0);
+                const reco::Candidate *dau2 = omCand->daughter(1);
+
+                double pt_dau1 = dau1->pt();
+                double eta_dau1 = dau1->eta();
+                double phi_dau1 = dau1->phi();
+
+                double pt_dau2 = dau2->pt();
+                double eta_dau2 = dau2->eta();
+                double phi_dau2 = dau2->phi();
+
+                TVector3 dau1PEPvector;
+                dau1PEPvector.SetPtEtaPhi(pt_dau1,eta_dau1,phi_dau1);
+
+                TVector3 dau2PEPvector;
+                dau2PEPvector.SetPtEtaPhi(pt_dau2,eta_dau2,phi_dau2);
+
+                if(doRap_)
+                    EffXchoice = om_rap;
+                else
+                    EffXchoice = om_eta;
+
+                //efficiency
+                //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,om_pT));
+
+                // Make vector of Om Candidate parameters
+                TLorentzVector omPEPvector;
+                omPEPvector.SetPtEtaPhiE(om_pT,om_eta,om_phi,om_rap);
+                for(int i=0; i<ptbin_n_cas_;i++)
                 {
-                    Mass_om[i]->Fill(mass);
-                    //peak
-                    if(mass >= (mean_om_[i] - peakFactor_*sigma_om_[i]) && mass <= (mean_om_[i] + peakFactor_*sigma_om_[i]))
+                    if(om_pT <= ptcut_om_[i+1] && om_pT >= ptcut_om_[i])
                     {
-                        pepVect_om_peak[i]->push_back(omPEPvector);
-                        pepVect_dau_om_peak[i]->push_back(dau1PEPvector);
-                        pepVect_dau_om_peak[i]->push_back(dau2PEPvector);
-                        KET_om[i]->Fill(Ket);//,1.0/effom);
-                        Pt_om[i]->Fill(om_pT);//,1.0/effom);
-                        Eta_om[i]->Fill(om_eta);//,1.0/effom);
-                        rap_om[i]->Fill(om_rap);//,1.0/effom);
-                    }
-                    //sideband
-                    if((mass <= (mean_om_[i] - sideFactor_*sigma_om_[i]) && mass >= 1.6) || (mass <= 1.75 && mass >= (mean_om_[i] + sideFactor_*sigma_om_[i])))
-                    {
-                        pepVect_om_side[i]->push_back(omPEPvector);
-                        pepVect_dau_om_side[i]->push_back(dau1PEPvector);
-                        pepVect_dau_om_side[i]->push_back(dau2PEPvector);
-                        KET_om_bkg[i]->Fill(Ket);//,1.0/effom);
-                        Pt_om_bkg[i]->Fill(om_pT);//,1.0/effom);
-                        Eta_om_bkg[i]->Fill(om_eta);//,1.0/effom);
-                        rap_om_bkg[i]->Fill(om_rap);//,1.0/effom);
+                        Mass_om[i]->Fill(mass);
+                        //peak
+                        if(mass >= (mean_om_[i] - peakFactor_*sigma_om_[i]) && mass <= (mean_om_[i] + peakFactor_*sigma_om_[i]))
+                        {
+                            pepVect_om_peak[i]->push_back(omPEPvector);
+                            pepVect_dau_om_peak[i]->push_back(dau1PEPvector);
+                            pepVect_dau_om_peak[i]->push_back(dau2PEPvector);
+                            KET_om[i]->Fill(Ket);//,1.0/effom);
+                            Pt_om[i]->Fill(om_pT);//,1.0/effom);
+                            Eta_om[i]->Fill(om_eta);//,1.0/effom);
+                            rap_om[i]->Fill(om_rap);//,1.0/effom);
+                        }
+                        //sideband
+                        if((mass <= (mean_om_[i] - sideFactor_*sigma_om_[i]) && mass >= 1.6) || (mass <= 1.75 && mass >= (mean_om_[i] + sideFactor_*sigma_om_[i])))
+                        {
+                            pepVect_om_side[i]->push_back(omPEPvector);
+                            pepVect_dau_om_side[i]->push_back(dau1PEPvector);
+                            pepVect_dau_om_side[i]->push_back(dau2PEPvector);
+                            KET_om_bkg[i]->Fill(Ket);//,1.0/effom);
+                            Pt_om_bkg[i]->Fill(om_pT);//,1.0/effom);
+                            Eta_om_bkg[i]->Fill(om_eta);//,1.0/effom);
+                            rap_om_bkg[i]->Fill(om_rap);//,1.0/effom);
+                        }
                     }
                 }
             }
@@ -775,11 +816,11 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                     double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
-		if(rejectDaughter_)
-                {
-                    if(fabs(eta_ass-eta_trg_dau1)<0.03 && fabs(phi_ass-phi_trg_dau1)<0.03) continue;
-                    if(fabs(eta_ass-eta_trg_dau2)<0.03 && fabs(phi_ass-phi_trg_dau2)<0.03) continue;
-                }
+                    if(rejectDaughter_)
+                    {
+                        if(fabs(eta_ass-eta_trg_dau1)<0.03 && fabs(phi_ass-phi_trg_dau1)<0.03) continue;
+                        if(fabs(eta_ass-eta_trg_dau2)<0.03 && fabs(phi_ass-phi_trg_dau2)<0.03) continue;
+                    }
 
                     double deltaEta=eta_ass-eta_trg;
                     double deltaPhi=phi_ass-phi_trg;
@@ -1295,6 +1336,10 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 void
 V0CasCorrelation::beginJob()
 {
+    if(doKs_) cout << "Will Access Ks" << endl;
+    if(doLa_) cout << "Will Access La" << endl;
+    if(doXi_) cout << "Will Access Xi" << endl;
+    if(doOm_) cout << "Will Access Om" << endl;
     edm::Service<TFileService> fs;
 
     TH1::SetDefaultSumw2();
@@ -1329,17 +1374,16 @@ V0CasCorrelation::beginJob()
         hPt_ks[i] = fs->make<TH1D>(Form("Ptkshort_pt%d",i),";GeV",50000,0,25);
         hPt_la[i] = fs->make<TH1D>(Form("Ptlambda_pt%d",i),";GeV",50000,0,25);
         hEta_ks[i] = fs->make<TH1D>(Form("Etakshort_pt%d",i),";eta",24,-2.4,2.4);
-        hRap_ks[i] = fs->make<TH1D>(Form("Rapkshort_pt%d",i),";y",30,-1.5,1.5);
-        hRap_ks_Lorentz[i] = fs->make<TH1D>(Form("RapksLorentz_pt%d",i),";y",30,-1.5,1.5);
         hEta_la[i] = fs->make<TH1D>(Form("Etalambda_pt%d",i),";eta",24,-2.4,2.4);
+        hRap_ks[i] = fs->make<TH1D>(Form("Rapkshort_pt%d",i),";y",30,-1.5,1.5);
         hRap_la[i] = fs->make<TH1D>(Form("Raplambda_pt%d",i),";y",30,-1.5,1.5);
         hMass_ks[i] = fs->make<TH1D>(Form("masskshort_pt%d",i),";GeV",2000,0,1.0);
         hMass_la[i] = fs->make<TH1D>(Form("masslambda_pt%d",i),";GeV",2000,0.5,1.5);
         hMult_ks[i] = fs->make<TH1D>(Form("mult_ks_pt%d",i),";N",250,0,250);
-        hSignal_ks[i] = fs->make<TH2D>(Form("signalkshort_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
-        hBackground_ks[i] = fs->make<TH2D>(Form("backgroundkshort_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
         hMult_la[i] = fs->make<TH1D>(Form("mult_la_pt%d",i),";N",250,0,250);
+        hSignal_ks[i] = fs->make<TH2D>(Form("signalkshort_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
         hSignal_la[i] = fs->make<TH2D>(Form("signallambda_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
+        hBackground_ks[i] = fs->make<TH2D>(Form("backgroundkshort_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
         hBackground_la[i] = fs->make<TH2D>(Form("backgroundlambda_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
         pVectVect_trg_ks[i] = new vector< vector<TLorentzVector> >;
         pVectVect_trg_la[i] = new vector< vector<TLorentzVector> >;
@@ -1350,14 +1394,14 @@ V0CasCorrelation::beginJob()
         hPt_ks_bkg[i] = fs->make<TH1D>(Form("Ptkshort_bkg_pt%d",i),";GeV",50000,0,25);
         hPt_la_bkg[i] = fs->make<TH1D>(Form("Ptlambda_bkg_pt%d",i),";GeV",50000,0,25);
         hEta_ks_bkg[i] = fs->make<TH1D>(Form("Etakshort_bkg_pt%d",i),";GeV",24,-2.4,2.4);
-        hRap_ks_bkg[i] = fs->make<TH1D>(Form("Rapkshort_bkg_pt%d",i),";y",30,-1.5,1.5);
         hEta_la_bkg[i] = fs->make<TH1D>(Form("Etalambda_bkg_pt%d",i),";GeV",24,-2.4,2.4);
+        hRap_ks_bkg[i] = fs->make<TH1D>(Form("Rapkshort_bkg_pt%d",i),";y",30,-1.5,1.5);
         hRap_la_bkg[i] = fs->make<TH1D>(Form("Raplambda_bkg_pt%d",i),";y",30,-1.5,1.5);
         hMult_ks_bkg[i] = fs->make<TH1D>(Form("mult_ks_bkg_pt%d",i),";N",250,0,250);
-        hSignal_ks_bkg[i] = fs->make<TH2D>(Form("signalkshort_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
-        hBackground_ks_bkg[i] = fs->make<TH2D>(Form("backgroundkshort_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
         hMult_la_bkg[i] = fs->make<TH1D>(Form("mult_la_bkg_pt%d",i),";N",250,0,250);
+        hSignal_ks_bkg[i] = fs->make<TH2D>(Form("signalkshort_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
         hSignal_la_bkg[i] = fs->make<TH2D>(Form("signallambda_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
+        hBackground_ks_bkg[i] = fs->make<TH2D>(Form("backgroundkshort_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
         hBackground_la_bkg[i] = fs->make<TH2D>(Form("backgroundlambda_bkg_pt%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
         pVectVect_trg_ks_bkg[i] = new vector< vector<TLorentzVector> >;
         pVectVect_trg_la_bkg[i] = new vector< vector<TLorentzVector> >;

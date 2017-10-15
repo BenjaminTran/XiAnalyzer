@@ -7,6 +7,7 @@ from XiAnalyzer.XiAnalyzer.xicorrelation_cfi import *
 hltHM = hltHM.clone()
 
 omCorrelation = xiCorrelation.clone(
+        v0IDName = cms.string("Omega"),
         multHigh      = cms.double(220),
         casCollection = cms.InputTag('selectOmegaCandidatesNew:Omega'),
         ptBin         = cms.vdouble(1.0, 1.5, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10.0),
@@ -15,10 +16,8 @@ omCorrelation = xiCorrelation.clone(
         xiMassSigma   = cms.vdouble(0.00635809 ,0.0052194 ,0.00463206 ,0.0049998 ,0.00469137 ,0.00451139 ,0.00444609 ,0.00430358 ,0.00556587)
         )
 
-omCorrelationRapidity = xiCorrelation.clone(
+omCorrelationRapidity = omCorrelation.clone(
         casCollection = cms.InputTag('selectOmegaCandidatesNewRapidity:Omega'),
-        ptBin         = cms.vdouble(1.0, 1.5, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10.0),
-        PtBinNum      = cms.int32(9),
         xiMassMean    = cms.vdouble(1.67306 ,1.67284 ,1.6728 ,1.67268 ,1.67272 ,1.6727 ,1.67262 ,1.67269 ,1.67279),
         xiMassSigma   = cms.vdouble(0.00762585 ,0.00910153 ,0.00762863 ,0.00588798 ,0.00553094 ,0.00401328 ,0.00372463 ,0.00354882 ,0.00479006),
         doRap         = cms.bool(True)

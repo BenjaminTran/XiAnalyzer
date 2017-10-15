@@ -54,5 +54,9 @@ v0CasCorrelation          = cms.EDAnalyzer('V0CasCorrelation',
         ptcut_om         = cms.untracked.vdouble(1.0, 1.5, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10.0),
         rejectDaughter = cms.untracked.bool(True),
         doRap = cms.untracked.bool(False),
-        doGenRef = cms.untracked.bool(False)
+        doGenRef = cms.untracked.bool(False),
+        doKs = cms.untracked.bool(True),
+        doLa = cms.untracked.bool(True),
+        doXi = cms.untracked.bool(True),
+        doOm = cms.untracked.bool(True)
         )
