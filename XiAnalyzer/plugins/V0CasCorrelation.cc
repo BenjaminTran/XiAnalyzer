@@ -1362,7 +1362,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 void
 V0CasCorrelation::beginJob()
 {
-    int nevent = 0;
+    nevent = 0;
     if(doKs_) cout << "Will Access Ks" << endl;
     if(doLa_) cout << "Will Access La" << endl;
     if(doXi_) cout << "Will Access Xi" << endl;
