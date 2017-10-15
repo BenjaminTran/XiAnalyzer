@@ -117,7 +117,7 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
     edm::Handle< reco::VertexCompositeCandidateCollection > CascadeCandidates;
     iEvent.getByToken(_XiCollection, CascadeCandidates);
-    if(!v0candidates.isValid()) return;
+    if(!CascadeCandidates.isValid()) return;
 
     // Create auto_ptr for each collection to be stored in the Event
     std::auto_ptr< reco::VertexCompositeCandidateCollection >
@@ -145,8 +145,8 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
         //pt,mass
         double eta  = CasCand->eta();
-        double mass = CasCand->mass();
-        double pt   = CasCand->pt();
+        //double mass = CasCand->mass();
+        //double pt   = CasCand->pt();
         double rap  = CasCand->rapidity();
 
         if(doRap_)
