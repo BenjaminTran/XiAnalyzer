@@ -39,8 +39,8 @@ process.load("XiAnalyzer.XiAnalyzer.massptproducer_cff")
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
+#process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(3000) )
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -78,11 +78,11 @@ process.source = cms.Source("PoolSource",
 # Additional output definition
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
-                                    #'V0CorrelationCorrectMultB.root'
+                                    'V0CorrelationCrossCheck.root'
                                     #'V0CorrelationRapidityClosureRecoCollection.root'
                                     #'MatchV0ClosureB.root'
                                     #'MatchV0ClosureGenRef.root'
-                                    'V0CorrelationRapidityPeriSubTestRAM.root'
+                                    #'V0CorrelationRapidityPeriSubTestRAM.root'
 				                    )
                                   )
 # CORRELATION
@@ -108,7 +108,7 @@ process.HadCorrAnalysisRapidityMCGen = cms.Sequence(process.HadronCorrelation)
 
 process.genSelector = cms.Sequence(process.selectGenCandidatesKshort*process.selectGenCandidatesLambda*process.MatchCandidatesKshort*process.MatchCandidatesLambda*process.v0CorrelationRapidityMatchMC)
 
-process.p = cms.Path(process.V0CorrAnalysisRapidityPeriSub)
+process.p = cms.Path(process.V0CorrAnalysisRapidity)
 
 process.schedule = cms.Schedule(process.p)
 
