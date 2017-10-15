@@ -86,7 +86,8 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
                                     #'V0CasCorrelationMB.root'
-                                    'V0CasCorrelationMBTEST.root'
+                                    #'V0CasCorrelationMBTEST.root'
+                                    'V0CasCorrelationPbPb.root'
 				    )
                                   )
 # CORRELATION
@@ -98,7 +99,7 @@ process.TFileService = cms.Service("TFileService",
 process.RapidityAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
 process.RapidityAnalysisPeriSub = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidityPeriSub)
 
-process.p = cms.Path(process.RapidityAnalysisPeriSub)
+process.p = cms.Path(process.RapidityAnalysis)
 
 process.schedule = cms.Schedule(process.p)
 

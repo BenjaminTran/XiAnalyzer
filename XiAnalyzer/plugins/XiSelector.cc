@@ -62,14 +62,15 @@ XiSelector::XiSelector(const edm::ParameterSet& iConfig)
     nHitCut1_           = iConfig.getParameter<int>("nHitCut1");
     v0CollName_         = iConfig.getParameter<string>("v0CollName");
     v0IDName_           = iConfig.getParameter<string>("v0IDName");
-    xi3DIpSigValue_     = iConfig.getParameter<double>("xi3DIpSigValue");
-    xiFlightSigValue_   = iConfig.getParameter<double>("xi3DIpSigValue");
-    xiPi3DIpSigValue_   = iConfig.getParameter<double>("xiPi3DIpSigValue");
+    cas3DIpSigValue_     = iConfig.getParameter<double>("cas3DIpSigValue");
+    casFlightSigValue_   = iConfig.getParameter<double>("casFlightSigValue");
+    casBat3DIpSigValue_   = iConfig.getParameter<double>("casBat3DIpSigValue");
     zVertexHigh_        = iConfig.getParameter<double>("zVertexHigh");
     zVertexLow_         = iConfig.getParameter<double>("zVertexLow");
     doRap_              = iConfig.getParameter<bool>("doRap");
     rapMax_             = iConfig.getParameter<double>("rapMax");
     rapMin_             = iConfig.getParameter<double>("rapMin");
+    misIDMassCut_ = iConfig.getParameter<double>("misIDMassCut");
     _XiCollection       = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag(v0CollName_,v0IDName_,"ANASKIM"));
     _vertexCollName     = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName"));
 
@@ -118,20 +119,19 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
     // Create auto_ptr for each collection to be stored in the Event
     std::auto_ptr< reco::VertexCompositeCandidateCollection >
-        theNewXiCands( new reco::VertexCompositeCandidateCollection() );
+        theNewCasCands( new reco::VertexCompositeCandidateCollection() );
 
 
-    for( reco::VertexCompositeCandidateCollection::const_iterator v0cand =
-            v0candidates->begin(); v0cand != v0candidates->end();
-            v0cand++)
+    for( reco::VertexCompositeCandidateCollection::const_iterator CasCand =
+            CascadeCandidates->begin(); CasCand != CascadeCandidates->end();
+            CasCand++)
     {
-
         //double secvz = -999.9, secvx = -999.9, secvy = -999.9;
 
         // access daughters of Xi and Lambda
 
-        const reco::Candidate * d1 = v0cand->daughter(0); // Xi_Lambda
-        const reco::Candidate * d2 = v0cand->daughter(1); // Xi_Pion
+        const reco::Candidate * d1 = CasCand->daughter(0); // Xi_Lambda
+        const reco::Candidate * d2 = CasCand->daughter(1); // Xi_Pion
 
         const reco::Candidate * lambda_d1 = d1->daughter(0); // Lambda_Proton
         const reco::Candidate * lambda_d2 = d1->daughter(1); // Lambda_Pion
@@ -141,32 +141,29 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         reco::TrackRef  lambda_dau1 = lambda_d1->get<reco::TrackRef>();
         reco::TrackRef  lambda_dau2 = lambda_d2->get<reco::TrackRef>();
 
-
-
         //pt,mass
-        double eta_xi = v0cand->eta();
-        double rap_xi = v0cand->rapidity();
-        //double px_xi   = v0cand->px();
-        //double py_xi   = v0cand->py();
-        //double pz_xi   = v0cand->pz();
+        double eta  = CasCand->eta();
+        double mass = CasCand->mass();
+        double pt   = CasCand->pt();
+        double rap  = CasCand->rapidity();
 
-        if(doRap_)
-        {
-            if(rap_xi > rapMax_ || rap_xi < rapMin_) continue;
-        }
-        else
-        {
-            if(eta_xi > etaCutMax_ || eta_xi < etaCutMin_) continue;
-        }
+        //if(doRap_)
+        //{
+        //if(rap < rapMin_ || rap > rapMax_) continue;
+        //}
+        //else
+        //{
+        //if(eta > 2.4 || eta < -2.4) continue;
+        //}
 
-        //secvz  = v0cand->vz();
-        //secvx  = v0cand->vx();
-        //secvy  = v0cand->vy();
+        //secvz  = CasCand->vz(); << endl;
+        //secvx  = CasCand->vx();
+        //secvy  = CasCand->vy();
 
         // Xi Impact Parameter Significance
         // Build Transient Tracks of Xi_pion, Lambda_Proton, Lambda_pion
         TransientTrack pion_lambdaTT(lambda_dau2, &(*bFieldHandle));
-        TransientTrack pion_XiTT(dau2, &(*bFieldHandle));
+        TransientTrack bat_CasTT(dau2, &(*bFieldHandle));
         TransientTrack proton_lambdaTT(lambda_dau1, &(*bFieldHandle));
 
         // Create a kinematicParticleFactory
@@ -192,62 +189,69 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         RefCountedKinematicParticle lamCand      = v0FitTree->currentParticle();
         RefCountedKinematicVertex lamDecayVertex = v0FitTree->currentDecayVertex();
 
-        vector<RefCountedKinematicParticle> xiParticles;
-        xiParticles.push_back(pFactory.particle(pion_XiTT,piMass,chi,ndf,piMass_sigma));
-        xiParticles.push_back(lamCand);
+        vector<RefCountedKinematicParticle> casParticles;
+        if(v0IDName_ == "Xi") casParticles.push_back(pFactory.particle(bat_CasTT,piMass,chi,ndf,piMass_sigma));
+        else if(v0IDName_ == "Omega") casParticles.push_back(pFactory.particle(bat_CasTT,kaonMass,chi,ndf,kaonMass_sigma));
+        else cout << "unexpected particle option" << endl;
+        casParticles.push_back(lamCand);
 
-        RefCountedKinematicTree xiFitTree = fitter.fit(xiParticles);
-        if(!xiFitTree->isValid())
+        RefCountedKinematicTree casFitTree = fitter.fit(casParticles);
+        if(!casFitTree->isValid())
         {
-            cout<<"invalid xi kinematic vertex fitting"<<endl;
+            cout<<"invalid cas kinematic vertex fitting"<<endl;
             continue;
         }
-        xiFitTree->movePointerToTheTop();
-        RefCountedKinematicParticle xiCand      = xiFitTree->currentParticle();
-        RefCountedKinematicVertex xiDecayVertex = xiFitTree->currentDecayVertex();
+        casFitTree->movePointerToTheTop();
+        RefCountedKinematicParticle casCand      = casFitTree->currentParticle();
+        RefCountedKinematicVertex casDecayVertex = casFitTree->currentDecayVertex();
 
-        if(!xiCand->currentState().isValid())
+        if(!casCand->currentState().isValid())
         {
-            cout<<"invalid state from xi cand"<<endl;
+            cout<<"invalid state from cas cand"<<endl;
         }
 
-        KinematicState theCurrentXiCandKinematicState = xiCand->currentState();
-        FreeTrajectoryState theXiFTS = theCurrentXiCandKinematicState.freeTrajectoryState();
-        TransientTrack xiTT = (*theTTB).build(theXiFTS);
+        KinematicState theCurrentXiCandKinematicState = casCand->currentState();
+        FreeTrajectoryState theCasFTS = theCurrentXiCandKinematicState.freeTrajectoryState();
+        TransientTrack casTT = (*theTTB).build(theCasFTS);
+
 
         //3D impact parameter of Xi wrt primary vertex
-        float xi3DIpSigValue = -1000;
-        if(xiTT.isValid())
+        float cas3DIpSigValue = -1000;
+        if(casTT.isValid())
         {
-            pair<bool,Measurement1D> xi3DIpPair = IPTools::absoluteImpactParameter3D(xiTT,bestvtx);
-            if(xi3DIpPair.first)
+            pair<bool,Measurement1D> cas3DIpPair = IPTools::absoluteImpactParameter3D(casTT,vtx);
+            if(cas3DIpPair.first)
             {
-                xi3DIpSigValue = xi3DIpPair.second.significance();
+                cas3DIpSigValue = cas3DIpPair.second.significance();
             }
         }
+        else cout << "bad casTT" << endl;
 
         //3D impact parameter wrt to primary vertex for Lambda_pion,
-        //Lambda_proton, Xi_Pion
+        //Lambda_proton, Cas_batchelor
         float VTrkP3DIpSigValue = -1000;
-        pair<bool,Measurement1D> proton3DIpPair = IPTools::absoluteImpactParameter3D(proton_lambdaTT,bestvtx);
+        pair<bool,Measurement1D> proton3DIpPair = IPTools::absoluteImpactParameter3D(proton_lambdaTT,vtx);
         if(proton3DIpPair.first)
         {
             VTrkP3DIpSigValue = proton3DIpPair.second.significance();
         }
+        else cout << "bad proton3dippair" << endl;
 
         float VTrkPi3DIpSigValue = -1000;
-        pair<bool,Measurement1D> pion3DIpPair = IPTools::absoluteImpactParameter3D(pion_lambdaTT,bestvtx);
+        pair<bool,Measurement1D> pion3DIpPair = IPTools::absoluteImpactParameter3D(pion_lambdaTT,vtx);
         if(pion3DIpPair.first)
         {
             VTrkPi3DIpSigValue = pion3DIpPair.second.significance();
         }
+        else cout << "bad pionlambda" << endl;
 
-        float xiPi3DIpSigValue = -1000;
-        pair<bool,Measurement1D> pionXi3DIpPair = IPTools::absoluteImpactParameter3D(pion_XiTT,bestvtx);
-        if(pionXi3DIpPair.first)
+        float casBat3DIpSigValue = -1000;
+        pair<bool,Measurement1D> casBat3DIpPair = IPTools::absoluteImpactParameter3D(bat_CasTT,vtx);
+        if(casBat3DIpPair.first)
         {
-            xiPi3DIpSigValue = pionXi3DIpPair.second.significance();
+            casBat3DIpSigValue = casBat3DIpPair.second.significance();
         }
+        else cout << "bad casBat" << endl;
 
         // Decay length
 
@@ -264,57 +268,81 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         vVtxEVec.push_back(lamDecayVertex->error().czz());
         SMatrixSym3D vVtxCov(vVtxEVec.begin(),vVtxEVec.end() );
 
-        std::vector<double> xiVtxEVec;
-        xiVtxEVec.push_back(xiDecayVertex->error().cxx());
-        xiVtxEVec.push_back(xiDecayVertex->error().cyx());
-        xiVtxEVec.push_back(xiDecayVertex->error().cyy());
-        xiVtxEVec.push_back(xiDecayVertex->error().czx());
-        xiVtxEVec.push_back(xiDecayVertex->error().czy());
-        xiVtxEVec.push_back(xiDecayVertex->error().czz());
-        SMatrixSym3D xiVtxCov(xiVtxEVec.begin(),xiVtxEVec.end() );
+        std::vector<double> casVtxEVec;
+        casVtxEVec.push_back(casDecayVertex->error().cxx());
+        casVtxEVec.push_back(casDecayVertex->error().cyx());
+        casVtxEVec.push_back(casDecayVertex->error().cyy());
+        casVtxEVec.push_back(casDecayVertex->error().czx());
+        casVtxEVec.push_back(casDecayVertex->error().czy());
+        casVtxEVec.push_back(casDecayVertex->error().czz());
+        SMatrixSym3D casVtxCov(casVtxEVec.begin(),casVtxEVec.end() );
 
         // Decay Lengths
-        SMatrixSym3D totalCov = vVtxCov  + bestvtx.covariance();
-        SMatrixSym3D xiCov    = xiVtxCov + bestvtx.covariance();
+        SMatrixSym3D totalCov = vVtxCov  + vtx.covariance();
+        SMatrixSym3D casCov    = casVtxCov + vtx.covariance();
 
         //Xi dlos to primary vertex
-        SVector3 xiFlightVector(
-                xiDecayVertex->position().x() - bestvtx.x(),
-                xiDecayVertex->position().y() - bestvtx.y(),
-                xiDecayVertex->position().z() - bestvtx.z()
+        SVector3 casFlightVector(
+                casDecayVertex->position().x() - vtx.x(),
+                casDecayVertex->position().y() - vtx.y(),
+                casDecayVertex->position().z() - vtx.z()
                 );
-        double xiFlightMag      = ROOT::Math::Mag(xiFlightVector);
-        double xiFlightSigma    = sqrt(ROOT::Math::Similarity(xiCov, xiFlightVector))/xiFlightMag;
-        double xiFlightSigValue = xiFlightMag/xiFlightSigma;
+        double casFlightMag      = ROOT::Math::Mag(casFlightVector);
+        double casFlightSigma    = sqrt(ROOT::Math::Similarity(casCov, casFlightVector))/casFlightMag;
+        double casFlightSigValue = casFlightMag/casFlightSigma;
 
         //Lambda dlos between lam and primary vertex
         SVector3 distanceVector(
-                lamDecayVertex->position().x() - bestvtx.x(),
-                lamDecayVertex->position().y() - bestvtx.y(),
-                lamDecayVertex->position().z() - bestvtx.z()
+                lamDecayVertex->position().x() - vtx.x(),
+                lamDecayVertex->position().y() - vtx.y(),
+                lamDecayVertex->position().z() - vtx.z()
                 );
         double distanceMag      = ROOT::Math::Mag(distanceVector);
         double distanceSigma    = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/distanceMag;
         double distanceSigValue = distanceMag/distanceSigma;
 
-
         // Apply Cuts
-        if(xi3DIpSigValue     > xi3DIpSigValue_)     continue;
-        if(xiPi3DIpSigValue   < xiPi3DIpSigValue_)   continue;
+        if(cas3DIpSigValue     > cas3DIpSigValue_)     continue;
+        if(casBat3DIpSigValue   < casBat3DIpSigValue_)   continue;
         if(VTrkPi3DIpSigValue < VTrkPi3DIpSigValue_) continue;
         if(VTrkP3DIpSigValue  < VTrkP3DIpSigValue_)  continue;
-        if(xiFlightSigValue   < xiFlightSigValue_)   continue;
+        if(casFlightSigValue   < casFlightSigValue_)   continue;
         if(distanceSigValue   < distanceSigValue_)   continue;
+
+        double misIDMass_Om_pila = -999;
+        double misIDMass_Om_lapi = -999;
+        if(v0IDName_ == "Omega")
+        {
+            double pd1 = d1->p();
+            double pd2 = d2->p();
+            TVector3 dauvec1(d1->px(),d1->py(),d1->pz());
+            TVector3 dauvec2(d2->px(),d2->py(),d2->pz());
+            TVector3 dauvecsum(dauvec1+dauvec2);
+            double massd1=piMass;
+            double massd2=lambdaMass;
+            double energyd1 = sqrt(massd1*massd1+pd1*pd1);
+            double energyd2 = sqrt(massd2*massd2+pd2*pd2);
+            double invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+            misIDMass_Om_pila = invmass - xiMass;
+            if(fabs(misIDMass_Om_pila) < misIDMassCut_) continue;
+
+            massd1=lambdaMass;
+            massd2=piMass;
+            energyd1 = sqrt(massd1*massd1+pd1*pd1);
+            energyd2 = sqrt(massd2*massd2+pd2*pd2);
+            invmass = sqrt((energyd1+energyd2)*(energyd1+energyd2)-dauvecsum.Mag2());
+            misIDMass_Om_lapi = invmass - xiMass;
+            if(fabs(misIDMass_Om_lapi) < misIDMassCut_) continue;
+        }
 
         theNewXiCands->push_back( *v0cand );
 
-        cout<<"Successful"<<endl;
     }
 
     // Write the collections to the Event
     // Collection is stored as module label : instance
     // e.g. for this the InputTag should be selectV0CandidatesLowXi:Xi
-    iEvent.put( theNewXiCands, std::string(v0IDName_) );
+    iEvent.put( theNewCasCands, std::string(v0IDName_) );
 }
 
 void XiSelector::beginJob() {

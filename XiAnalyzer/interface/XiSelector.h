@@ -99,15 +99,16 @@ private:
   int nHitCut1_;
   double etaCutMin_, etaCutMax_;
   double zVertexLow_, zVertexHigh_;
-  double xi3DIpSigValue_;
-  double xiPi3DIpSigValue_;
+  double cas3DIpSigValue_;
+  double casBat3DIpSigValue_;
   double VTrkPi3DIpSigValue_;
   double VTrkP3DIpSigValue_;
-  double xiFlightSigValue_;
+  double casFlightSigValue_;
   double distanceSigValue_;
   bool doRap_;
   double rapMax_;
   double rapMin_;
+  double misIDMassCut_;
 };
 
 #endif

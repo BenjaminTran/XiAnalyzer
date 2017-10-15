@@ -17,6 +17,19 @@ selectV0CandidatesNewlambdaRapidity = selectV0CandidatesNew.clone(
   dorap        = cms.bool(True)
 )
 
+selectV0CandidatesNewkshortRapidityPbPb = selectV0CandidatesNew.clone(
+        dorap = cms.bool(True),
+        useCentrality = cms.bool(True)
+)
+
+selectV0CandidatesNewlambdaRapidityPbPb = selectV0CandidatesNew.clone(
+  v0IDName     = cms.string("Lambda"),
+  misIDMassCut = cms.double(0.020),
+  dorap        = cms.bool(True),
+  useCentrality = cms.bool(True)
+)
+
+#### SYSTEMATICS AND MC
 selectV0CandidatesNewkshortRapidityMC = selectV0CandidatesNewkshortRapidity.clone(
         v0CollName = cms.string("generalV0Candidates")
 )
@@ -31,8 +44,8 @@ selectV0CandidatesNewlambdatight = selectV0CandidatesNewlambda.clone(
   dzSigCut1       = cms.double(1.25),
   dzSigCut2       = cms.double(1.25),
   vtxChi2Cut      = cms.double(10000.0),
-  cosThetaCut     = cms.double(0.9995),
-  decayLSigCut    = cms.double(7.0),
+  cosThetaCut     = cms.double(0.9999),
+  decayLSigCut    = cms.double(7.5),
 )
 
 selectV0CandidatesNewlambdaloose = selectV0CandidatesNewlambda.clone(
@@ -41,34 +54,26 @@ selectV0CandidatesNewlambdaloose = selectV0CandidatesNewlambda.clone(
   dzSigCut1       = cms.double(1.),
   dzSigCut2       = cms.double(1.),
   vtxChi2Cut      = cms.double(10000.0),
-  cosThetaCut     = cms.double(0.995),
-  decayLSigCut    = cms.double(3.0),
+  cosThetaCut     = cms.double(0.99),
+  decayLSigCut    = cms.double(2.5),
 )
 
 selectV0CandidatesNewlambdalooseRapidity = selectV0CandidatesNewlambdaloose.clone(
         dorap        = cms.bool(True),
-        decayLSigCut = cms.double(2.5),
-        cosThetaCut  = cms.double(0.99)
         )
 
 selectV0CandidatesNewlambdatightRapidity = selectV0CandidatesNewlambdatight.clone(
         dorap        = cms.bool(True),
-        decayLSigCut = cms.double(7.5),
-        cosThetaCut  = cms.double(0.9999)
         )
 
-selectV0CandidatesNewkshorttightRapidity = selectV0CandidatesNewkshortRapidity.clone(
-        dxySigCut1      = cms.double(1.25),
-        dxySigCut2      = cms.double(1.25),
-        dzSigCut1       = cms.double(1.25),
-        dzSigCut2       = cms.double(1.25),
-        decayLSigCut = cms.double(7.5),
-        cosThetaCut  = cms.double(0.9999)
+selectV0CandidatesNewkshorttightRapidity = selectV0CandidatesNewlambdaloose.clone(
+        v0IDName     = cms.string("Kshort"),
+        dorap = cms.bool(True)
         )
 
-selectV0CandidatesNewkshortlooseRapidity = selectV0CandidatesNewkshortRapidity.clone(
-        decayLSigCut = cms.double(2.5),
-        cosThetaCut  = cms.double(0.99)
+selectV0CandidatesNewkshortlooseRapidity = selectV0CandidatesNewlambdatight.clone(
+        v0IDName     = cms.string("Kshort"),
+        dorap = cms.bool(True)
         )
 
 selectV0CandidatesNewd0 = selectV0CandidatesNew.clone(
