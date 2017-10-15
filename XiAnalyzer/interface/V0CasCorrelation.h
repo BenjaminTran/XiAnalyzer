@@ -185,7 +185,6 @@ private:
 
 
     int ptbin_n_cas_;
-    int nevent;
     vector<TLorentzVector> *pepVect_xi_peak[18];
     vector<TLorentzVector> *pepVect_xi_side[18];
     vector<TVector3> *pepVect_dau_xi_peak[18];
