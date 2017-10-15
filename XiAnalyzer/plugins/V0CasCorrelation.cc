@@ -134,39 +134,25 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
     for(int i=0;i<ptbin_n_;i++)
     {
-        if(doKs_)
-        {
             pVect_trg_ks[i] = new vector<TLorentzVector>;
             pVect_dau_ks[i] = new vector<TVector3>;
             pVect_trg_ks_bkg[i] = new vector<TLorentzVector>;
             pVect_dau_ks_bkg[i] = new vector<TVector3>;
-        }
-
-        if(doLa_)
-        {
             pVect_trg_la[i] = new vector<TLorentzVector>;
             pVect_dau_la[i] = new vector<TVector3>;
             pVect_trg_la_bkg[i] = new vector<TLorentzVector>;
             pVect_dau_la_bkg[i] = new vector<TVector3>;
-        }
     }
     for(int i=0; i<ptbin_n_cas_; i++)
     {
-        if(doXi_)
-        {
             pepVect_xi_peak[i]    = new vector<TLorentzVector>;
             pepVect_xi_side[i]    = new vector<TLorentzVector>;
             pepVect_dau_xi_peak[i]= new vector<TVector3>;
             pepVect_dau_xi_side[i]= new vector<TVector3>;
-        }
-
-        if(doOm_)
-        {
             pepVect_om_peak[i]    = new vector<TLorentzVector>;
             pepVect_om_side[i]    = new vector<TLorentzVector>;
             pepVect_dau_om_peak[i]= new vector<TVector3>;
             pepVect_dau_om_side[i]= new vector<TVector3>;
-        }
     }
 
     pVect_ass = new vector<TVector3>;
@@ -1283,8 +1269,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
         for(int i=0; i<ptbin_n_; i++)
         {
-            if(doKs_)
-            {
                 pVectVect_trg_ks[i]->push_back(*pVect_trg_ks[i]);
                 pVectVect_dau_ks[i]->push_back(*pVect_dau_ks[i]);
                 pVectVect_trg_ks_bkg[i]->push_back(*pVect_trg_ks_bkg[i]);
@@ -1293,10 +1277,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 delete pVect_dau_ks[i];
                 delete pVect_trg_ks_bkg[i];
                 delete pVect_dau_ks_bkg[i];
-            }
 
-            if(doLa_)
-            {
                 pVectVect_trg_la[i]->push_back(*pVect_trg_la[i]);
                 pVectVect_dau_la[i]->push_back(*pVect_dau_la[i]);
                 pVectVect_trg_la_bkg[i]->push_back(*pVect_trg_la_bkg[i]);
@@ -1305,12 +1286,9 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 delete pVect_dau_la[i];
                 delete pVect_trg_la_bkg[i];
                 delete pVect_dau_la_bkg[i];
-            }
         }
         for(int i=0 ; i<ptbin_n_cas_; i++)
         {
-            if(doXi_)
-            {
                 PepVect2_xi_peak[i]->push_back(*pepVect_xi_peak[i]);
                 PepVect2_xi_side[i]->push_back(*pepVect_xi_side[i]);
                 PepVect2_dau_xi_peak[i]->push_back(*pepVect_dau_xi_peak[i]);
@@ -1319,10 +1297,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 delete pepVect_xi_side[i];
                 delete pepVect_dau_xi_peak[i];
                 delete pepVect_dau_xi_side[i];
-            }
 
-            if(doOm_)
-            {
                 PepVect2_om_peak[i]->push_back(*pepVect_om_peak[i]);
                 PepVect2_om_side[i]->push_back(*pepVect_om_side[i]);
                 PepVect2_dau_om_peak[i]->push_back(*pepVect_dau_om_peak[i]);
@@ -1331,7 +1306,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 delete pepVect_om_side[i];
                 delete pepVect_dau_om_peak[i];
                 delete pepVect_dau_om_side[i];
-            }
         }
 
         pVectVect_ass->push_back(*pVect_ass);
