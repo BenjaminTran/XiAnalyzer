@@ -320,7 +320,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                             hPt_ks[i]->Fill(pt,1.0/effks);
                             hEta_ks[i]->Fill(eta,1.0/effks);
                             hRap_ks[i]->Fill(rapidity);
-                            hRap_ks_Lorentz[i]->Fill(pvector.E());
                             double KET = sqrt(mass*mass + pt*pt) - mass;
                             hKET_ks[i]->Fill(KET,1.0/effks);
                         }
