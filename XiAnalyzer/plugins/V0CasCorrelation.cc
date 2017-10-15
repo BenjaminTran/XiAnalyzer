@@ -2121,12 +2121,15 @@ V0CasCorrelation::endJob() {
 
     if(doOm_)
     {
+        cout << "1" << endl;
         for(int i=0; i<ptbin_n_cas_; i++)
         {
             // Make background histograms
             // Xi paired with hadron
             int PepVect2_om_peak_size = (int)PepVect2_om_peak[i]->size();
             int PepVect2_om_side_size = (int)PepVect2_om_side[i]->size();
+        cout << "2" << endl;
+
 
             // PEAK REGION Background
             for(int bkgnum = 0; bkgnum<bkgnum_; bkgnum++)
@@ -2221,6 +2224,7 @@ V0CasCorrelation::endJob() {
 
                             if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
+        cout << "3" << endl;
                             BackgroundOmPeak[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_om/effom);
                         }
                     }
@@ -2228,6 +2232,7 @@ V0CasCorrelation::endJob() {
             }
 
             // SIDEBAND REGION Background
+        cout << "4" << endl;
             for(int bkgnum = 0; bkgnum<bkgnum_; bkgnum++)
             {
                 int ncount = 0;
@@ -2319,6 +2324,7 @@ V0CasCorrelation::endJob() {
 
                             if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
+        cout << "5" << endl;
                             BackgroundOmSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_om/effom);
                         }
                     }
