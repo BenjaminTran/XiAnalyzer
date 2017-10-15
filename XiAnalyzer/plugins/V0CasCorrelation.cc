@@ -668,8 +668,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 double eta = trk.eta();
                 double phi = trk.phi();
                 double pt  = trk.pt();
-                double mass = trk.mass();
-                int id = trk.pdgId();
                 int st = trk.status();
 
                 TVector3 pvector;
@@ -1003,7 +1001,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             for(int xi_ntrg = 0; xi_ntrg<pepVect_xi_peak_size; xi_ntrg++)
             {
                 TLorentzVector pepVect_trg = (*pepVect_xi_peak[i])[xi_ntrg];
-                double pt_trg     = pepVect_trg.Pt();
+                //double pt_trg     = pepVect_trg.Pt();
                 double eta_trg    = pepVect_trg.Eta();
                 double rap_trg    = pepVect_trg.E();
                 double EffXchoice = 0;
@@ -1025,7 +1023,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             for(int xi_trg = 0; xi_trg < pepVect_xi_peak_size; xi_trg++)
             {
                 TLorentzVector pepVect_trg = (*pepVect_xi_peak[i])[xi_trg];
-                double pt_trg     = pepVect_trg.Pt();
+                //double pt_trg     = pepVect_trg.Pt();
                 double eta_trg    = pepVect_trg.Eta();
                 double phi_trg    = pepVect_trg.Phi();
                 double rap_trg    = pepVect_trg.E();
@@ -1079,7 +1077,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             for(int xi_trg = 0; xi_trg<pepVect_xi_side_size; xi_trg++)
             {
                 TLorentzVector pepVect_trg = (*pepVect_xi_side[i])[xi_trg];
-                double pt_trg     = pepVect_trg.Pt();
+                //double pt_trg     = pepVect_trg.Pt();
                 double eta_trg    = pepVect_trg.Eta();
                 double rap_trg    = pepVect_trg.E();
                 double EffXchoice = 0;
@@ -1101,7 +1099,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             for(int xi_trg = 0; xi_trg < pepVect_xi_side_size; xi_trg++)
             {
                 TLorentzVector pepVect_trg = (*pepVect_xi_side[i])[xi_trg];
-                double pt_trg     = pepVect_trg.Pt();
+                //double pt_trg     = pepVect_trg.Pt();
                 double eta_trg    = pepVect_trg.Eta();
                 double phi_trg    = pepVect_trg.Phi();
                 double rap_trg    = pepVect_trg.E();
@@ -1148,7 +1146,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             for(int om_ntrg = 0; om_ntrg<pepVect_om_peak_size; om_ntrg++)
             {
                 TLorentzVector pepVect_trg = (*pepVect_om_peak[i])[om_ntrg];
-                double pt_trg     = pepVect_trg.Pt();
+                //double pt_trg     = pepVect_trg.Pt();
                 double eta_trg    = pepVect_trg.Eta();
                 double rap_trg    = pepVect_trg.E();
                 double EffXchoice = 0;
@@ -1170,7 +1168,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             for(int om_trg = 0; om_trg < pepVect_om_peak_size; om_trg++)
             {
                 TLorentzVector pepVect_trg = (*pepVect_om_peak[i])[om_trg];
-                double pt_trg     = pepVect_trg.Pt();
+                //double pt_trg     = pepVect_trg.Pt();
                 double eta_trg    = pepVect_trg.Eta();
                 double phi_trg    = pepVect_trg.Phi();
                 double rap_trg    = pepVect_trg.E();
@@ -1224,7 +1222,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             for(int om_trg = 0; om_trg<pepVect_om_side_size; om_trg++)
             {
                 TLorentzVector pepVect_trg = (*pepVect_om_side[i])[om_trg];
-                double pt_trg     = pepVect_trg.Pt();
+                //double pt_trg     = pepVect_trg.Pt();
                 double eta_trg    = pepVect_trg.Eta();
                 double rap_trg    = pepVect_trg.E();
                 double EffXchoice = 0;
@@ -1246,7 +1244,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
             for(int om_trg = 0; om_trg < pepVect_om_side_size; om_trg++)
             {
                 TLorentzVector pepVect_trg = (*pepVect_om_side[i])[om_trg];
-                double pt_trg     = pepVect_trg.Pt();
+                //double pt_trg     = pepVect_trg.Pt();
                 double eta_trg    = pepVect_trg.Eta();
                 double phi_trg    = pepVect_trg.Phi();
                 double rap_trg    = pepVect_trg.E();
@@ -1893,12 +1891,12 @@ V0CasCorrelation::endJob() {
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
 
-                double nMult_trg_eff_xi = 0;
+                //double nMult_trg_eff_xi = 0;
 
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
                 {
                     TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    double pt_trg = pvectorTmp_trg.Pt();
+                    //double pt_trg = pvectorTmp_trg.Pt();
                     double eta_trg = pvectorTmp_trg.Eta();
                     double rap_trg = pvectorTmp_trg.E();
                     double EffXchoice = 0;
@@ -1917,7 +1915,7 @@ V0CasCorrelation::endJob() {
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
                 {
                     TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    double pt_trg = pvectorTmp_trg.Pt();
+                    //double pt_trg = pvectorTmp_trg.Pt();
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
                     double rap_trg = pvectorTmp_trg.E();
@@ -1992,12 +1990,12 @@ V0CasCorrelation::endJob() {
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
 
-                double nMult_trg_eff_xi = 0;
+                //double nMult_trg_eff_xi = 0;
 
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
                 {
                     TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    double pt_trg = pvectorTmp_trg.Pt();
+                    //double pt_trg = pvectorTmp_trg.Pt();
                     double eta_trg = pvectorTmp_trg.Eta();
                     double rap_trg = pvectorTmp_trg.E();
                     double EffXchoice = 0;
@@ -2017,7 +2015,7 @@ V0CasCorrelation::endJob() {
                     TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
-                    double pt_trg = pvectorTmp_trg.Pt();
+                    //double pt_trg = pvectorTmp_trg.Pt();
                     double rap_trg = pvectorTmp_trg.E();
                     double EffXchoice = 0;
                     UNUSED(EffXchoice);
@@ -2098,12 +2096,12 @@ V0CasCorrelation::endJob() {
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
 
-                double nMult_trg_eff_om = 0;
+                //double nMult_trg_eff_om = 0;
 
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
                 {
                     TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    double pt_trg = pvectorTmp_trg.Pt();
+                    //double pt_trg = pvectorTmp_trg.Pt();
                     double eta_trg = pvectorTmp_trg.Eta();
                     double rap_trg = pvectorTmp_trg.E();
                     double EffXchoice = 0;
@@ -2122,7 +2120,7 @@ V0CasCorrelation::endJob() {
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
                 {
                     TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    double pt_trg = pvectorTmp_trg.Pt();
+                    //double pt_trg = pvectorTmp_trg.Pt();
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
                     double rap_trg = pvectorTmp_trg.E();
@@ -2197,12 +2195,12 @@ V0CasCorrelation::endJob() {
                 int nMult_trg = pepVectTmp_trg.size();
                 int nMult_ass = pepVectTmp_ass.size();
 
-                double nMult_trg_eff_om = 0;
+                //double nMult_trg_eff_om = 0;
 
                 for(int ntrg=0; ntrg<nMult_trg; ntrg++)
                 {
                     TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                    double pt_trg = pvectorTmp_trg.Pt();
+                    //double pt_trg = pvectorTmp_trg.Pt();
                     double eta_trg = pvectorTmp_trg.Eta();
                     double rap_trg = pvectorTmp_trg.E();
                     double EffXchoice = 0;
@@ -2222,7 +2220,7 @@ V0CasCorrelation::endJob() {
                     TLorentzVector pvectorTmp_trg = pepVectTmp_trg[ntrg];
                     double eta_trg = pvectorTmp_trg.Eta();
                     double phi_trg = pvectorTmp_trg.Phi();
-                    double pt_trg = pvectorTmp_trg.Pt();
+                    //double pt_trg = pvectorTmp_trg.Pt();
                     double rap_trg = pvectorTmp_trg.E();
                     double EffXchoice = 0;
                     UNUSED(EffXchoice);

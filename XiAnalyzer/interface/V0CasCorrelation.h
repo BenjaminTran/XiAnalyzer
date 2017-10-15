@@ -169,6 +169,10 @@ private:
     bool rejectDaughter_;
     bool doRap_;
     bool doGenRef_;
+    bool doKs_;
+    bool doLa_;
+    bool doXi_;
+    bool doOm_;
 
     edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
     edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
