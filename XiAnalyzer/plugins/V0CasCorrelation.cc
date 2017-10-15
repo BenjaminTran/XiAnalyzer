@@ -1507,6 +1507,7 @@ V0CasCorrelation::beginJob()
 //loop  ------------
 void
 V0CasCorrelation::endJob() {
+    cout << "EndJob" << endl;
     //Calculating background
     int nevttotal_ass = (int)pVectVect_ass->size();
 
@@ -1516,11 +1517,9 @@ V0CasCorrelation::endJob() {
 
     for(int i=0;i<ptbin_n_;i++)
     {
-        int nevttotal_trg_ks = (int)pVectVect_trg_ks[i]->size();
-        int nevttotal_trg_la = (int)pVectVect_trg_la[i]->size();
-
         if(doKs_)
         {
+            int nevttotal_trg_ks = (int)pVectVect_trg_ks[i]->size();
             for(int nround=0;nround<bkgnum_;nround++)
             {
                 int ncount = 0;
@@ -1618,6 +1617,7 @@ V0CasCorrelation::endJob() {
 
         if(doLa_)
         {
+            int nevttotal_trg_la = (int)pVectVect_trg_la[i]->size();
             for(int nround=0;nround<bkgnum_;nround++)
             {
                 int ncount = 0;
@@ -1716,11 +1716,10 @@ V0CasCorrelation::endJob() {
 
     for(int i=0;i<ptbin_n_;i++)
     {
-        int nevttotal_trg_ks = (int)pVectVect_trg_ks_bkg[i]->size();
-        int nevttotal_trg_la = (int)pVectVect_trg_la_bkg[i]->size();
 
         if(doKs_)
         {
+            int nevttotal_trg_ks = (int)pVectVect_trg_ks_bkg[i]->size();
             for(int nround=0;nround<bkgnum_;nround++)
             {
                 int ncount = 0;
@@ -1817,6 +1816,7 @@ V0CasCorrelation::endJob() {
 
         if(doLa_)
         {
+            int nevttotal_trg_la = (int)pVectVect_trg_la_bkg[i]->size();
             for(int nround=0;nround<bkgnum_;nround++)
             {
                 int ncount = 0;
@@ -1911,7 +1911,6 @@ V0CasCorrelation::endJob() {
                 }
             }
         }
-
     }
 
     if(doXi_)
