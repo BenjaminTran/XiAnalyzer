@@ -54,7 +54,7 @@ process.source = cms.Source("PoolSource",
 # Additional output definition
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
-                                            'V0CasTreePbPb_Production_v2.root'
+                                            'V0CasTreePbPb.root'
                                         )
                                   )
 # CORRELATION
@@ -64,7 +64,7 @@ process.TFileService = cms.Service("TFileService",
 #Tree producer
 process.TreeProd = cms.Sequence(process.OmTreeProducerRapidityPbPb*process.XiTreeProducerRapidityPbPb*process.KsTreeProducerRapidityPbPb*process.LaTreeProducerRapidityPbPb)
 
-process.OmTreeProd = cms.Sequence(process.OmTreeProducer)
+process.XiOmLaTreeProd = cms.Sequence(process.XiTreeProducer*process.OmTreeProducer*process.LaTreeProducer)
 
 process.p = cms.Path(process.TreeProd)
 
