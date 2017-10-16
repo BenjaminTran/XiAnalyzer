@@ -352,21 +352,21 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                             pVect_trg_ks[i]->push_back(pvector);
                             pVect_dau_ks[i]->push_back(pvector_dau1);
                             pVect_dau_ks[i]->push_back(pvector_dau2);
-                            hPt_ks[i]->Fill(pt,1.0/effks);
-                            hEta_ks[i]->Fill(eta,1.0/effks);
+                            hPt_ks[i]->Fill(pt);//,1.0/effks);
+                            hEta_ks[i]->Fill(eta);//,1.0/effks);
                             hRap_ks[i]->Fill(rapidity);
                             double KET = sqrt(mass*mass + pt*pt) - mass;
-                            hKET_ks[i]->Fill(KET,1.0/effks);
+                            hKET_ks[i]->Fill(KET);//,1.0/effks);
                         }
                         if((mass<=(mean_ks_[i]-sideFactor_*sigma_ks_[i]) && mass>=0.425) || (mass<=0.57 && mass>=(mean_ks_[i]+sideFactor_*sigma_ks_[i]))){
                             pVect_trg_ks_bkg[i]->push_back(pvector);
                             pVect_dau_ks_bkg[i]->push_back(pvector_dau1);
                             pVect_dau_ks_bkg[i]->push_back(pvector_dau2);
-                            hPt_ks_bkg[i]->Fill(pt,1.0/effks);
-                            hEta_ks_bkg[i]->Fill(eta,1.0/effks);
+                            hPt_ks_bkg[i]->Fill(pt);//,1.0/effks);
+                            hEta_ks_bkg[i]->Fill(eta);//,1.0/effks);
                             hRap_ks_bkg[i]->Fill(rapidity);
                             double KET = sqrt(mass*mass + pt*pt) - mass;
-                            hKET_ks_bkg[i]->Fill(KET,1.0/effks);
+                            hKET_ks_bkg[i]->Fill(KET);//,1.0/effks);
                         }
                     }
                 }
@@ -489,21 +489,21 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                             pVect_trg_la[i]->push_back(pvector);
                             pVect_dau_la[i]->push_back(pvector_dau1);
                             pVect_dau_la[i]->push_back(pvector_dau2);
-                            hPt_la[i]->Fill(pt,1.0/effla);
-                            hEta_la[i]->Fill(eta,1.0/effla);
+                            hPt_la[i]->Fill(pt);//,1.0/effla);
+                            hEta_la[i]->Fill(eta);//,1.0/effla);
                             hRap_la[i]->Fill(rapidity);
                             double KET = sqrt(mass*mass + pt*pt) - mass;
-                            hKET_la[i]->Fill(KET,1.0/effla);
+                            hKET_la[i]->Fill(KET);//,1.0/effla);
                         }
                         if((mass<=1.165 && mass>=(mean_la_[i]+sideFactor_*sigma_la_[i])) || (mass<=(mean_la_[i]-sideFactor_*sigma_la_[i]) && mass>=1.075)){
                             pVect_trg_la_bkg[i]->push_back(pvector);
                             pVect_dau_la_bkg[i]->push_back(pvector_dau1);
                             pVect_dau_la_bkg[i]->push_back(pvector_dau2);
-                            hPt_la_bkg[i]->Fill(pt,1.0/effla);
-                            hEta_la_bkg[i]->Fill(eta,1.0/effla);
+                            hPt_la_bkg[i]->Fill(pt);//,1.0/effla);
+                            hEta_la_bkg[i]->Fill(eta);//,1.0/effla);
                             hRap_la_bkg[i]->Fill(rapidity);
                             double KET = sqrt(mass*mass + pt*pt) - mass;
-                            hKET_la_bkg[i]->Fill(KET,1.0/effla);
+                            hKET_la_bkg[i]->Fill(KET);//,1.0/effla);
                         }
                     }
                 }
@@ -793,7 +793,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hSignal_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks/effweight_ass);
+                        hSignal_ks[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_ks/effks/effweight_ass);
                     }
                 }
 
@@ -871,7 +871,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hSignal_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_ks/effks/effweight_ass);
+                        hSignal_ks_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_ks/effks/effweight_ass);
                     }
                 }
             }
@@ -951,7 +951,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hSignal_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla/effweight_ass);
+                        hSignal_la[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_la/effla/effweight_ass);
                     }
                 }
 
@@ -1027,7 +1027,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hSignal_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff_la/effla/effweight_ass);
+                        hSignal_la_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_la/effla/effweight_ass);
                     }
                 }
             }
@@ -1641,7 +1641,7 @@ V0CasCorrelation::endJob() {
                                 deltaPhi=deltaPhi+2*PI;
 
                             //if(deltaEta==0 && deltaPhi==0) continue;
-                            hBackground_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks/effweight_ass);
+                            hBackground_ks[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff/effks/effweight_ass);
                         }
                     }
                 }
@@ -1739,7 +1739,7 @@ V0CasCorrelation::endJob() {
                                 deltaPhi=deltaPhi+2*PI;
 
                             //if(deltaEta==0 && deltaPhi==0) continue;
-                            hBackground_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla/effweight_ass);
+                            hBackground_la[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff/effla/effweight_ass);
                         }
                     }
                 }
@@ -1840,7 +1840,7 @@ V0CasCorrelation::endJob() {
                                 deltaPhi=deltaPhi+2*PI;
 
                             //if(deltaEta==0 && deltaPhi==0) continue;
-                            hBackground_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks/effweight_ass);
+                            hBackground_ks_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff/effks/effweight_ass);
                         }
                     }
                 }
@@ -1938,7 +1938,7 @@ V0CasCorrelation::endJob() {
                                 deltaPhi=deltaPhi+2*PI;
 
                             //if(deltaEta==0 && deltaPhi==0) continue;
-                            hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla/effweight_ass);
+                            hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff/effla/effweight_ass);
                         }
                     }
                 }
