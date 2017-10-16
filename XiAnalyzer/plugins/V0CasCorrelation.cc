@@ -98,7 +98,14 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
     bestvz = vtx.z(); bestvx = vtx.x(); bestvy = vtx.y();
     bestvzError = vtx.zError(); bestvxError = vtx.xError(); bestvyError = vtx.yError();
 
-    if(bestvz < -15.0 || bestvz>15.0) return;
+    if(!useCentrality_)
+    {
+        if(bestvz < -15.0 || bestvz>15.0) return;
+    }
+    else
+    {
+        if(bestvz < -10.0 || bestvz>10.0) return;
+    }
 
     if(useCentrality_)
     {
