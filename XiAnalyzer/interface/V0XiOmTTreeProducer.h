@@ -53,6 +53,7 @@
 
 #include "TrackingTools/IPTools/interface/IPTools.h"
 
+#include "DataFormats/CaloTowers/interface/CaloTowerCollection.h"
 
 #include <TString.h>
 #include <TVector3.h>
