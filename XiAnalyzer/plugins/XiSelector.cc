@@ -65,6 +65,7 @@ XiSelector::XiSelector(const edm::ParameterSet& iConfig)
     v0CollName_         = iConfig.getParameter<string>("v0CollName");
     v0IDName_           = iConfig.getParameter<string>("v0IDName");
     cas3DIpSigValue_     = iConfig.getParameter<double>("cas3DIpSigValue");
+    cas3DIpSigValue0_     = iConfig.getParameter<double>("cas3DIpSigValue0");
     casFlightSigValue_   = iConfig.getParameter<double>("casFlightSigValue");
     casBat3DIpSigValue_   = iConfig.getParameter<double>("casBat3DIpSigValue");
     zVertexHigh_        = iConfig.getParameter<double>("zVertexHigh");
@@ -123,7 +124,6 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     std::auto_ptr< reco::VertexCompositeCandidateCollection >
         theNewCasCands( new reco::VertexCompositeCandidateCollection() );
 
-
     for( reco::VertexCompositeCandidateCollection::const_iterator CasCand =
             CascadeCandidates->begin(); CasCand != CascadeCandidates->end();
             CasCand++)
@@ -146,16 +146,16 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         //pt,mass
         double eta  = CasCand->eta();
         //double mass = CasCand->mass();
-        //double pt   = CasCand->pt();
+        double pt   = CasCand->pt();
         double rap  = CasCand->rapidity();
 
         if(doRap_)
         {
-        if(rap < rapMin_ || rap > rapMax_) continue;
+            if(rap < rapMin_ || rap > rapMax_) continue;
         }
         else
         {
-        if(eta > 2.4 || eta < -2.4) continue;
+            if(eta > 2.4 || eta < -2.4) continue;
         }
 
         //secvz  = CasCand->vz(); << endl;
@@ -304,7 +304,28 @@ void XiSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         double distanceSigValue = distanceMag/distanceSigma;
 
         // Apply Cuts
-        if(cas3DIpSigValue     > cas3DIpSigValue_)     continue;
+        if(v0IDName_ == "Xi")
+        {
+            if(pt > 1.4)
+            {
+                if(cas3DIpSigValue     > cas3DIpSigValue_)     continue;
+            }
+            else
+            {
+                if(cas3DIpSigValue     > cas3DIpSigValue0_)     continue;
+            }
+        }
+        else
+        {
+            if(pt > 1.8)
+            {
+                if(cas3DIpSigValue     > cas3DIpSigValue_)     continue;
+            }
+            else
+            {
+                if(cas3DIpSigValue     > cas3DIpSigValue0_)     continue;
+            }
+        }
         if(casBat3DIpSigValue   < casBat3DIpSigValue_)   continue;
         if(VTrkPi3DIpSigValue < VTrkPi3DIpSigValue_) continue;
         if(VTrkP3DIpSigValue  < VTrkP3DIpSigValue_)  continue;

@@ -50,6 +50,7 @@ V0Selector::V0Selector(const edm::ParameterSet& iConfig)
   dzSigCut2_      = iConfig.getParameter<double>("dzSigCut2");
   vtxChi2Cut_     = iConfig.getParameter<double>("vtxChi2Cut");
   cosThetaCut_    = iConfig.getParameter<double>("cosThetaCut");
+  cosThetaCut0_   = iConfig.getParameter<double>("cosThetaCut0");
   decayLSigCut_   = iConfig.getParameter<double>("decayLSigCut");
   misIDMassCut_   = iConfig.getParameter<double>("misIDMassCut");
   misIDMassCutEE_ = iConfig.getParameter<double>("misIDMassCutEE");
@@ -111,21 +112,21 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
        //pt,mass
        double eta = v0cand->eta();
-//       double pt = v0cand->pt();
+       double pt = v0cand->pt();
        double px = v0cand->px();
        double py = v0cand->py();
        double pz = v0cand->pz();
        double rap = v0cand->rapidity();
 //       double mass = v0cand->mass();
 
-        if(doRap_)
-        {
-            if(rap > rapMax_ || rap < rapMin_) continue;
-        }
-        else
-        {
-            if(eta > etaCutMax_ || eta < etaCutMin_) continue;
-        }
+       if(doRap_)
+       {
+           if(rap > rapMax_ || rap < rapMin_) continue;
+       }
+       else
+       {
+           if(eta > etaCutMax_ || eta < etaCutMin_) continue;
+       }
 
        secvz = v0cand->vz(); secvx = v0cand->vx(); secvy = v0cand->vy();
 
@@ -174,7 +175,14 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
        TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
        TVector3 secvec(px,py,pz);
        double agl = cos(secvec.Angle(ptosvec));
-       if(agl < cosThetaCut_) continue;
+       if(pt > 1.0)
+       {
+           if(agl < cosThetaCut_) continue;
+       }
+       else
+       {
+           if(agl < cosThetaCut0_) continue;
+       }
 
        //Decay length
        typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;

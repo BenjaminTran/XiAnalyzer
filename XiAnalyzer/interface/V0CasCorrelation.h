@@ -152,6 +152,8 @@ private:
     vector<double> mean_la_;
 
     int ptbin_n_;
+    int cent_bin_low_;
+    int cent_bin_high_;
     double etaMin_trg_;
     double etaMax_trg_;
     double etaMin_ass_;
@@ -167,6 +169,7 @@ private:
     double mis_la_range_;
     double mis_ph_range_;
     bool rejectDaughter_;
+    bool useCentrality_;
     bool doRap_;
     bool doGenRef_;
     bool doKs_;

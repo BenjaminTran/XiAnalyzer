@@ -78,6 +78,7 @@ private:
   double dxySigCut1_,dxySigCut2_,dzSigCut1_,dzSigCut2_;
   double vtxChi2Cut_;
   double cosThetaCut_;
+  double cosThetaCut0_;
   double decayLSigCut_;
   double misIDMassCut_;
   double misIDMassCutEE_;
