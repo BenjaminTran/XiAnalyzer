@@ -19,12 +19,10 @@ selectV0CandidatesNewlambdaRapidity = selectV0CandidatesNew.clone(
 
 selectV0CandidatesNewkshortRapidityPbPb = selectV0CandidatesNew.clone(
         dorap = cms.bool(True),
-        useCentrality = cms.bool(True)
 )
 
 selectV0CandidatesNewlambdaRapidityPbPb = selectV0CandidatesNewlambda.clone(
         dorap        = cms.bool(True),
-        useCentrality = cms.bool(True),
         cosThetaCut0 = cms.double(0.9999),
         cosThetaCut = cms.double(0.9998)
 )

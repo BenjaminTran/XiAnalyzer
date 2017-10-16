@@ -21,12 +21,10 @@ selectV0CandidatesLowOmegaRapidity = selectV0CandidatesLowOmega.clone(
         )
 
 selectV0CandidatesLowXiRapidityPbPb = selectV0CandidatesLowXiRapidity.clone(
-        useCentrality = cms.bool(True),
         cas3DIpSigValue0 = cms.double(1.5)
         )
 
 selectV0CandidatesLowOmegaRapidityPbPb = selectV0CandidatesLowOmegaRapidity.clone(
-        useCentrality = cms.bool(True),
         cas3DIpSigValue0 = cms.double(1.8)
         )
 

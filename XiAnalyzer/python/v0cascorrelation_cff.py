@@ -23,17 +23,19 @@ v0CasCorrelationRapidity = v0CasCorrelation.clone(
         ptcut_ks       = cms.untracked.vdouble(0.2,0.4,0.6,0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5,10.0,15.0,20.0,25.0,30.0),
         ptcut_la       = cms.untracked.vdouble(0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5,10.0,15.0,20.0,25.0,30.0),
         ptcut_xi         = cms.untracked.vdouble(1.0, 1.4, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10),
-        ptcut_om         = cms.untracked.vdouble(1.0, 1.5, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10.0),
+        ptcut_om         = cms.untracked.vdouble(1.5, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10.0),
         doRap = cms.untracked.bool(True)
         )
 
 v0CasCorrelationRapidityPbPb = v0CasCorrelationRapidity.clone(
+        multLow = cms.untracked.double(0),
+        multHigh = cms.untracked.double(999999),
         towerSrc       = cms.InputTag('towerMaker'),
         useCentrality = cms.untracked.bool(True),
         ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshortRapidityPbPb:Kshort'),
         laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdaRapidityPbPb:Lambda'),
         xiCollection = cms.untracked.InputTag('selectV0CandidatesLowXiRapidityPbPb:Xi'),
-        omCollection = cms.untracked.InputTag('selectOmegaCandidatesNewRapidityPbPb:Omega'),
+        omCollection = cms.untracked.InputTag('selectV0CandidatesLowOmegaRapidityPbPb:Omega'),
         ptbin_n_cas = cms.untracked.int32(9),
         sigma_ks       = cms.untracked.vdouble(0.0066,0.0068,0.0063,0.0056,0.0049,0.0048,0.0047,0.0049,0.0053,0.0056,0.0057,0.0062,0.0068,0.0077),
         mean_ks        = cms.untracked.vdouble(0.49816 ,0.49754 ,0.49763 ,0.4977 ,0.49768 ,0.49764 ,0.49762 ,0.49757 ,0.49759 ,0.49761 ,0.49763 ,0.49763 ,0.4977 ,0.49769),
