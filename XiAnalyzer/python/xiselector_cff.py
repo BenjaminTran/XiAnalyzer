@@ -13,11 +13,23 @@ selectV0CandidatesLowOmega = selectV0CandidatesLow.clone(
         )
 
 selectV0CandidatesLowXiRapidity = selectV0CandidatesLow.clone(
-    doRap = cms.bool(True)
+        doRap = cms.bool(True)
         )
 
 selectV0CandidatesLowOmegaRapidity = selectV0CandidatesLowOmega.clone(
-    doRap = cms.bool(True)
+        doRap = cms.bool(True)
+        )
+
+selectV0CandidatesLowXiRapidityPbPb = selectV0CandidatesLowRapidity.clone(
+        doRap = cms.bool(True),
+        useCentrality = cms.bool(True),
+        cas3DIpSigValue0 = cms.double(1.5)
+        )
+
+selectV0CandidatesLowOmegaRapidityPbPb = selectV0CandidatesLowOmegaRapidity.clone(
+        doRap = cms.bool(True),
+        useCentrality = cms.bool(True),
+        cas3DIpSigValue0 = cms.double(1.8)
         )
 
 selectV0CandidatesXiRapidityLoose = selectV0CandidatesLowXiRapidity.clone(
