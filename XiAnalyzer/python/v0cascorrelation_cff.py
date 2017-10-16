@@ -28,7 +28,7 @@ v0CasCorrelationRapidity = v0CasCorrelation.clone(
         )
 
 v0CasCorrelationRapidityPbPb = v0CasCorrelationRapidity.clone(
-        useCentrality = cms.bool(True)
+        useCentrality = cms.bool(True),
         ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshortRapidityPbPb:Kshort'),
         laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdaRapidityPbPb:Lambda'),
         xiCollection = cms.untracked.InputTag('selectV0CandidatesLowXiRapidityPbPb:Xi'),
