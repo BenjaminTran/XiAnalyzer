@@ -100,6 +100,7 @@ private:
   double etaCutMin_, etaCutMax_;
   double zVertexLow_, zVertexHigh_;
   double cas3DIpSigValue_;
+  double cas3DIpSigValue0_;
   double casBat3DIpSigValue_;
   double VTrkPi3DIpSigValue_;
   double VTrkP3DIpSigValue_;

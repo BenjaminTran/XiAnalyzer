@@ -179,6 +179,7 @@ private:
 
     edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
     edm::EDGetTokenT<reco::TrackCollection> _trkSrc;
+    edm::EDGetTokenT<CaloTowerCollection> _towerSrc;
 
     edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _ksCollection;
     edm::EDGetTokenT<reco::VertexCompositeCandidateCollection> _laCollection;
