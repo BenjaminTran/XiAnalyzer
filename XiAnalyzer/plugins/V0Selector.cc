@@ -50,7 +50,6 @@ V0Selector::V0Selector(const edm::ParameterSet& iConfig)
   dzSigCut2_      = iConfig.getParameter<double>("dzSigCut2");
   vtxChi2Cut_     = iConfig.getParameter<double>("vtxChi2Cut");
   cosThetaCut_    = iConfig.getParameter<double>("cosThetaCut");
-  cosThetaCut0_   = iConfig.getParameter<double>("cosThetaCut0");
   decayLSigCut_   = iConfig.getParameter<double>("decayLSigCut");
   misIDMassCut_   = iConfig.getParameter<double>("misIDMassCut");
   misIDMassCutEE_ = iConfig.getParameter<double>("misIDMassCutEE");
@@ -59,6 +58,11 @@ V0Selector::V0Selector(const edm::ParameterSet& iConfig)
   rapMin_         = iConfig.getParameter<double>("rapMin");
   _vertexCollName = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName" ) );
   _V0Collection = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag( v0CollName_,v0IDName_,"ANASKIM" ) );
+
+  if(v0IDName_ == "Lambda")
+  {
+      cosThetaCut0_   = iConfig.getParameter<double>("cosThetaCut0");
+  }
   // Trying this with Candidates instead of the simple reco::Vertex
   produces< reco::VertexCompositeCandidateCollection >(v0IDName_);
 
@@ -175,13 +179,20 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
        TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
        TVector3 secvec(px,py,pz);
        double agl = cos(secvec.Angle(ptosvec));
-       if(pt > 1.0)
+       if(v0IDName_ == "Lambda")
        {
-           if(agl < cosThetaCut_) continue;
+           if(pt > 1.0)
+           {
+               if(agl < cosThetaCut_) continue;
+           }
+           else
+           {
+               if(agl < cosThetaCut0_) continue;
+           }
        }
        else
        {
-           if(agl < cosThetaCut0_) continue;
+           if(agl < cosThetaCut_) continue;
        }
 
        //Decay length

@@ -56,6 +56,7 @@ V0CasCorrelation::V0CasCorrelation(const edm::ParameterSet& iConfig)
 
     _vertexCollName = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexCollName"));
     _trkSrc         = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("trkSrc"));
+    _towerSrc       = consumes<CaloTowerCollection>(iConfig.getParameter<edm::InputTag>("towerSrc"));
     _ksCollection   = consumes<reco::VertexCompositeCandidateCollection>(iConfig.getUntrackedParameter<edm::InputTag>("ksCollection"));
     _laCollection   = consumes<reco::VertexCompositeCandidateCollection>(iConfig.getUntrackedParameter<edm::InputTag>("laCollection"));
     _xiCollection   = consumes<reco::VertexCompositeCandidateCollection>(iConfig.getUntrackedParameter<edm::InputTag>("xiCollection"));
