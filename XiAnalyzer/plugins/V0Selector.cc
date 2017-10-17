@@ -54,12 +54,13 @@ V0Selector::V0Selector(const edm::ParameterSet& iConfig)
   misIDMassCut_   = iConfig.getParameter<double>("misIDMassCut");
   misIDMassCutEE_ = iConfig.getParameter<double>("misIDMassCutEE");
   doRap_          = iConfig.getParameter<bool>("dorap");
+  doPbPbcuts_ = iConfig.getParameter<bool>("doPbPbcuts");
   rapMax_         = iConfig.getParameter<double>("rapMax");
   rapMin_         = iConfig.getParameter<double>("rapMin");
   _vertexCollName = consumes<reco::VertexCollection>( iConfig.getParameter<edm::InputTag>( "vertexCollName" ) );
   _V0Collection = consumes<reco::VertexCompositeCandidateCollection>( edm::InputTag( v0CollName_,v0IDName_,"ANASKIM" ) );
 
-  if(v0IDName_ == "Lambda")
+  if(v0IDName_ == "Lambda" && doPbPbcuts_)
   {
       cosThetaCut0_   = iConfig.getParameter<double>("cosThetaCut0");
   }
@@ -179,15 +180,19 @@ void V0Selector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
        TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
        TVector3 secvec(px,py,pz);
        double agl = cos(secvec.Angle(ptosvec));
-       if(v0IDName_ == "Lambda")
+       if(doPbPbcuts_)
        {
-           if(pt > 1.0)
+           if(v0IDName_ == "Lambda")
            {
-               if(agl < cosThetaCut_) continue;
+               if(pt > 1.0){
+                   if(agl < cosThetaCut_) continue;
+               }
+               else{
+                   if(agl < cosThetaCut0_) continue;
+               }
            }
-           else
-           {
-               if(agl < cosThetaCut0_) continue;
+           else{
+               if(agl < cosThetaCut_) continue;
            }
        }
        else

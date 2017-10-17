@@ -106,6 +106,7 @@ private:
   double VTrkP3DIpSigValue_;
   double casFlightSigValue_;
   double distanceSigValue_;
+  bool doPbPbcuts_;
   bool doRap_;
   double rapMax_;
   double rapMin_;

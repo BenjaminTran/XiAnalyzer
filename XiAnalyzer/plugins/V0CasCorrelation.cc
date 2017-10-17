@@ -1497,7 +1497,7 @@ V0CasCorrelation::beginJob()
             SignalXiSide[i]     = fs->make<TH2D>(Form("SignalXiSide_pt%d",i), ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
             KET_xi[i]           = fs->make<TH1D>(Form("KET_xi_pt%d",i),";GeV",40000,0,20);
             KET_xi_bkg[i]       = fs->make<TH1D>(Form("KET_xi_bkg_pt%d",i),";GeV",40000,0,20);
-            Mass_xi[i]          = fs->make<TH1D>(Form("Mass_xi_pt%d",i),";GeV",2000,0.8,2.0);
+            Mass_xi[i]          = fs->make<TH1D>(Form("Mass_xi_pt%d",i),";GeV",150,1.25,1.40);
             Pt_xi[i]            = fs->make<TH1D>(Form("Pt_xi_pt%d",i),";GeV",40000,0,20);
             Pt_xi_bkg[i]        = fs->make<TH1D>(Form("Pt_xi_bkg_pt%d",i),";GeV",40000,0,20);
             Eta_xi[i]           = fs->make<TH1D>(Form("Eta_xi_pt%d",i),";#eta",30,-3.0,3.0);
@@ -1523,7 +1523,7 @@ V0CasCorrelation::beginJob()
             SignalOmSide[i]     = fs->make<TH2D>(Form("SignalOmSide_pt%d",i), ";#Delta#eta;#Delta#phi ", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
             KET_om[i]           = fs->make<TH1D>(Form("KET_om_pt%d",i),";GeV",40000,0,20);
             KET_om_bkg[i]       = fs->make<TH1D>(Form("KET_om_bkg_pt%d",i),";GeV",40000,0,20);
-            Mass_om[i]          = fs->make<TH1D>(Form("Mass_om_pt%d",i),";GeV",2000,0.8,2.0);
+            Mass_om[i]          = fs->make<TH1D>(Form("Mass_om_pt%d",i),";GeV",150,1.6,1.75);
             Pt_om[i]            = fs->make<TH1D>(Form("Pt_om_pt%d",i),";GeV",40000,0,20);
             Pt_om_bkg[i]        = fs->make<TH1D>(Form("Pt_om_bkg_pt%d",i),";GeV",40000,0,20);
             Eta_om[i]           = fs->make<TH1D>(Form("Eta_om_pt%d",i),";#eta",30,-3.0,3.0);

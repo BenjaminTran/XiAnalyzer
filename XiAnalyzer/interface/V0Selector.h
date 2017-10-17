@@ -82,6 +82,7 @@ private:
   double decayLSigCut_;
   double misIDMassCut_;
   double misIDMassCutEE_;
+  bool doPbPbcuts_;
   bool doRap_;
   double rapMax_;
   double rapMin_;
