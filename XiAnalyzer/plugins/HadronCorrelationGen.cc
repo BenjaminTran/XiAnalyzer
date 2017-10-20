@@ -101,12 +101,8 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     hMult_selected->Fill(nMult_ass_good);
     
     edm::Handle<reco::GenParticleCollection> genpars;
-    edm::Handle<reco::TrackCollection> tracks;
     if(doGen_){
         iEvent.getByToken(_gnCollection,genpars);
-    }
-    else{
-        iEvent.getByToken(_trkSrc,tracks);
     }
    
     if(nMult_ass_good<multMax_ && nMult_ass_good>=multMin_){
@@ -160,7 +156,7 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
                     }
                 }
 
-                if(eta<=etaMax_ass_ && eta>=etaMin_ass_ && pt<=ptcut_[i+1] && pt>=ptcut_[i]) pVect_ass->push_back(pvector);
+                if(eta<=etaMax_ass_ && eta>=etaMin_ass_ && pt<=ptMax_ass_ && pt>=ptMin_ass_) pVect_ass->push_back(pvector);
             }
         }
 
