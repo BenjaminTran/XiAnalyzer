@@ -149,17 +149,17 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
                 TVector3 pvector;
                 pvector.SetPtEtaPhi(pt,eta,phi);
 
-                for(int i=0; i<numPtBins_; i++){
-                    if(rap<=rapMax_ && rap>=rapMin_ && pt<=ptcut_[i+1] && pt>=ptcut_[i]){
-                        hPt[i]->Fill(pt);
-                        hEta[i]->Fill(eta);
-                        hPhi[i]->Fill(phi);
-                        hRap[i]->Fill(rap);
-                        pVect_trg[i]->push_back(pvector);
-                    }
-                }
+                //for(int i=0; i<numPtBins_; i++){
+                    //if(rap<=rapMax_ && rap>=rapMin_ && pt<=ptcut_[i+1] && pt>=ptcut_[i]){
+                        //hPt[i]->Fill(pt);
+                        //hEta[i]->Fill(eta);
+                        //hPhi[i]->Fill(phi);
+                        //hRap[i]->Fill(rap);
+                        //pVect_trg[i]->push_back(pvector);
+                    //}
+                //}
 
-                if(eta<=etaMax_ass_ && eta>=etaMin_ass_ && pt<=ptMax_ass_ && pt>=ptMin_ass_) pVect_ass->push_back(pvector);
+                //if(eta<=etaMax_ass_ && eta>=etaMin_ass_ && pt<=ptMax_ass_ && pt>=ptMin_ass_) pVect_ass->push_back(pvector);
             }
         }
 
