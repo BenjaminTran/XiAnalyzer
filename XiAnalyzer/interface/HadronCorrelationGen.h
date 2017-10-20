@@ -85,7 +85,6 @@ private:
     vector<TVector3> *pVect_trg[14];
     vector<TVector3> *pVect_trg_reco[14];
     vector< vector<TVector3> > *pVectVect_trg[14];
-    vector< vector<TVector3> > *pVectVect_trg_reco[14];
     
     vector<TVector3> *pVect_ass;
     vector<TVector3> *pepVect_trkass;
