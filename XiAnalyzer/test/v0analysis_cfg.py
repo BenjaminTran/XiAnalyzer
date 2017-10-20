@@ -95,6 +95,8 @@ process.V0CorrAnalysis = cms.Sequence(process.selectV0CandidatesNewlambda*proces
 
 process.V0CorrAnalysisRapidity = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.v0CorrelationRapidity)
 
+process.V0CorrAnalysisRapidityGenRef = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.v0CorrelationRapidityGenRef)
+
 process.V0CorrAnalysisRapidityPeriSub = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.v0CorrelationRapidityPeriSub)
 
 process.V0CorrAnalysisRapidityMC = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.v0CorrelationRapidityMC)
@@ -108,7 +110,7 @@ process.HadCorrAnalysisRapidityMCGen = cms.Sequence(process.HadronCorrelation)
 
 process.genSelector = cms.Sequence(process.selectGenCandidatesKshort*process.selectGenCandidatesLambda*process.MatchCandidatesKshort*process.MatchCandidatesLambda*process.v0CorrelationRapidityMatchMC)
 
-process.p = cms.Path(process.V0CorrAnalysisRapidity)
+process.p = cms.Path(process.V0CorrAnalysisRapidityGenRef)
 
 process.schedule = cms.Schedule(process.p)
 
