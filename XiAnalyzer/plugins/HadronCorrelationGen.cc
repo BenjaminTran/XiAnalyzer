@@ -141,9 +141,9 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
                 double eta = it->eta();
                 double phi = it->phi();
                 double pt = it->pt();
-                double mass = it->mass();
-                double mom = ROOT::Math::Mag(it->momentum());
-                double enery = sqrt(mass*mass + mom*mom);
+                //double mass = it->mass();
+                //double mom = ROOT::Math::Mag(it->momentum());
+                //double enery = sqrt(mass*mass + mom*mom);
                 double rap = it->rapidity();
 
                 TVector3 pvector;
