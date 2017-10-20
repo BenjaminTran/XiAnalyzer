@@ -92,15 +92,6 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         return;
     }
 
-    pepVect_trkass = new vector<TVector3>;
-    for(int i=0; i<PtBinNum_; i++)
-    {
-        pepVect_Xi_peak[i]    = new vector<TLorentzVector>;
-        pepVect_Xi_side[i]    = new vector<TLorentzVector>;
-        pepVect_dau_xi_peak[i]= new vector<TVector3>;
-        pepVect_dau_xi_side[i]= new vector<TVector3>;
-    }
-
     edm::Handle<reco::VertexCompositeCandidateCollection> casCollection;
     iEvent.getByToken(_casCollection, casCollection);
 
@@ -111,6 +102,16 @@ XiCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         cout << "Collection invalid" << endl;
         return;
     }
+
+    pepVect_trkass = new vector<TVector3>;
+    for(int i=0; i<PtBinNum_; i++)
+    {
+        pepVect_Xi_peak[i]    = new vector<TLorentzVector>;
+        pepVect_Xi_side[i]    = new vector<TLorentzVector>;
+        pepVect_dau_xi_peak[i]= new vector<TVector3>;
+        pepVect_dau_xi_side[i]= new vector<TVector3>;
+    }
+
 
     int EtaPtCutnTracks = 0;
 
