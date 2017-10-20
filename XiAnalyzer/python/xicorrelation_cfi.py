@@ -22,6 +22,7 @@ xiCorrelation          = cms.EDAnalyzer('XiCorrelation',
         casCollection   = cms.InputTag('selectV0CandidatesLowXi:Xi'),
         #Parameters
         v0IDName = cms.string("Xi"),
+  towerSrc       = cms.InputTag('towerMaker'),
         bkgnum         = cms.double(20.0),
         etaMax_ass     = cms.double(2.4),
         etaMin_ass     = cms.double(-2.4),
