@@ -2,8 +2,6 @@
 
 HadronCorrelationGen::HadronCorrelationGen(const edm::ParameterSet& iConfig)
 
-#define PI = 3.1416
-
 {
     //now do what ever initialization is needed
     etaMin_trg_ = iConfig.getParameter<double>("etaMin_trg");
