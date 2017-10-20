@@ -17,5 +17,7 @@ HadronCorrelation = cms.EDAnalyzer('HadronCorrelationGen',
         rapMin = cms.double(-1.0),
         multMax = cms.double(9999999),
         multMin = cms.double(-1),
-        ptcut = cms.vdouble(0.2,0.4,0.6,0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5,10.0,15.0,20.0,25.0,30.0)
+        doGen = cms.bool(False),
+        numPtBins = cms.int32(14),
+        ptcut = cms.vdouble(0.2,0.4,0.6,0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5,10.0)#,15.0,20.0,25.0,30.0)
         )

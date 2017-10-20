@@ -2,6 +2,8 @@
 
 HadronCorrelationGen::HadronCorrelationGen(const edm::ParameterSet& iConfig)
 
+#define PI = 3.1416
+
 {
     //now do what ever initialization is needed
     etaMin_trg_ = iConfig.getParameter<double>("etaMin_trg");
@@ -11,11 +13,13 @@ HadronCorrelationGen::HadronCorrelationGen(const edm::ParameterSet& iConfig)
     ptMin_ass_ = iConfig.getParameter<double>("ptMin_ass");
     ptMax_ass_ = iConfig.getParameter<double>("ptMax_ass");
     bkgFactor_ = iConfig.getParameter<int>("bkgFactor");
+    numPtBins_ = iConfig.getParameter<int>("numPtBins");
     multMax_ = iConfig.getParameter<double>("multMax");
     multMin_ = iConfig.getParameter<double>("multMin");
     rapMax_ = iConfig.getParameter<double>("rapMax");
     rapMin_ = iConfig.getParameter<double>("rapMin");
     ptcut_ = iConfig.getParameter<std::vector<double> >("ptcut");
+    doGen_ = iConfig.getParameter<bool>("doGen");
     _trkSrc         = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("trkSrc"));
     _vertexCollName = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexCollName"));
     _gnCollection   = consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("gnCollection"));
@@ -52,8 +56,8 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     bestvzError = vtx.zError(); bestvxError = vtx.xError(); bestvyError = vtx.yError();
     
     if(bestvz < -15 || bestvz>15) return;
-    
-    for(int i=0;i<18;i++)
+
+    for(int i=0;i<numPtBins_;i++)
     {
         pVect_trg[i] = new vector<TVector3>;
     }
@@ -98,40 +102,73 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     }
     hMult_selected->Fill(nMult_ass_good);
     
-    //Gen Pars
     edm::Handle<reco::GenParticleCollection> genpars;
-    iEvent.getByToken(_gnCollection,genpars);
+    edm::Handle<reco::TrackCollection> tracks;
+    if(doGen_){
+        iEvent.getByToken(_gnCollection,genpars);
+    }
+    else{
+        iEvent.getByToken(_trkSrc,tracks);
+    }
    
     if(nMult_ass_good<multMax_ && nMult_ass_good>=multMin_){
-        for(unsigned it=0; it<genpars->size(); ++it){
+        if(doGen_){
+            for(unsigned it=0; it<genpars->size(); ++it){
 
-            const reco::GenParticle & trk = (*genpars)[it];
+                const reco::GenParticle & trk = (*genpars)[it];
 
-            double eta = trk.eta();
-            double phi = trk.phi();
-            double pt  = trk.pt();
-            double rap = trk.rapidity();
-            int st = trk.status();
+                double eta = trk.eta();
+                double phi = trk.phi();
+                double pt  = trk.pt();
+                double rap = trk.rapidity();
+                int st = trk.status();
 
-            TVector3 pvector;
-            pvector.SetPtEtaPhi(pt,eta,phi);
+                TVector3 pvector;
+                pvector.SetPtEtaPhi(pt,eta,phi);
 
-            double effweight = 1;
+                double effweight = 1;
 
-            for(int i=0;i<18;i++)
-            {
-                if(rap<=rapMax_ && rap>=rapMin_ && pt<=ptcut_[i+1] && pt>=ptcut_[i] && fabs(trk.charge())==1 && st==1){
-                    hPt[i]->Fill(pt,1.0/effweight);
-                    pVect_trg[i]->push_back(pvector);
+                for(int i=0;i<numPtBins_;i++)
+                {
+                    if(rap<=rapMax_ && rap>=rapMin_ && pt<=ptcut_[i+1] && pt>=ptcut_[i] && fabs(trk.charge())==1 && st==1){
+                        hPt[i]->Fill(pt,1.0/effweight);
+                        hEta[i]->Fill(eta);
+                        hPhi[i]->Fill(phi);
+                        hRap[i]->Fill(rap);
+                        pVect_trg[i]->push_back(pvector);
+                    }
                 }
-            }
 
-            if(eta<=etaMax_ass_ && eta>=etaMin_ass_ && pt<=ptMax_ass_ && pt>=ptMin_ass_ && fabs(trk.charge())==1 && st==1) pVect_ass->push_back(pvector);
+                if(eta<=etaMax_ass_ && eta>=etaMin_ass_ && pt<=ptMax_ass_ && pt>=ptMin_ass_ && fabs(trk.charge())==1 && st==1) pVect_ass->push_back(pvector);
+            }
+        }
+        else{
+            for(reco::TrackCollection::const_iterator it=tracks->begin(); it!=tracks->end(); ++it){
+                double eta = it->eta();
+                double phi = it->phi();
+                double pt = it->pt();
+                double rap = it->rapidity();
+
+                TVector3 pvector;
+                pvector.SetPtEtaPhi(pt,eta,phi);
+
+                for(int i=0; i<numPtBins_; i++){
+                    if(rap<=rapMax_ && rap>=rapMin_ && pt<=ptcut_[i+1] && pt>=ptcut_[i]){
+                        hPt[i]->Fill(pt);
+                        hEta[i]->Fill(eta);
+                        hPhi[i]->Fill(phi);
+                        hRap[i]->Fill(rap);
+                        pVect_trg[i]->push_back(pvector);
+                    }
+                }
+
+                if(eta<=etaMax_ass_ && eta>=etaMin_ass_ && pt<=ptcut_[i+1] && pt>=ptcut_[i]) pVect_ass->push_back(pvector);
+            }
         }
 
         int nMult_ass = (int)pVect_ass->size();
         // Calculating signal
-        for(int i=0;i<18;i++)
+        for(int i=0;i<numPtBins_;i++)
         {
             int nMult_trg = (int)pVect_trg[i]->size();
             hMult[i]->Fill(nMult_trg);
@@ -192,6 +229,7 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
             hMult_good[i]->Fill(nMult_corr);
             pVectVect_trg[i]->push_back(*pVect_trg[i]);
         }
+        /*
         //
         // Make signal histogram for pairing of two charged primary GEN tracks
         //
@@ -228,8 +266,10 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
                 SignalHad->Fill(dEta, dPhi,1.0/pepVect_trkhad_size);
             }
         }
+        */
 
 
+        /*
         // Make signal histogram for pairing of two charged primary RECO tracks
         //
         int pepVect_trkass_size = (int)pepVect_trkass->size();
@@ -264,13 +304,14 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
                 SignalHadReco->Fill(dEta, dPhi);
             }
         }
+        */
 
 
         pVect2_ass->push_back(*pepVect_trkass);
         pVectVect_ass->push_back(*pVect_ass);
         zvtxVect->push_back(bestvz);
 
-        for(int i=0; i<18; i++)
+        for(int i=0; i<numPtBins_; i++)
         {
             delete pVect_trg[i];
         }
@@ -286,19 +327,24 @@ HadronCorrelationGen::beginJob(){
     
     TH1D::SetDefaultSumw2();
     
+    TFileDirectory KineParam = fs->mkdir("KineParam");
+    TFileDirectory Mult = fs->mkdir("Mult");
     hMult_selected = fs->make<TH1D>("mult_selected",";N",600,0,600);
     HadPerEvt       = fs->make<TH1D>("HadPerEvent", "Hadrons per Event", 1500, 0, 1500);
-    BackgroundHad   = fs->make<TH2D>("BackgroundHad", "BkgHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-    SignalHad       = fs->make<TH2D>("SignalHad", "SigHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-    BackgroundHadReco   = fs->make<TH2D>("BackgroundHadReco", "BkgHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
-    SignalHadReco       = fs->make<TH2D>("SignalHadReco", "SigHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+    //BackgroundHad   = fs->make<TH2D>("BackgroundHad", "BkgHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+    //SignalHad       = fs->make<TH2D>("SignalHad", "SigHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+    //BackgroundHadReco   = fs->make<TH2D>("BackgroundHadReco", "BkgHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
+    //SignalHadReco       = fs->make<TH2D>("SignalHadReco", "SigHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     
-    for(int i=0;i<18;i++)
+    for(int i=0;i<numPtBins_;i++)
     {
-        hPt[i] = fs->make<TH1D>(Form("Pt%d",i),";GeV",25000,0,12.5);
-        hMult[i] = fs->make<TH1D>(Form("mult%d",i),";N",300,0,300);
-        hMult_good[i] = fs->make<TH1D>(Form("mult_good%d",i),";N",300,0,300);
-        hMult_assoc[i] = fs->make<TH1D>(Form("mult_assoc%d",i),";N",300,0,300);
+        hPt[i] = KineParam.make<TH1D>(Form("Pt%d",i),";GeV",25000,0,12.5);
+        hRap[i] = KineParam.make<TH1D>(Form("rap_pt%d",i),";y",100,-5,5);
+        hEta[i] = KineParam.make<TH1D>(Form("Eta_pt%d",i),";#eta",100,-5.0,5.0);
+        hPhi[i] = KineParam.make<TH1D>(Form("Phi_pt%d",i),";#phi",132,-2.1*PI,2.1*PI);
+        hMult[i] = Mult.make<TH1D>(Form("mult%d",i),";N",300,0,300);
+        hMult_good[i] = Mult.make<TH1D>(Form("mult_good%d",i),";N",300,0,300);
+        hMult_assoc[i] = Mult.make<TH1D>(Form("mult_assoc%d",i),";N",300,0,300);
         hSignal[i] = fs->make<TH2D>(Form("signal%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
         hBackground[i] = fs->make<TH2D>(Form("background%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
         pVectVect_trg[i] = new vector< vector<TVector3> >;
@@ -318,7 +364,7 @@ HadronCorrelationGen::endJob() {
     int nevttotal_ass_Reco = (int)pVect2_ass->size();
     
     // Calculate background
-    for(int i=0;i<18;i++)
+    for(int i=0;i<numPtBins_;i++)
     {
         int nevttotal_trg = (int)pVectVect_trg[i]->size();
         
@@ -390,6 +436,7 @@ HadronCorrelationGen::endJob() {
         }
     }
 
+    /*
     //
     // hadron paired with hadron GEN
     //
@@ -507,4 +554,5 @@ HadronCorrelationGen::endJob() {
             }
         }
     }
+*/
 }

@@ -65,13 +65,16 @@ private:
     TH1D* hMult_selected;
     TH1D* HadPerEvt;
     
-    TH1D* hPt[18];
+    TH1D* hPt[14];
+    TH1D* hEta[14];
+    TH1D* hPhi[14];
+    TH1D* hRap[14];
     
-    TH1D* hMult[18];
-    TH2D* hSignal[18];
-    TH2D* hBackground[18];
-    TH1D* hMult_good[18];
-    TH1D* hMult_assoc[18];
+    TH1D* hMult[14];
+    TH2D* hSignal[14];
+    TH2D* hBackground[14];
+    TH1D* hMult_good[14];
+    TH1D* hMult_assoc[14];
     
     TH2F* effhisto;
     TH2D* SignalHad;
@@ -79,8 +82,10 @@ private:
     TH2D* SignalHadReco;
     TH2D* BackgroundHadReco;
     
-    vector<TVector3> *pVect_trg[18];
-    vector< vector<TVector3> > *pVectVect_trg[18];
+    vector<TVector3> *pVect_trg[14];
+    vector<TVector3> *pVect_trg_reco[14;]
+    vector< vector<TVector3> > *pVectVect_trg[14];
+    vector< vector<TVector3> > *pVectVect_trg_reco[14];
     
     vector<TVector3> *pVect_ass;
     vector<TVector3> *pepVect_trkass;
@@ -96,10 +101,12 @@ private:
     double ptMin_ass_;
     double ptMax_ass_;
     int bkgFactor_;
+    int numPtBins_;
     double multMax_;
     double multMin_;
     double rapMax_;
     double rapMin_;
+    bool doGen_;
     edm::Service<TFileService> fs;
 };
 
