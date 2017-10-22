@@ -24,6 +24,7 @@ V0CorrelationMC::V0CorrelationMC(const edm::ParameterSet& iConfig)
     doKs_           = iConfig.getUntrackedParameter<bool>("doKs");
     doLa_           = iConfig.getUntrackedParameter<bool>("doLa");
     doXi_           = iConfig.getUntrackedParameter<bool>("doXi");
+    doReco_         = iConfig.getUntrackedParameter<bool>("doReco");
     ptcut_ks_       = iConfig.getUntrackedParameter<std::vector<double> >("ptcut_ks");
     ptcut_la_       = iConfig.getUntrackedParameter<std::vector<double> >("ptcut_la");
     ptcut_xi_       = iConfig.getUntrackedParameter<std::vector<double> >("ptcut_xi");
@@ -105,6 +106,36 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
     }
     hMult->Fill(nMult_ass_good);
 
+    if(doReco)
+    {
+        for(unsigned it=0; it<tracks->size(); ++it){
+
+            const reco::Track & trk = (*tracks)[it];
+
+            math::XYZPoint bestvtx(bestvx,bestvy,bestvz);
+
+            double dzvtx = trk.dz(bestvtx);
+            double dxyvtx = trk.dxy(bestvtx);
+            double dzerror = sqrt(trk.dzError()*trk.dzError()+bestvzError*bestvzError);
+            double dxyerror = sqrt(trk.d0Error()*trk.d0Error()+bestvxError*bestvyError);
+            if(trk.pt == 0) continue;
+
+            if(!trk.quality(reco::TrackBase::highPurity)) continue;
+            if(fabs(trk.ptError())/trk.pt()>0.10) continue;
+            if(fabs(dzvtx/dzerror) > 3) continue;
+            if(fabs(dxyvtx/dxyerror) > 3) continue;
+
+
+            double eta = trk.eta();
+            double phi = trk.phi();
+            double pt  = trk.pt();
+
+            TVector3 pvector;
+            pvector.SetPtEtaPhi(pt,eta,phi);
+            if(eta<=etaMax_ass_ && eta>=etaMin_ass_ && pt<=ptMax_ass_ && pt>=ptMin_ass_) pVect_ass->push_back(pvector);
+        }
+    }
+
     if(nMult_ass_good<multMax_ && nMult_ass_good>=multMin_){
         //loop over tracks
         for(unsigned it=0; it<genpars->size(); ++it){
@@ -123,7 +154,10 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
             TVector3 pvector;
             pvector.SetPtEtaPhi(pt,eta,phi);
 
-            if(trk.eta()<=etaMax_ass_ && trk.eta()>=etaMin_ass_ && trk.pt()<=ptMax_ass_ && trk.pt()>=ptMin_ass_ && fabs(trk.charge())==1 && st==1) pVect_ass->push_back(pvector);
+            if(!doReco)
+            {
+                if(trk.eta()<=etaMax_ass_ && trk.eta()>=etaMin_ass_ && trk.pt()<=ptMax_ass_ && trk.pt()>=ptMin_ass_ && fabs(trk.charge())==1 && st==1) pVect_ass->push_back(pvector);
+            }
 
             //int nm;
 
