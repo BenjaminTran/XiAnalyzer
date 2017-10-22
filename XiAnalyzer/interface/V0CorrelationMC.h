@@ -144,5 +144,6 @@ private:
     bool doKs_;
     bool doLa_;
     bool doXi_;
+    bool doReco_;
 };
 #endif
