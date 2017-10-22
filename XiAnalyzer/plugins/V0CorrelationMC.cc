@@ -106,7 +106,7 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
     }
     hMult->Fill(nMult_ass_good);
 
-    if(doReco)
+    if(doReco_)
     {
         for(unsigned it=0; it<tracks->size(); ++it){
 
@@ -118,7 +118,7 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
             double dxyvtx = trk.dxy(bestvtx);
             double dzerror = sqrt(trk.dzError()*trk.dzError()+bestvzError*bestvzError);
             double dxyerror = sqrt(trk.d0Error()*trk.d0Error()+bestvxError*bestvyError);
-            if(trk.pt == 0) continue;
+            //if(trk.pt == 0) continue;
 
             if(!trk.quality(reco::TrackBase::highPurity)) continue;
             if(fabs(trk.ptError())/trk.pt()>0.10) continue;
@@ -154,7 +154,7 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
             TVector3 pvector;
             pvector.SetPtEtaPhi(pt,eta,phi);
 
-            if(!doReco)
+            if(!doReco_)
             {
                 if(trk.eta()<=etaMax_ass_ && trk.eta()>=etaMin_ass_ && trk.pt()<=ptMax_ass_ && trk.pt()>=ptMin_ass_ && fabs(trk.charge())==1 && st==1) pVect_ass->push_back(pvector);
             }
