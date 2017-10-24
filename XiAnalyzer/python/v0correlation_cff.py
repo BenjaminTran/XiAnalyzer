@@ -18,10 +18,6 @@ v0CorrelationRapidity = v0Correlation.clone(
         doRap = cms.untracked.bool(True),
         )
 
-v0CorrelationRapidityGenRef = v0CorrelationRapidity.clone(
-        doGenRef = cms.untracked.bool(True)
-        )
-
 v0CorrelationlooseRapidity = v0CorrelationRapidity.clone(
         laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdalooseRapidity:Lambda'),
         ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshortlooseRapidity:Kshort')
@@ -35,6 +31,13 @@ v0CorrelationtightRapidity = v0CorrelationRapidity.clone(
 v0CorrelationRapidityMC = v0CorrelationRapidity.clone(
         multHigh = cms.untracked.double(999999),
         multLow = cms.untracked.double(-1)
+        )
+
+v0CorrelationRapidityMCGenRef = v0CorrelationRapidity.clone(
+        multHigh = cms.untracked.double(999999),
+        multLow = cms.untracked.double(-1),
+        gnCollection   = cms.InputTag('genParticles'),
+        doGenRef = cms.untracked.bool(True)
         )
 
 v0CorrelationRapidityMatchMC = v0CorrelationRapidity.clone(

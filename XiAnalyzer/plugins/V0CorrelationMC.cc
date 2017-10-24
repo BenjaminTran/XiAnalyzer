@@ -135,7 +135,6 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
         }
     }
 
-    cout << "1" << endl;
 
     if(nMult_ass_good<multMax_ && nMult_ass_good>=multMin_){
         //loop over tracks
@@ -143,7 +142,6 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 
             const reco::GenParticle & trk = (*genpars)[it];
 
-            cout << "2" << endl;
 
             double eta = trk.eta();
             double phi = trk.phi();
@@ -152,19 +150,16 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
             int id = trk.pdgId();
             int st = trk.status();
 
-            cout << "3" << endl;
 
             TVector3 pvector;
             pvector.SetPtEtaPhi(pt,eta,phi);
 
-            cout << "4" << endl;
 
             if(!doReco_)
             {
                 if(trk.eta()<=etaMax_ass_ && trk.eta()>=etaMin_ass_ && trk.pt()<=ptMax_ass_ && trk.pt()>=ptMin_ass_ && fabs(trk.charge())==1 && st==1) pVect_ass->push_back(pvector);
             }
 
-            cout << "5" << endl;
 
             //int nm;
 
@@ -199,7 +194,6 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                         pt_dau2 = dau2->pt();
                         h2Daughter->Fill(1);
                     }
-            cout << "6" << endl;
 
                     TVector3 pvector;
                     pvector.SetPtEtaPhi(pt,eta,phi);
@@ -210,7 +204,6 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                     TVector3 pvector_dau2;
                     pvector_dau2.SetPtEtaPhi(pt_dau2,eta_dau2,phi_dau2);
 
-            cout << "7" << endl;
 
                     for(int i=0;i<18;i++)
                     {
@@ -244,7 +237,6 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 
             if(doLa_)
             {
-            cout << "8" << endl;
                 if(fabs(id)==3122){
 
                     int mid = 0;
@@ -257,17 +249,15 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                             mid = mom1->pdgId();
                         }
                     }
-            cout << "9" << endl;
 
                     if(fabs(mid)==3322 || fabs(mid)==3312 || fabs(mid)==3324 || fabs(mid)==3314 || fabs(mid)==3334) continue;
-            cout << "10" << endl;
 
-                    double eta_dau1 = 999999;
-                    double phi_dau1 = 999999;
+                    double eta_dau1 = 0;
+                    double phi_dau1 = 0;
                     double pt_dau1 = 999.999;
 
-                    double eta_dau2 = 999999;
-                    double phi_dau2 = 999999;
+                    double eta_dau2 = 0;
+                    double phi_dau2 = 0;
                     double pt_dau2 = 999.999;
 
                     if(trk.numberOfDaughters()==2){
@@ -283,7 +273,6 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                         pt_dau2 = dau2->pt();
                     }
 
-            cout << "11" << endl;
 
                     TVector3 pvector;
                     pvector.SetPtEtaPhi(pt,eta,phi);
@@ -293,7 +282,6 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 
                     TVector3 pvector_dau2;
                     pvector_dau2.SetPtEtaPhi(pt_dau2,eta_dau2,phi_dau2);
-            cout << "12" << endl;
 
                     for(int i=0;i<18;i++)
                     {
@@ -324,7 +312,6 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                     }
                 }
             }
-            cout << "13" << endl;
 
             if(doXi_)
             {
@@ -387,7 +374,6 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
             hMult_xi[i]->Fill(nMult_trg_xi);
             if(doKs_)
             {
-            cout << "14" << endl;
                 for(int ntrg=0;ntrg<nMult_trg_ks;ntrg++)
                 {
                     TVector3 pvector_trg = (*pVect_trg_ks[i])[ntrg];
@@ -439,7 +425,6 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 
             if(doLa_)
             {
-            cout << "15" << endl;
                 for(int ntrg=0;ntrg<nMult_trg_la;ntrg++)
                 {
                     TVector3 pvector_trg = (*pVect_trg_la[i])[ntrg];
@@ -562,6 +547,7 @@ V0CorrelationMC::beginJob()
     if(doKs_) cout << "Will Access Ks" << endl;
     if(doLa_) cout << "Will Access La" << endl;
     if(doXi_) cout << "Will Access Xi" << endl;
+    if(doReco_) cout << "Will Use Reco Ref" << endl;
 
 
     hMult = fs->make<TH1D>("mult",";N",300,0,300);
