@@ -79,11 +79,12 @@ process.source = cms.Source("PoolSource",
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
                                         #'V0ClosureGen_RecoRef.root'
-                                    'V0ClosureRecoGenRef.root'
+                                    #'V0ClosureRecoGenRef.root'
                                     #'V0CorrelationRapidityClosureRecoCollection.root'
                                     #'MatchV0ClosureB.root'
                                     #'MatchV0ClosureGenRef.root'
                                     #'V0CorrelationRapidityPeriSubTestRAM.root'
+                                    'V0ClosureGenNoStrange.root'
 				                    )
                                   )
 # CORRELATION
@@ -112,7 +113,7 @@ process.V0CorrAnalysisRapidityTight = cms.Sequence(process.selectV0CandidatesNew
 
 process.genSelector = cms.Sequence(process.selectGenCandidatesKshort*process.selectGenCandidatesLambda*process.MatchCandidatesKshort*process.MatchCandidatesLambda*process.v0CorrelationRapidityMatchMC)
 
-process.p = cms.Path(process.V0CorrAnalysisRapidityMCGenRef)
+process.p = cms.Path(process.V0CorrAnalysisRapidityMCGen)
 
 process.schedule = cms.Schedule(process.p)
 
