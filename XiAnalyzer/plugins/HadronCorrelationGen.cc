@@ -116,6 +116,7 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
                 double pt  = trk.pt();
                 double rap = trk.rapidity();
                 int st = trk.status();
+                int id = trk.pdgId();
 
                 TVector3 pvector;
                 pvector.SetPtEtaPhi(pt,eta,phi);
@@ -133,7 +134,10 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
                     }
                 }
 
-                if(eta<=etaMax_ass_ && eta>=etaMin_ass_ && pt<=ptMax_ass_ && pt>=ptMin_ass_ && fabs(trk.charge())==1 && st==1) pVect_ass->push_back(pvector);
+                if(id == 311 || id == 2212 || id ==211)
+                {
+                    if(eta<=etaMax_ass_ && eta>=etaMin_ass_ && pt<=ptMax_ass_ && pt>=ptMin_ass_ && fabs(trk.charge())==1 && st==1) pVect_ass->push_back(pvector);
+                }
             }
         }
         else{
@@ -226,7 +230,6 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
             hMult_good[i]->Fill(nMult_corr);
             pVectVect_trg[i]->push_back(*pVect_trg[i]);
         }
-        /*
         //
         // Make signal histogram for pairing of two charged primary GEN tracks
         //
@@ -263,10 +266,8 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
                 SignalHad->Fill(dEta, dPhi,1.0/pepVect_trkhad_size);
             }
         }
-        */
 
 
-        /*
         // Make signal histogram for pairing of two charged primary RECO tracks
         //
         int pepVect_trkass_size = (int)pepVect_trkass->size();
@@ -301,7 +302,6 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
                 SignalHadReco->Fill(dEta, dPhi);
             }
         }
-        */
 
 
         pVect2_ass->push_back(*pepVect_trkass);

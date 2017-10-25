@@ -1,4 +1,4 @@
-//system include files
+// system include files
 #include <memory>
 
 #include "../interface/V0CasCorrelation.h"
@@ -234,7 +234,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
     }
     hMult->Fill(nMult_ass_good);
 
-    if(nMult_ass_good<multMax_ && nMult_ass_good>=multMin_){
+    if ( nMult_ass_good < multMax_ && nMult_ass_good >= multMin_ ) {
         hMult_accept->Fill(nMult_ass_good);
         if(doKs_)
         {
@@ -477,8 +477,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     double rapOrEtaMinCut = etaMin_trg_;
                     double rapOrEta = eta;
 
-                    if(doRap_)
-                    {
+                    if (doRap_) {
                         rapOrEtaMaxCut = 1.0;
                         rapOrEtaMinCut = -1.0;
                         rapOrEta = rapidity;
@@ -1458,7 +1457,7 @@ V0CasCorrelation::beginJob()
     {
         for(int i=0; i<ptbin_n_; i++)
         {
-            hKET_la[i] = fs->make<TH1D>(Form("KETlambda_pt%d",i),";GeV",50000,0,25);
+            hKET_la[i] = fs->make<TH1D>(Form("KETlambda_pt%d", i), ";GeV", 50000, 0, 25);
             hPt_la[i] = fs->make<TH1D>(Form("Ptlambda_pt%d",i),";GeV",50000,0,25);
             hEta_la[i] = fs->make<TH1D>(Form("Etalambda_pt%d",i),";eta",24,-2.4,2.4);
             hRap_la[i] = fs->make<TH1D>(Form("Raplambda_pt%d",i),";y",30,-1.5,1.5);
