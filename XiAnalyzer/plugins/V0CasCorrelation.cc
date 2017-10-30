@@ -1060,7 +1060,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
                 }
 
-                mult_xi[i]->Fill(nMult_trg_eff_xi);
+                mult_xi[i]->Fill(pepVect_xi_peak_size);
 
                 // PEAK REGION signal
                 for(int xi_trg = 0; xi_trg < pepVect_xi_peak_size; xi_trg++)
@@ -1095,12 +1095,16 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         TVector3 pepVect_ass = (*pVect_ass)[assoc];
                         double eta_ass       = pepVect_ass.Eta();
                         double phi_ass       = pepVect_ass.Phi();
+                        double pt_ass = pepVect_ass.Pt();
+
+                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                         if(fabs(eta_ass-eta_trg_dau1) < 0.03 && fabs(phi_ass-phi_trg_dau1) < 0.03) continue;
                         if(fabs(eta_ass-eta_trg_dau2) < 0.03 && fabs(phi_ass-phi_trg_dau2) < 0.03) continue;
 
                         double dEta = eta_ass - eta_trg;
                         double dPhi = phi_ass - phi_trg;
+
 
                         if(dPhi > PI)
                             dPhi=dPhi-2*PI;
@@ -1111,7 +1115,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                         // To reduce jet fragmentation contributions
                         if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                        SignalXiPeak[i]->Fill(dEta, dPhi);//,1.0/nMult_trg_eff_xi/effxi);
+                        SignalXiPeak[i]->Fill(dEta, dPhi,1.0/effweight_ass);//,1.0/nMult_trg_eff_xi/effxi);
                     }
                 }
 
@@ -1136,7 +1140,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     //nMult_trg_eff_xi = nMult_trg_eff_xi + 1.0/effxi;
                 }
 
-                mult_xi_bkg[i]->Fill(nMult_trg_eff_xi);
+                mult_xi_bkg[i]->Fill(pepVect_xi_side_size);
 
                 // SIDEBAND REGION signal
                 for(int xi_trg = 0; xi_trg < pepVect_xi_side_size; xi_trg++)
@@ -1154,6 +1158,17 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     else
                         EffXchoice = eta_trg;
 
+                    TVector3 pepvector_trg_dau1 = (*pepVect_dau_xi_peak[i])[2*xi_trg];
+
+                    double eta_trg_dau1 = pepvector_trg_dau1.Eta();
+                    double phi_trg_dau1 = pepvector_trg_dau1.Phi();
+
+                    TVector3 pepvector_trg_dau2 = (*pepVect_dau_xi_peak[i])[2*xi_trg+1];
+
+                    double eta_trg_dau2 = pepvector_trg_dau2.Eta();
+                    double phi_trg_dau2 = pepvector_trg_dau2.Phi();
+
+
                     //double effxi = effhisto_xi->GetBinContent(effhisto_xi->FindBin(EffXchoice,pt_trg));
 
                     for(int assoc = 0; assoc < nMult_ass; assoc++)
@@ -1161,6 +1176,12 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         TVector3 pepVect_ass = (*pVect_ass)[assoc];
                         double eta_ass       = pepVect_ass.Eta();
                         double phi_ass       = pepVect_ass.Phi();
+                        double pt_ass = pepVect_ass.Pt();
+
+                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+
+                        if(fabs(eta_ass-eta_trg_dau1) < 0.03 && fabs(phi_ass-phi_trg_dau1) < 0.03) continue;
+                        if(fabs(eta_ass-eta_trg_dau2) < 0.03 && fabs(phi_ass-phi_trg_dau2) < 0.03) continue;
 
                         double dEta = eta_ass - eta_trg;
                         double dPhi = phi_ass - phi_trg;
@@ -1174,7 +1195,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                         // To reduce jet fragmentation contributions
                         if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                        SignalXiSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_xi/effxi);
+                        SignalXiSide[i]->Fill(dEta, dPhi, 1.0/effweight_ass);//, 1.0/nMult_trg_eff_xi/effxi);
                     }
                 }
             }
@@ -1208,7 +1229,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     //nMult_trg_eff_om = nMult_trg_eff_om + 1.0/effom;
                 }
 
-                mult_om[i]->Fill(nMult_trg_eff_om);
+                mult_om[i]->Fill(pepVect_om_peak_size);
 
                 // PEAK REGION signal
                 for(int om_trg = 0; om_trg < pepVect_om_peak_size; om_trg++)
@@ -1243,6 +1264,9 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         TVector3 pepVect_ass = (*pVect_ass)[assoc];
                         double eta_ass       = pepVect_ass.Eta();
                         double phi_ass       = pepVect_ass.Phi();
+                        double pt_ass = pepVect_ass.Pt();
+
+                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                         if(fabs(eta_ass-eta_trg_dau1) < 0.03 && fabs(phi_ass-phi_trg_dau1) < 0.03) continue;
                         if(fabs(eta_ass-eta_trg_dau2) < 0.03 && fabs(phi_ass-phi_trg_dau2) < 0.03) continue;
@@ -1259,7 +1283,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                         // To reduce jet fragmentation contributions
                         if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                        SignalOmPeak[i]->Fill(dEta, dPhi);//,1.0/nMult_trg_eff_om/effom);
+                        SignalOmPeak[i]->Fill(dEta, dPhi, 1.0/effweight_ass);//,1.0/nMult_trg_eff_om/effom);
                     }
                 }
 
@@ -1284,7 +1308,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     //nMult_trg_eff_om = nMult_trg_eff_om + 1.0/effom;
                 }
 
-                mult_om_bkg[i]->Fill(nMult_trg_eff_om);
+                mult_om_bkg[i]->Fill(pepVect_om_side_size);
 
                 // SIDEBAND REGION signal
                 for(int om_trg = 0; om_trg < pepVect_om_side_size; om_trg++)
@@ -1304,14 +1328,30 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                     //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
 
+                    TVector3 pepvector_trg_dau1 = (*pepVect_dau_om_peak[i])[2*om_trg];
+
+                    double eta_trg_dau1 = pepvector_trg_dau1.Eta();
+                    double phi_trg_dau1 = pepvector_trg_dau1.Phi();
+
+                    TVector3 pepvector_trg_dau2 = (*pepVect_dau_om_peak[i])[2*om_trg+1];
+
+                    double eta_trg_dau2 = pepvector_trg_dau2.Eta();
+                    double phi_trg_dau2 = pepvector_trg_dau2.Phi();
+
                     for(int assoc = 0; assoc < nMult_ass; assoc++)
                     {
                         TVector3 pepVect_ass = (*pVect_ass)[assoc];
                         double eta_ass       = pepVect_ass.Eta();
                         double phi_ass       = pepVect_ass.Phi();
+                        double pt_ass = pepVect_ass.Pt();
 
                         double dEta = eta_ass - eta_trg;
                         double dPhi = phi_ass - phi_trg;
+
+                        double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
+
+                        if(fabs(eta_ass-eta_trg_dau1) < 0.03 && fabs(phi_ass-phi_trg_dau1) < 0.03) continue;
+                        if(fabs(eta_ass-eta_trg_dau2) < 0.03 && fabs(phi_ass-phi_trg_dau2) < 0.03) continue;
 
                         if(dPhi > PI)
                             dPhi=dPhi-2*PI;
@@ -1322,7 +1362,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                         // To reduce jet fragmentation contributions
                         if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                        SignalOmSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_om/effom);
+                        SignalOmSide[i]->Fill(dEta, dPhi, 1.0/effweight_ass);//, 1.0/nMult_trg_eff_om/effom);
                     }
                 }
             }
@@ -2035,6 +2075,9 @@ V0CasCorrelation::endJob() {
                             TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
                             double eta_ass = pvectorTmp_ass.Eta();
                             double phi_ass = pvectorTmp_ass.Phi();
+                            double pt_ass = pvectorTmp_ass.Pt();
+
+                            double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
                             if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
                             if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
 
@@ -2047,7 +2090,7 @@ V0CasCorrelation::endJob() {
 
                             if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                            BackgroundXiPeak[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_xi/effxi);
+                            BackgroundXiPeak[i]->Fill(dEta, dPhi,1.0/effweight_ass);//, 1.0/nMult_trg_eff_xi/effxi);
                         }
                     }
                 }
@@ -2132,6 +2175,9 @@ V0CasCorrelation::endJob() {
                             TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
                             double eta_ass = pvectorTmp_ass.Eta();
                             double phi_ass = pvectorTmp_ass.Phi();
+                            double pt_ass = pvectorTmp_ass.Pt();
+
+                            double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                             if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
                             if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
@@ -2145,7 +2191,7 @@ V0CasCorrelation::endJob() {
 
                             if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                            BackgroundXiSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_xi/effxi);
+                            BackgroundXiSide[i]->Fill(dEta, dPhi, 1.0/effweight_ass);//, 1.0/nMult_trg_eff_xi/effxi);
                         }
                     }
                 }
@@ -2244,6 +2290,9 @@ V0CasCorrelation::endJob() {
                             TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
                             double eta_ass = pvectorTmp_ass.Eta();
                             double phi_ass = pvectorTmp_ass.Phi();
+                            double pt_ass = pvectorTmp_ass.Pt();
+
+                            double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
                             if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
                             if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
 
@@ -2256,7 +2305,7 @@ V0CasCorrelation::endJob() {
 
                             if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                            BackgroundOmPeak[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_om/effom);
+                            BackgroundOmPeak[i]->Fill(dEta, dPhi, 1.0/effweight_ass);//, 1.0/nMult_trg_eff_om/effom);
                         }
                     }
                 }
@@ -2341,6 +2390,9 @@ V0CasCorrelation::endJob() {
                             TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
                             double eta_ass = pvectorTmp_ass.Eta();
                             double phi_ass = pvectorTmp_ass.Phi();
+                            double pt_ass = pvectorTmp_ass.Pt();
+
+                            double effweight_ass = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                             if(fabs(eta_ass - eta_trg_dau1)<0.03 && fabs(phi_ass - phi_trg_dau1)<0.03) continue;
                             if(fabs(eta_ass - eta_trg_dau2)<0.03 && fabs(phi_ass - phi_trg_dau2)<0.03) continue;
@@ -2354,7 +2406,7 @@ V0CasCorrelation::endJob() {
 
                             if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                            BackgroundOmSide[i]->Fill(dEta, dPhi);//, 1.0/nMult_trg_eff_om/effom);
+                            BackgroundOmSide[i]->Fill(dEta, dPhi, 1.0/effweight_ass);//, 1.0/nMult_trg_eff_om/effom);
                         }
                     }
                 }
