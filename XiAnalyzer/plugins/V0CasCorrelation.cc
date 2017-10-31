@@ -1040,6 +1040,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 int pepVect_xi_side_size     = (int)pepVect_xi_side[i]->size();
 
                 double nMult_trg_eff_xi = 0;
+                UNUSED(nMult_trg_eff_xi);
 
                 for(int xi_ntrg = 0; xi_ntrg<pepVect_xi_peak_size; xi_ntrg++)
                 {
@@ -1209,6 +1210,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 int pepVect_om_side_size     = (int)pepVect_om_side[i]->size();
 
                 double nMult_trg_eff_om = 0;
+                UNUSED(nMult_trg_eff_om);
 
                 for(int om_ntrg = 0; om_ntrg<pepVect_om_peak_size; om_ntrg++)
                 {
