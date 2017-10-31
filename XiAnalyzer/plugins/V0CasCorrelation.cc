@@ -1159,12 +1159,12 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     else
                         EffXchoice = eta_trg;
 
-                    TVector3 pepvector_trg_dau1 = (*pepVect_dau_xi_peak[i])[2*xi_trg];
+                    TVector3 pepvector_trg_dau1 = (*pepVect_dau_xi_side[i])[2*xi_trg];
 
                     double eta_trg_dau1 = pepvector_trg_dau1.Eta();
                     double phi_trg_dau1 = pepvector_trg_dau1.Phi();
 
-                    TVector3 pepvector_trg_dau2 = (*pepVect_dau_xi_peak[i])[2*xi_trg+1];
+                    TVector3 pepvector_trg_dau2 = (*pepVect_dau_xi_side[i])[2*xi_trg+1];
 
                     double eta_trg_dau2 = pepvector_trg_dau2.Eta();
                     double phi_trg_dau2 = pepvector_trg_dau2.Phi();
@@ -1330,12 +1330,12 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                     //double effom = effhisto_om->GetBinContent(effhisto_om->FindBin(EffXchoice,pt_trg));
 
-                    TVector3 pepvector_trg_dau1 = (*pepVect_dau_om_peak[i])[2*om_trg];
+                    TVector3 pepvector_trg_dau1 = (*pepVect_dau_om_side[i])[2*om_trg];
 
                     double eta_trg_dau1 = pepvector_trg_dau1.Eta();
                     double phi_trg_dau1 = pepvector_trg_dau1.Phi();
 
-                    TVector3 pepvector_trg_dau2 = (*pepVect_dau_om_peak[i])[2*om_trg+1];
+                    TVector3 pepvector_trg_dau2 = (*pepVect_dau_om_side[i])[2*om_trg+1];
 
                     double eta_trg_dau2 = pepvector_trg_dau2.Eta();
                     double phi_trg_dau2 = pepvector_trg_dau2.Phi();
