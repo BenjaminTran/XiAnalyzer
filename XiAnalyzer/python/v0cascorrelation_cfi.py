@@ -62,5 +62,5 @@ v0CasCorrelation          = cms.EDAnalyzer('V0CasCorrelation',
         doKs = cms.untracked.bool(False),
         doLa = cms.untracked.bool(False),
         doXi = cms.untracked.bool(True),
-        doOm = cms.untracked.bool(True)
+        doOm = cms.untracked.bool(False)
         )
