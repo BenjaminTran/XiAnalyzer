@@ -151,11 +151,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 double mass_xi = xiCand->mass();
                 double pT_xi   = xiCand->pt();
                 double eta_xi  = xiCand->eta();
-                int charge = xiCand->charge();
-
-                charge_xi -> Fill(charge);
-
-                if(fabs(charge) != 1) continue;
 
                 XiMassPtRap       -> Fill(mass_xi,pT_xi,rap_xi);
                 rapidity_xi       -> Fill(rap_xi);
