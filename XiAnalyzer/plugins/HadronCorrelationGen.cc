@@ -371,72 +371,75 @@ HadronCorrelationGen::endJob() {
     int nevttotal_ass_Reco = (int)pVect2_ass->size();
 
     // Calculate background
-    for(int i=0;i<numPtBins_;i++)
+    if(doGen_)
     {
-        int nevttotal_trg = (int)pVectVect_trg[i]->size();
-
-        for(int nround=0;nround<bkgFactor_;nround++)
+        for(int i=0;i<numPtBins_;i++)
         {
-            int ncount = 0;
-            for(int nevt_ass=0; nevt_ass<nevttotal_ass; nevt_ass++)
+            int nevttotal_trg = (int)pVectVect_trg[i]->size();
+
+            for(int nround=0;nround<bkgFactor_;nround++)
             {
-                int nevt_trg = gRandom->Integer(nevttotal_trg);
-                if(nevt_trg == nevt_ass) { nevt_ass--; continue; }
-                if(fabs((*zvtxVect)[nevt_trg]-(*zvtxVect)[nevt_ass])>0.5) {
-                    nevt_ass--;
-                    ncount++;
-                    if(ncount>5000) {nevt_ass++; ncount = 0;}
-                    continue; }
-
-                vector<TVector3> pVectTmp_trg = (*pVectVect_trg[i])[nevt_trg];
-                vector<TVector3> pVectTmp_ass = (*pVectVect_ass)[nevt_ass];
-                int nMult_trg = pVectTmp_trg.size();
-                int nMult_ass = pVectTmp_ass.size();
-
-                double nMult_trg_eff=0;
-
-                for(int ntrg=0;ntrg<nMult_trg;ntrg++)
+                int ncount = 0;
+                for(int nevt_ass=0; nevt_ass<nevttotal_ass; nevt_ass++)
                 {
-                    TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    //double phi_trg = pvectorTmp_trg.Phi();
-                    double pt_trg = pvectorTmp_trg.Pt();
+                    int nevt_trg = gRandom->Integer(nevttotal_trg);
+                    if(nevt_trg == nevt_ass) { nevt_ass--; continue; }
+                    if(fabs((*zvtxVect)[nevt_trg]-(*zvtxVect)[nevt_ass])>0.5) {
+                        nevt_ass--;
+                        ncount++;
+                        if(ncount>5000) {nevt_ass++; ncount = 0;}
+                        continue; }
 
-                    double effweight_trg = 1;
+                    vector<TVector3> pVectTmp_trg = (*pVectVect_trg[i])[nevt_trg];
+                    vector<TVector3> pVectTmp_ass = (*pVectVect_ass)[nevt_ass];
+                    int nMult_trg = pVectTmp_trg.size();
+                    int nMult_ass = pVectTmp_ass.size();
 
-                    nMult_trg_eff = nMult_trg_eff + 1.0/effweight_trg;
-                }
+                    double nMult_trg_eff=0;
 
-                for(int ntrg=0;ntrg<nMult_trg;ntrg++)
-                {
-                    TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double phi_trg = pvectorTmp_trg.Phi();
-                    double pt_trg = pvectorTmp_trg.Pt();
-
-                    double effweight_trg = 1;
-
-                    for(int nass=0;nass<nMult_ass;nass++)
+                    for(int ntrg=0;ntrg<nMult_trg;ntrg++)
                     {
-                        TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
-                        double eta_ass = pvectorTmp_ass.Eta();
-                        double phi_ass = pvectorTmp_ass.Phi();
-                        double pt_ass = pvectorTmp_ass.Pt();
+                        TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        //double phi_trg = pvectorTmp_trg.Phi();
+                        double pt_trg = pvectorTmp_trg.Pt();
 
-                        double effweight_ass = 1;
+                        double effweight_trg = 1;
 
-                        double deltaEta=eta_ass-eta_trg;
-                        double deltaPhi=phi_ass-phi_trg;
-                        if(deltaPhi>PI)
-                            deltaPhi=deltaPhi-2*PI;
-                        if(deltaPhi<-PI)
-                            deltaPhi=deltaPhi+2*PI;
-                        if(deltaPhi>-PI && deltaPhi<-PI/2.)
-                            deltaPhi=deltaPhi+2*PI;
+                        nMult_trg_eff = nMult_trg_eff + 1.0/effweight_trg;
+                    }
 
-                        //if(fabs(deltaEta)<0.028 && fabs(deltaPhi)<0.02) continue;
+                    for(int ntrg=0;ntrg<nMult_trg;ntrg++)
+                    {
+                        TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double phi_trg = pvectorTmp_trg.Phi();
+                        double pt_trg = pvectorTmp_trg.Pt();
 
-                        hBackground[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effweight_trg/effweight_ass);
+                        double effweight_trg = 1;
+
+                        for(int nass=0;nass<nMult_ass;nass++)
+                        {
+                            TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
+                            double eta_ass = pvectorTmp_ass.Eta();
+                            double phi_ass = pvectorTmp_ass.Phi();
+                            double pt_ass = pvectorTmp_ass.Pt();
+
+                            double effweight_ass = 1;
+
+                            double deltaEta=eta_ass-eta_trg;
+                            double deltaPhi=phi_ass-phi_trg;
+                            if(deltaPhi>PI)
+                                deltaPhi=deltaPhi-2*PI;
+                            if(deltaPhi<-PI)
+                                deltaPhi=deltaPhi+2*PI;
+                            if(deltaPhi>-PI && deltaPhi<-PI/2.)
+                                deltaPhi=deltaPhi+2*PI;
+
+                            //if(fabs(deltaEta)<0.028 && fabs(deltaPhi)<0.02) continue;
+
+                            hBackground[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effweight_trg/effweight_ass);
+                        }
                     }
                 }
             }
