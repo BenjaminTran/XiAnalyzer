@@ -30,7 +30,6 @@ v0CasCorrelationRapidity = v0CasCorrelation.clone(
 v0CasCorrelationRapidityPbPb = v0CasCorrelationRapidity.clone(
         multLow       = cms.untracked.double(0),
         multHigh      = cms.untracked.double(999999),
-        towerSrc      = cms.InputTag('towerMaker'),
         useCentrality = cms.untracked.bool(True),
         ksCollection  = cms.untracked.InputTag('selectV0CandidatesNewkshortRapidityPbPb:Kshort'),
         laCollection  = cms.untracked.InputTag('selectV0CandidatesNewlambdaRapidityPbPb:Lambda'),

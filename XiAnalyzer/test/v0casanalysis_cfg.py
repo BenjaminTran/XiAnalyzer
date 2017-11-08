@@ -35,37 +35,39 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 #process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(3000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(20000))
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
-        #pPb
-   #'root://cmsxrootd.fnal.gov//store/user/davidlw/PAMinimumBias1/RecoSkim2016_pPb_V0Cascade_v1/170302_094853/0000/pPb_HM_1.root'
-   #),
-   # secondaryFileNames = cms.untracked.vstring(
-   #     'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/479/00000/4E546F7B-DBAE-E611-B49E-FA163E63A392.root',
-   #     'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/480/00000/126AB4C4-2CAF-E611-93B9-FA163E41A46B.root',
-   #     'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/480/00000/2CB5DFE9-2BAF-E611-A0A9-FA163EA4BCD2.root',
-   #     'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/480/00000/52EDED08-28AF-E611-82AC-02163E0124B5.root',
-   #     'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/480/00000/9CDBDF3A-30AF-E611-8365-02163E01252E.root',
-   #     'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/480/00000/C8B078A7-24AF-E611-ADF7-FA163EDC366E.root',
-   #     'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/480/00000/F42B4F03-32AF-E611-9CC6-02163E011CAE.root'
-   #)
-   #PbPb
-   'root://cmsxrootd.fnal.gov//store/user/davidlw/HIMinimumBias5/RecoSkim2015_pprereco_V0Cascade_Golden_v2/170302_083114/0000/PbPb_MB_107.root'
+        #pPb MB
+   'root://cmsxrootd.fnal.gov//store/user/davidlw/PAMinimumBias1/RecoSkim2016_pPb_V0Cascade_v1/170302_094853/0000/pPb_HM_1.root'
    ),
     secondaryFileNames = cms.untracked.vstring(
-        'root://cmsxrootd.fnal.gov//store/hidata/HIRun2015/HIMinimumBias5/AOD/02May2016-v1/10000/5A15CD8E-BE24-E611-BE6B-842B2B6AECDD.root'
+        'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/479/00000/4E546F7B-DBAE-E611-B49E-FA163E63A392.root',
+        'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/480/00000/126AB4C4-2CAF-E611-93B9-FA163E41A46B.root',
+        'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/480/00000/2CB5DFE9-2BAF-E611-A0A9-FA163EA4BCD2.root',
+        'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/480/00000/52EDED08-28AF-E611-82AC-02163E0124B5.root',
+        'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/480/00000/9CDBDF3A-30AF-E611-8365-02163E01252E.root',
+        'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/480/00000/C8B078A7-24AF-E611-ADF7-FA163EDC366E.root',
+        'root://cmsxrootd.fnal.gov//store/hidata/PARun2016C/PAMinimumBias1/AOD/PromptReco-v1/000/285/480/00000/F42B4F03-32AF-E611-9CC6-02163E011CAE.root'
    )
+   #PbPb
+   #'root://cmsxrootd.fnal.gov//store/user/davidlw/HIMinimumBias5/RecoSkim2015_pprereco_V0Cascade_Golden_v2/170302_083114/0000/PbPb_MB_107.root'
+   #),
+   # secondaryFileNames = cms.untracked.vstring(
+   #     'root://cmsxrootd.fnal.gov//store/hidata/HIRun2015/HIMinimumBias5/AOD/02May2016-v1/10000/5A15CD8E-BE24-E611-BE6B-842B2B6AECDD.root'
+   #)
 )
 
 # Additional output definition
 process.TFileService = cms.Service("TFileService",
                                     fileName = cms.string(
-                                    'V0CasCorrelationPbPbTest.root'
+                                    #'V0CasCorrelationPbPbTest.root'
                                     #'V0CasCorrelationMBTEST.root'
                                     #'V0CasCorrelationPbPb.root'
+                                    #'V0CasCorrelationPeriSubOmegaTest.root'
+                                    'TESTV0CasCorrelationMBXiOm.root'
 				    )
                                   )
 # CORRELATION
@@ -78,10 +80,12 @@ process.RapidityAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdaRapid
 
 process.RapidityAnalysisPeriSub = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidityPeriSub)
 
+process.RapidityAnalysisPeriSubXiOmega = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidityPeriSub)
+
 process.RapidityAnalysisPbPb = cms.Sequence(process.selectV0CandidatesNewlambdaRapidityPbPb*process.selectV0CandidatesNewkshortRapidityPbPb*process.selectV0CandidatesLowXiRapidityPbPb*process.selectV0CandidatesLowOmegaRapidityPbPb*process.v0CasCorrelationRapidityPbPb)
 
 #process.p = cms.Path(process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
-process.p = cms.Path(process.RapidityAnalysisPbPb)
+process.p = cms.Path(process.RapidityAnalysisPeriSubXiOmega)
 
 process.schedule = cms.Schedule(process.p)
 

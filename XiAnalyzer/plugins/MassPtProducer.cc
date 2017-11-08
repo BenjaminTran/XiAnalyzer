@@ -155,7 +155,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 XiMassPtRap       -> Fill(mass_xi,pT_xi,rap_xi);
                 rapidity_xi       -> Fill(rap_xi);
                 pseudorapidity_xi -> Fill(eta_xi);
-                chargecut_xi -> Fill(charge);
 
                 cout<<"Fill Xi"<<endl;
             }
