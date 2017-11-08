@@ -21,3 +21,7 @@ v0CorrelationMCRapidity = v0CorrelationMC.clone(
         multHigh       = cms.untracked.double(999999),
         multLow        = cms.untracked.double(-1)
         )
+
+v0CorrelationMCRapidityRecoRef = v0CorrelationMCRapidity.clone(
+        doReco = cms.untracked.bool(True)
+        )

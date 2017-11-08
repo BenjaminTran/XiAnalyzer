@@ -104,6 +104,9 @@ process.V0CorrAnalysisRapidityMC = cms.Sequence(process.selectV0CandidatesNewlam
 process.V0CorrAnalysisRapidityMCGenRef = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.v0CorrelationRapidityMCGenRef)
 
 process.V0CorrAnalysisRapidityMCGen = cms.Sequence(process.v0CorrelationMCRapidity)
+
+process.V0CorrAnalysisRapidityMCRecoRef = cms.Sequence(process.v0CorrelationMCRapidityRecoRef)
+
 process.HadCorrAnalysisRapidityMCGen = cms.Sequence(process.HadronCorrelation)
 
 process.V0CorrAnalysisRapidityLoose = cms.Sequence(process.selectV0CandidatesNewlambdalooseRapidity*process.selectV0CandidatesNewkshortlooseRapidity*process.v0CorrelationlooseRapidity)
