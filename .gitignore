@@ -12,5 +12,4 @@
 *.pyc
 *.log
 XiAnalyzer/crab/crab_dir/HLT*
-*.dat
 *.orig
