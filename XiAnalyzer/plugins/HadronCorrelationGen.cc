@@ -556,7 +556,7 @@ HadronCorrelationGen::endJob() {
                     double dEta = eta_ass - eta_trg;
                     double dPhi = phi_ass - phi_trg;
 
-                    double eff = effhisto->GetBinContent(eta_ass,pt_ass);
+                    double eff = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                     if(dPhi > PI)                    dPhi=dPhi-2*PI;
                     if(dPhi < -PI)                   dPhi=dPhi+2*PI;
