@@ -116,7 +116,7 @@ process.V0CorrAnalysisRapidityTight = cms.Sequence(process.selectV0CandidatesNew
 
 process.genSelector = cms.Sequence(process.selectGenCandidatesKshort*process.selectGenCandidatesLambda*process.MatchCandidatesKshort*process.MatchCandidatesLambda*process.v0CorrelationRapidityMatchMC)
 
-process.p = cms.Path(process.HadCorrAnalysisRapidityMCGen)
+process.p = cms.Path(process.V0CorrAnalysisRapidityMCGen)
 
 process.schedule = cms.Schedule(process.p)
 

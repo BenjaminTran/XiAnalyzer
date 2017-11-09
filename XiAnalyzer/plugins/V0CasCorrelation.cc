@@ -136,28 +136,44 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
     if(doKs_)
     {
         iEvent.getByToken(_ksCollection,v0candidates_ks);
-        if(!v0candidates_ks.isValid()) return;
+        if(!v0candidates_ks.isValid())
+        {
+            cout << "KsCollection is not valid" << endl;
+            return;
+        }
     }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> v0candidates_la;
     if(doLa_)
     {
         iEvent.getByToken(_laCollection,v0candidates_la);
-        if(!v0candidates_la.isValid()) return;
+        if(!v0candidates_la.isValid())
+        {
+            cout << "LaCollection is not valid" << endl;
+            return;
+        }
     }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
     if(doXi_)
     {
         iEvent.getByToken(_xiCollection, xiCollection);
-        if(!xiCollection.isValid()) return;
+        if(!xiCollection.isValid())
+        {
+            cout << "XiCollection is not valid" << endl;
+            return;
+        }
     }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> omCollection;
     if(doOm_)
     {
         iEvent.getByToken(_omCollection, omCollection);
-        if(!omCollection.isValid()) return;
+        if(!omCollection.isValid())
+        {
+            cout << "OmCollection is not valid" << endl;
+            return;
+        }
     }
 
     edm::Handle<reco::TrackCollection> tracks;

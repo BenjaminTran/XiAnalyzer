@@ -101,41 +101,60 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     edm::Handle<reco::TrackCollection> tracks;
     iEvent.getByToken(_trkSrc, tracks);
 
-    int nTracks         = 0;
-
-    // Track selection
-    for(unsigned it = 0; it < tracks->size(); it++)
-    {
-        const reco::Track & trk = (*tracks)[it];
-        math::XYZPoint bestvtx(bestvx, bestvy, bestvz);
-
-        double dzvtx    = trk.dz(bestvtx);
-        double dxyvtx   = trk.dxy(bestvtx);
-        double dzerror  = sqrt(trk.dzError()*trk.dzError() + bestvzError*bestvzError);
-        double dxyerror = sqrt(trk.d0Error()*trk.d0Error() + bestvxError*bestvyError);
-
-        if(!trk.quality(reco::TrackBase::highPurity)) continue;
-        if(fabs(trk.ptError()/trk.pt() > 0.10))       continue;
-        if(fabs(dzvtx/dzerror) > 3)                   continue;
-        if(fabs(dxyvtx/dxyerror) > 3)                 continue;
-
-        nTracks++;
-        if(fabs(trk.eta()) > 2.4 || trk.pt() < 0.4) continue;
-        EtaPtCutnTracks++;
-    }
-    nTrk->Fill(nTracks); //number of acceptable tracks
-
     edm::Handle<reco::VertexCompositeCandidateCollection> xiCollection;
-    iEvent.getByToken(_xiCollection, xiCollection);
+    if(xi_)
+    {
+        iEvent.getByToken(_xiCollection, xiCollection);
+        if(!xiCollection.isValid()) return;
+    }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> omCollection;
-    iEvent.getByToken(_omCollection, omCollection);
+    if(om_)
+    {
+        iEvent.getByToken(_omCollection, omCollection);
+        if(!omCollection.isValid()) return;
+    }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> ksCollection;
-    iEvent.getByToken(_ksCollection, ksCollection);
+    if(ks_)
+    {
+        iEvent.getByToken(_ksCollection, ksCollection);
+        if(!ksCollection.isValid()) return;
+    }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> laCollection;
-    iEvent.getByToken(_laCollection, laCollection);
+    if(la_)
+    {
+        iEvent.getByToken(_laCollection, laCollection);
+        if(!laCollection.isValid()) return;
+    }
+
+
+    // Track selection
+    if((ks_ && ksCollection->size() != 0) || (la_ && laCollection->size() != 0) || (xi_ && xiCollection->size() != 0) || om_ && omCollection->size() != 0) //If all collection sizes are zero then skip looping over tracks and exit function to save time
+    {
+        int nTracks         = 0;
+        for(unsigned it = 0; it < tracks->size(); it++)
+        {
+            const reco::Track & trk = (*tracks)[it];
+            math::XYZPoint bestvtx(bestvx, bestvy, bestvz);
+
+            double dzvtx    = trk.dz(bestvtx);
+            double dxyvtx   = trk.dxy(bestvtx);
+            double dzerror  = sqrt(trk.dzError()*trk.dzError() + bestvzError*bestvzError);
+            double dxyerror = sqrt(trk.d0Error()*trk.d0Error() + bestvxError*bestvyError);
+
+            if(!trk.quality(reco::TrackBase::highPurity)) continue;
+            if(fabs(trk.ptError()/trk.pt() > 0.10))       continue;
+            if(fabs(dzvtx/dzerror) > 3)                   continue;
+            if(fabs(dxyvtx/dxyerror) > 3)                 continue;
+
+            nTracks++;
+            if(fabs(trk.eta()) > 2.4 || trk.pt() < 0.4) continue;
+            EtaPtCutnTracks++;
+        }
+        nTrk->Fill(nTracks); //number of acceptable tracks
+    }
 
 
     if(EtaPtCutnTracks >= multLow_ && EtaPtCutnTracks < multHigh_){
@@ -155,8 +174,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 XiMassPtRap       -> Fill(mass_xi,pT_xi,rap_xi);
                 rapidity_xi       -> Fill(rap_xi);
                 pseudorapidity_xi -> Fill(eta_xi);
-
-                cout<<"Fill Xi"<<endl;
             }
         }
         //OM
@@ -179,9 +196,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 OmMassPtRap       -> Fill(mass_om,pT_om,rap_om);
                 rapidity_om       -> Fill(rap_om);
                 pseudorapidity_om -> Fill(eta_om);
-                chargecut_om ->Fill(charge);
-
-                cout<<"Fill Om"<<endl;
             }
         }
         //KS
@@ -198,8 +212,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 KsMassPtRap       -> Fill(mass_ks,pT_ks,rap_ks);
                 rapidity_ks       -> Fill(rap_ks);
                 pseudorapidity_ks -> Fill(eta_ks);
-
-                cout<<"Fill Ks"<<endl;
             }
         }
         //LAMBDA
@@ -216,8 +228,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 LaMassPtRap       -> Fill(mass_la,pT_la,rap_la);
                 rapidity_la       -> Fill(rap_la);
                 pseudorapidity_la -> Fill(eta_la);
-
-                cout<<"Fill La"<<endl;
             }
         }
 
