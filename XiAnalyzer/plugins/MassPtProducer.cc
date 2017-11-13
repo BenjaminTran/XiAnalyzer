@@ -105,28 +105,44 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     if(xi_)
     {
         iEvent.getByToken(_xiCollection, xiCollection);
-        if(!xiCollection.isValid()) return;
+        if(!xiCollection.isValid())
+        {
+            cout << "Xi Collection invalid" << endl;
+            return;
+        }
     }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> omCollection;
     if(om_)
     {
         iEvent.getByToken(_omCollection, omCollection);
-        if(!omCollection.isValid()) return;
+        if(!omCollection.isValid()) 
+        {
+            cout << "Om Collection invalid" << endl;
+            return;
+        }
     }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> ksCollection;
     if(ks_)
     {
         iEvent.getByToken(_ksCollection, ksCollection);
-        if(!ksCollection.isValid()) return;
+        if(!ksCollection.isValid()) 
+        {
+            cout << "Ks Collection invalid" << endl;
+            return;
+        }
     }
 
     edm::Handle<reco::VertexCompositeCandidateCollection> laCollection;
     if(la_)
     {
         iEvent.getByToken(_laCollection, laCollection);
-        if(!laCollection.isValid()) return;
+        if(!laCollection.isValid()) 
+        {
+            cout << "La Collection invalid" << endl;
+            return;
+        }
     }
 
 
