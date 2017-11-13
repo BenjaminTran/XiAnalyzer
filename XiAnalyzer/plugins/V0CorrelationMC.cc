@@ -49,7 +49,7 @@ void
 V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
     using namespace edm;
-    nEvt-Fill(1);
+    nEvt->Fill(1);
 
     // select on requirement of valid vertex
     edm::Handle<reco::VertexCollection> vertices;
