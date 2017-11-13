@@ -49,6 +49,7 @@ void
 V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
     using namespace edm;
+    nEvt-Fill(1);
 
     // select on requirement of valid vertex
     edm::Handle<reco::VertexCollection> vertices;
@@ -157,10 +158,10 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
 
             if(!doReco_)
             {
-                if(id == 311 || id == 2212 || id == 211)
-                {
+                //if(id == 311 || id == 2212 || id == 211)
+                //{
                     if(trk.eta()<=etaMax_ass_ && trk.eta()>=etaMin_ass_ && trk.pt()<=ptMax_ass_ && trk.pt()>=ptMin_ass_ && fabs(trk.charge())==1 && st==1) pVect_ass->push_back(pvector);
-                }
+                //}
             }
 
 
@@ -253,7 +254,11 @@ V0CorrelationMC::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup
                         }
                     }
 
-                    if(fabs(mid)==3322 || fabs(mid)==3312 || fabs(mid)==3324 || fabs(mid)==3314 || fabs(mid)==3334) continue;
+                    if(fabs(mid)==3322 || fabs(mid)==3312 || fabs(mid)==3324 || fabs(mid)==3314 || fabs(mid)==3334)
+                    {
+                        LaMomID->Fill(mid);
+                        continue;
+                    }
 
                     double eta_dau1 = 0;
                     double phi_dau1 = 0;
@@ -553,9 +558,13 @@ V0CorrelationMC::beginJob()
     if(doReco_) cout << "Will Use Reco Ref" << endl;
 
 
+    nEvt = fs->make<TH1D>("nEvt",";N",10,0,10);
     hMult = fs->make<TH1D>("mult",";N",300,0,300);
     hMult_ass = fs->make<TH1D>("mult_ass",";N",600,0,600);
     h2Daughter = fs->make<TH1D>("h2Daughter",";N",10,0,10);
+
+    LaMomID = fs->make<TH1D>("LaMomID",";N",10000,0,10000);
+    KsMomID = fs->make<TH1D>("KsMomID",";N",10000,0,10000);
 
     for(int i=0; i<18; i++)
     {

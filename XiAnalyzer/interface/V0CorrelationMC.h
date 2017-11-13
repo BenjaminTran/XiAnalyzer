@@ -83,6 +83,10 @@ private:
     edm::EDGetTokenT<reco::VertexCollection> _vertexCollName;
 
     TH1D* hMult;
+    TH1D* nEvt;
+
+    TH1D* LaMomID;
+    TH1D* KsMomID;
 
     TH1D* hRap_ks[18];
     TH1D* hRap_la[18];

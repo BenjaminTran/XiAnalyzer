@@ -19,7 +19,7 @@ v0CorrelationMCRapidity = v0CorrelationMC.clone(
         ptcut_la       = cms.untracked.vdouble(0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5,10.0,15.0,20.0,25.0,30.0),
         ptcut_xi       = cms.untracked.vdouble(1.0, 1.4, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10, 20),
         multHigh       = cms.untracked.double(999999),
-        multLow        = cms.untracked.double(-1)
+        multLow        = cms.untracked.double(105) #Highest 80% multiplicity
         )
 
 v0CorrelationMCRapidityRecoRef = v0CorrelationMCRapidity.clone(

@@ -68,6 +68,7 @@ V0Correlation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                          iSetup)
 {
     using namespace edm;
+    nEvt->Fill(1);
 
     // select on requirement of valid vertex
     edm::Handle<reco::VertexCollection> vertices;
@@ -832,6 +833,7 @@ V0Correlation::beginJob()
     effhisto_ks = (TH2D*)f.Get("EffHistoKs");
     effhisto_la = (TH2D*)f.Get("EffHistoLa");
 
+    nEvt = fs->make<TH1D>("nEvt",";N",10,0,10);
     hMult = fs->make<TH1D>("mult",";N",600,0,600);
     hMult_ass = fs->make<TH1D>("mult_ass",";N",600,0,600);
     hMult_accept = fs->make<TH1D>("mult_acc",";N",600,0,600);
