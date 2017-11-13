@@ -37,6 +37,11 @@ MassPtRapidity = MassPt.clone(
         omCollection = cms.InputTag('selectOmegaCandidatesNewRapidity:Omega')
 )
 
+MassPtRapidityMB = MassPtRapidity.clone(
+        multHigh = cms.double(35),
+        multLow = cms.double(0)
+        )
+
 MassPtRapidityMC = MassPt.clone(
         MC = cms.untracked.bool(True),
         om = cms.untracked.bool(True),

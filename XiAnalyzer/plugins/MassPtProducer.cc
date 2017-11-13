@@ -131,8 +131,8 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 
     // Track selection
-    if((ks_ && ksCollection->size() != 0) || (la_ && laCollection->size() != 0) || (xi_ && xiCollection->size() != 0) || om_ && omCollection->size() != 0) //If all collection sizes are zero then skip looping over tracks and exit function to save time
-    {
+    //if((ks_ && ksCollection->size() != 0) || (la_ && laCollection->size() != 0) || (xi_ && xiCollection->size() != 0) || om_ && omCollection->size() != 0) //If all collection sizes are zero then skip looping over tracks and exit function to save time
+    //{
         int nTracks         = 0;
         for(unsigned it = 0; it < tracks->size(); it++)
         {
@@ -154,7 +154,7 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             EtaPtCutnTracks++;
         }
         nTrk->Fill(nTracks); //number of acceptable tracks
-    }
+    //}
 
 
     if(EtaPtCutnTracks >= multLow_ && EtaPtCutnTracks < multHigh_){
@@ -179,20 +179,12 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         //OM
         if(om_ && omCollection.isValid())
         {
-            cout << "omCollection is valid" << endl;
             for(reco::VertexCompositeCandidateCollection::const_iterator omCand =
                     omCollection->begin(); omCand != omCollection->end(); omCand++) {
-
                 double rap_om  = omCand->rapidity();
                 double mass_om = omCand->mass();
                 double pT_om   = omCand->pt();
                 double eta_om  = omCand->eta();
-                int charge = omCand->charge();
-
-                charge_om ->Fill(charge);
-
-                if(fabs(charge) != 1) continue;
-
                 OmMassPtRap       -> Fill(mass_om,pT_om,rap_om);
                 rapidity_om       -> Fill(rap_om);
                 pseudorapidity_om -> Fill(eta_om);
@@ -311,7 +303,6 @@ MassPtProducer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             }
         }
     }
-    else cout << "Bad Multiplicity" << endl;
 
 }
 
