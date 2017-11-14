@@ -73,9 +73,9 @@ v0CasCorrelationRapidityMatchMC = v0CasCorrelationRapidity.clone(
 #hltHM = hltHM.clone()
 
 v0CasCorrelationRapidityPeriSub = v0CasCorrelationRapidity.clone(
-        mean_om  = cms.untracked.vdouble(1.6728, 1.6729, 1.6728, 1.6728),
-        sigma_om = cms.untracked.vdouble(0.0033, 0.0033, 0.0028, 0.0028),
-        ptcut_om = cms.untracked.vdouble(1.0, 1.8, 2.3, 3.0, 7.2),
-        multHigh = cms.untracked.double(20),
+        mean_om  = cms.untracked.vdouble(1.6728, 1.6729, 1.6728, 1.6728,1.6728, 1.6728),
+        sigma_om = cms.untracked.vdouble(0.0033, 0.0033, 0.0030, 0.0030, 0.003, 0.003),
+        ptcut_om = cms.untracked.vdouble(1.5, 1.8, 2.2, 2.8, 3.6, 5.0, 8.0),
+        multHigh = cms.untracked.double(35),
         multLow  = cms.untracked.double(0)
         )
