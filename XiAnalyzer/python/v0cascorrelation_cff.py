@@ -43,7 +43,7 @@ v0CasCorrelationRapidityPbPb = v0CasCorrelationRapidity.clone(
         mean_xi       = cms.untracked.vdouble(1.3232 ,1.3226 ,1.3224 ,1.3223 ,1.3222 ,1.3222 ,1.3219, 1.3221),
         sigma_xi      = cms.untracked.vdouble(0.0043 ,0.0044,0.004 ,0.0035 ,0.0034 ,0.0034 ,0.0033, 0.0035),
         mean_om       = cms.untracked.vdouble(1.6728 ,1.6726 ,1.6727 ,1.6727 ,1.6728 ,1.6727),
-        sigma_om      = cms.untracked.vdouble(0.011,0.0083 ,0.0061 ,0.0043 ,0.0049 ,0.003)
+        sigma_om      = cms.untracked.vdouble(0.009,0.0056 ,0.0043 ,0.004 ,0.0042 ,0.0033)
         )
 
 v0CasCorrelationlooseRapidity = v0CasCorrelationRapidity.clone(
