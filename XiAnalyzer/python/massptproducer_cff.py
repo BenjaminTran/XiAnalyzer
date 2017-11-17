@@ -44,7 +44,6 @@ MassPtRapidityMB = MassPtRapidity.clone(
 
 MassPtRapidityMC = MassPt.clone(
         MC = cms.untracked.bool(True),
-        om = cms.untracked.bool(True),
         multLow = cms.double(0),
         multHigh = cms.double(999999),
         gnCollection = cms.InputTag('genParticles'),
