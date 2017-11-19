@@ -50,5 +50,6 @@ MassPtRapidityMC = MassPt.clone(
         ksCollection = cms.InputTag('selectV0CandidatesNewkshortRapidity:Kshort'),
         laCollection = cms.InputTag('selectV0CandidatesNewlambdaRapidity:Lambda'),
         xiCollection = cms.InputTag('selectV0CandidatesLowXiRapidity:Xi')
+        omCollection = cms.InputTag('selectOmegaCandidatesNewRapidity:Omega')
 )
 #hltHM = hltHM.clone();
