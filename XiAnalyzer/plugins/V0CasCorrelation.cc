@@ -815,7 +815,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hSignal_ks[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_ks/effks/effweight_ass);
+                        hSignal_ks[i]->Fill(deltaEta,deltaPhi,1.0/effweight_ass);//,1.0/nMult_trg_eff_ks/effks/effweight_ass);
                     }
                 }
 
@@ -893,7 +893,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hSignal_ks_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_ks/effks/effweight_ass);
+                        hSignal_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/effweight_ass);//,1.0/nMult_trg_eff_ks/effks/effweight_ass);
                     }
                 }
             }
@@ -973,7 +973,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hSignal_la[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_la/effla/effweight_ass);
+                        hSignal_la[i]->Fill(deltaEta,deltaPhi,1.0/effweight_ass);//,1.0/nMult_trg_eff_la/effla/effweight_ass);
                     }
                 }
 
@@ -1049,7 +1049,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                             deltaPhi=deltaPhi+2*PI;
 
                         //if(deltaEta==0 && deltaPhi==0) continue;
-                        hSignal_la_bkg[i]->Fill(deltaEta,deltaPhi);//,1.0/nMult_trg_eff_la/effla/effweight_ass);
+                        hSignal_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/effweight_ass);//,1.0/nMult_trg_eff_la/effla/effweight_ass);
                     }
                 }
             }
@@ -1469,9 +1469,13 @@ V0CasCorrelation::beginJob()
 
     TH1::SetDefaultSumw2();
 
-    edm::FileInPath fip2("XiAnalyzer/XiAnalyzer/data/Hijing_8TeV_dataBS.root");
+    //edm::FileInPath fip2("XiAnalyzer/XiAnalyzer/data/Hijing_8TeV_dataBS.root");
+    //TFile f2(fip2.fullPath().c_str(),"READ");
+    //effhisto = (TH2F*)f2.Get("rTotalEff3D_0");
+
+    edm::FileInPath fip2("XiAnalyzer/XiAnalyzer/data/Hydjet_ppReco_default.root");
     TFile f2(fip2.fullPath().c_str(),"READ");
-    effhisto = (TH2F*)f2.Get("rTotalEff3D_0");
+    effhisto = (TH2F*)f2.Get("rTotalEff3D_400_800");
 
 	/*
     edm::FileInPath fip1("Demo/DemoAnalyzer/data/V0_pp13TeV_Efficiency.root");
@@ -1705,7 +1709,7 @@ V0CasCorrelation::endJob() {
                                 deltaPhi=deltaPhi+2*PI;
 
                             //if(deltaEta==0 && deltaPhi==0) continue;
-                            hBackground_ks[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks/effweight_ass);
+                            hBackground_ks[i]->Fill(deltaEta,deltaPhi,1.0/effweight_ass);///nMult_trg_eff/effks/effweight_ass);
                         }
                     }
                 }
@@ -1803,7 +1807,7 @@ V0CasCorrelation::endJob() {
                                 deltaPhi=deltaPhi+2*PI;
 
                             //if(deltaEta==0 && deltaPhi==0) continue;
-                            hBackground_la[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla/effweight_ass);
+                            hBackground_la[i]->Fill(deltaEta,deltaPhi,1.0/effweight_ass);///nMult_trg_eff/effla/effweight_ass);
                         }
                     }
                 }
@@ -1904,7 +1908,7 @@ V0CasCorrelation::endJob() {
                                 deltaPhi=deltaPhi+2*PI;
 
                             //if(deltaEta==0 && deltaPhi==0) continue;
-                            hBackground_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effks/effweight_ass);
+                            hBackground_ks_bkg[i]->Fill(deltaEta,deltaPhi,1.0/effweight_ass);//nMult_trg_eff/effks/effweight_ass);
                         }
                     }
                 }
@@ -2002,7 +2006,7 @@ V0CasCorrelation::endJob() {
                                 deltaPhi=deltaPhi+2*PI;
 
                             //if(deltaEta==0 && deltaPhi==0) continue;
-                            hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effla/effweight_ass);
+                            hBackground_la_bkg[i]->Fill(deltaEta,deltaPhi,1.0/effweight_ass);///nMult_trg_eff/effla/effweight_ass);
                         }
                     }
                 }
