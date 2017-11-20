@@ -11,11 +11,13 @@ HadronCorrelationGen::HadronCorrelationGen(const edm::ParameterSet& iConfig)
     ptMin_ass_ = iConfig.getParameter<double>("ptMin_ass");
     ptMax_ass_ = iConfig.getParameter<double>("ptMax_ass");
     bkgFactor_ = iConfig.getParameter<int>("bkgFactor");
+    numPtBins_ = iConfig.getParameter<int>("numPtBins");
     multMax_ = iConfig.getParameter<double>("multMax");
     multMin_ = iConfig.getParameter<double>("multMin");
     rapMax_ = iConfig.getParameter<double>("rapMax");
     rapMin_ = iConfig.getParameter<double>("rapMin");
     ptcut_ = iConfig.getParameter<std::vector<double> >("ptcut");
+    doGen_ = iConfig.getParameter<bool>("doGen");
     _trkSrc         = consumes<reco::TrackCollection>(iConfig.getParameter<edm::InputTag>("trkSrc"));
     _vertexCollName = consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexCollName"));
     _gnCollection   = consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("gnCollection"));
@@ -52,8 +54,8 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     bestvzError = vtx.zError(); bestvxError = vtx.xError(); bestvyError = vtx.yError();
     
     if(bestvz < -15 || bestvz>15) return;
-    
-    for(int i=0;i<18;i++)
+
+    for(int i=0;i<numPtBins_;i++)
     {
         pVect_trg[i] = new vector<TVector3>;
     }
@@ -62,170 +64,209 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
     //----- loop over tracks -----
     edm::Handle<reco::TrackCollection> tracks;
     iEvent.getByToken(_trkSrc,tracks);
-    
+
     //track selection
     int nMult_ass_good = 0;
     for(unsigned it=0; it<tracks->size(); ++it){
-        
+
         const reco::Track & trk = (*tracks)[it];
-        
+
         math::XYZPoint bestvtx(bestvx,bestvy,bestvz);
-        
+
         double dzvtx = trk.dz(bestvtx);
         double dxyvtx = trk.dxy(bestvtx);
         double dzerror = sqrt(trk.dzError()*trk.dzError()+bestvzError*bestvzError);
         double dxyerror = sqrt(trk.d0Error()*trk.d0Error()+bestvxError*bestvyError);
-        
+
         if(!trk.quality(reco::TrackBase::highPurity)) continue;
         if(fabs(trk.ptError())/trk.pt()>0.10) continue;
         if(fabs(dzvtx/dzerror) > 3) continue;
         if(fabs(dxyvtx/dxyerror) > 3) continue;
-        
+
         double eta = trk.eta();
         double pt  = trk.pt();
         double phi = trk.phi();
 
         nMult_ass_good++;
 
-        TVector3 primPEPvector;
-        primPEPvector.SetPtEtaPhi(pt,eta,phi);
-        if(eta <= etaMax_ass_  &&
-                eta >= etaMin_ass_ &&
-                pt <= ptMax_ass_ && //pT associated window
-                pt >= ptMin_ass_ //pT associated window
-          )
-            pepVect_trkass->push_back(primPEPvector);
+        //TVector3 primPEPvector;
+        //primPEPvector.SetPtEtaPhi(pt,eta,phi);
+        //if(eta <= etaMax_ass_  &&
+                //eta >= etaMin_ass_ &&
+                //pt <= ptMax_ass_ && //pT associated window
+                //pt >= ptMin_ass_ //pT associated window
+          //)
+            //pepVect_trkass->push_back(primPEPvector);
     }
     hMult_selected->Fill(nMult_ass_good);
-    
-    //Gen Pars
+
     edm::Handle<reco::GenParticleCollection> genpars;
-    iEvent.getByToken(_gnCollection,genpars);
-   
+    if(doGen_){
+        iEvent.getByToken(_gnCollection,genpars);
+    }
+
     if(nMult_ass_good<multMax_ && nMult_ass_good>=multMin_){
-        for(unsigned it=0; it<genpars->size(); ++it){
+        if(doGen_){
+            for(unsigned it=0; it<genpars->size(); ++it){
 
-            const reco::GenParticle & trk = (*genpars)[it];
+                const reco::GenParticle & trk = (*genpars)[it];
 
-            double eta = trk.eta();
-            double phi = trk.phi();
-            double pt  = trk.pt();
-            double rap = trk.rapidity();
-            int st = trk.status();
+                double eta = trk.eta();
+                double phi = trk.phi();
+                double pt  = trk.pt();
+                double rap = trk.rapidity();
+                int st = trk.status();
+                int id = trk.pdgId();
 
-            TVector3 pvector;
-            pvector.SetPtEtaPhi(pt,eta,phi);
+                TVector3 pvector;
+                pvector.SetPtEtaPhi(pt,eta,phi);
 
-            double effweight = 1;
+                double effweight = 1;
 
-            for(int i=0;i<18;i++)
-            {
-                if(rap<=rapMax_ && rap>=rapMin_ && pt<=ptcut_[i+1] && pt>=ptcut_[i] && fabs(trk.charge())==1 && st==1){
-                    hPt[i]->Fill(pt,1.0/effweight);
-                    pVect_trg[i]->push_back(pvector);
+                for(int i=0;i<numPtBins_;i++)
+                {
+                    if(rap<=rapMax_ && rap>=rapMin_ && pt<=ptcut_[i+1] && pt>=ptcut_[i] && fabs(trk.charge())==1 && st==1){
+                        hPt[i]->Fill(pt,1.0/effweight);
+                        hEta[i]->Fill(eta);
+                        hPhi[i]->Fill(phi);
+                        hRap[i]->Fill(rap);
+                        pVect_trg[i]->push_back(pvector);
+                    }
+                }
+
+                if(id == 311 || id == 2212 || id ==211)
+                {
+                    if(eta<=etaMax_ass_ && eta>=etaMin_ass_ && pt<=ptMax_ass_ && pt>=ptMin_ass_ && fabs(trk.charge())==1 && st==1) pVect_ass->push_back(pvector);
                 }
             }
+        }
+        else{
+            for(reco::TrackCollection::const_iterator it=tracks->begin(); it!=tracks->end(); ++it){
+                math::XYZPoint bestvtx(bestvx,bestvy,bestvz);
 
-            if(eta<=etaMax_ass_ && eta>=etaMin_ass_ && pt<=ptMax_ass_ && pt>=ptMin_ass_ && fabs(trk.charge())==1 && st==1) pVect_ass->push_back(pvector);
+                double dzvtx = it->dz(bestvtx);
+                double dxyvtx = it->dxy(bestvtx);
+                double dzerror = sqrt(it->dzError()*it->dzError()+bestvzError*bestvzError);
+                double dxyerror = sqrt(it->d0Error()*it->d0Error()+bestvxError*bestvyError);
+
+                if(!it->quality(reco::TrackBase::highPurity)) continue;
+                if(fabs(it->ptError())/it->pt()>0.10) continue;
+                if(fabs(dzvtx/dzerror) > 3) continue;
+                if(fabs(dxyvtx/dxyerror) > 3) continue;
+                double eta = it->eta();
+                double phi = it->phi();
+                double pt = it->pt();
+
+                TVector3 pvector;
+                pvector.SetPtEtaPhi(pt,eta,phi);
+
+                if(eta<=etaMax_ass_ && eta>=etaMin_ass_ && pt<=ptMax_ass_ && pt>=ptMin_ass_) pepVect_trkass->push_back(pvector);
+            }
         }
 
         int nMult_ass = (int)pVect_ass->size();
         // Calculating signal
-        for(int i=0;i<18;i++)
+        if(doGen_)
         {
-            int nMult_trg = (int)pVect_trg[i]->size();
-            hMult[i]->Fill(nMult_trg);
-
-            int nMult_corr = 0;
-            if(nMult_trg>0 && nMult_ass>0) nMult_corr = 1;
-
-            double nMult_trg_eff=0;
-
-            for(int ntrg=0;ntrg<nMult_trg;ntrg++)
+            for(int i=0;i<numPtBins_;i++)
             {
-                TVector3 pvector_trg = (*pVect_trg[i])[ntrg];
-                double eta_trg = pvector_trg.Eta();
-                //double phi_trg = pvector_trg.Phi();
-                double pt_trg = pvector_trg.Pt();
+                int nMult_trg = (int)pVect_trg[i]->size();
+                hMult[i]->Fill(nMult_trg);
 
-                double effweight_trg = 1;
+                int nMult_corr = 0;
+                if(nMult_trg>0 && nMult_ass>0) nMult_corr = 1;
 
-                nMult_trg_eff = nMult_trg_eff + 1.0/effweight_trg;
-            }
+                double nMult_trg_eff=0;
 
-            for(int ntrg=0;ntrg<nMult_trg;ntrg++)
-            {
-                int nMult_ass_pair = (int)pVect_ass->size();
-                TVector3 pvector_trg = (*pVect_trg[i])[ntrg];
-                double eta_trg = pvector_trg.Eta();
-                double phi_trg = pvector_trg.Phi();
-                double pt_trg = pvector_trg.Pt();
-
-                double effweight_trg = 1;
-
-                for(int nass=0;nass<nMult_ass;nass++)
+                for(int ntrg=0;ntrg<nMult_trg;ntrg++)
                 {
-                    TVector3 pvector_ass = (*pVect_ass)[nass];
-                    double eta_ass = pvector_ass.Eta();
-                    double phi_ass = pvector_ass.Phi();
-                    double pt_ass = pvector_ass.Pt();
+                    TVector3 pvector_trg = (*pVect_trg[i])[ntrg];
+                    double eta_trg = pvector_trg.Eta();
+                    //double phi_trg = pvector_trg.Phi();
+                    double pt_trg = pvector_trg.Pt();
 
-                    double effweight_ass = 1;
+                    double effweight_trg = 1;
 
-                    double deltaEta=eta_ass-eta_trg;
-                    double deltaPhi=phi_ass-phi_trg;
-                    if(deltaPhi>PI)
-                        deltaPhi=deltaPhi-2*PI;
-                    if(deltaPhi<-PI)
-                        deltaPhi=deltaPhi+2*PI;
-                    if(deltaPhi>-PI && deltaPhi<-PI/2.)
-                        deltaPhi=deltaPhi+2*PI;
-
-                    if(fabs(deltaEta)==0 && fabs(deltaPhi)==0){
-                        if(nMult_trg==1 && nMult_ass==1){nMult_corr = 0;}
-                        nMult_ass_pair = nMult_ass_pair - 1;
-                        continue;}
-                    hSignal[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effweight_trg/effweight_ass);
+                    nMult_trg_eff = nMult_trg_eff + 1.0/effweight_trg;
                 }
-                if(nMult_corr > 0) hMult_assoc[i]->Fill(nMult_ass_pair);
+
+                for(int ntrg=0;ntrg<nMult_trg;ntrg++)
+                {
+                    int nMult_ass_pair = (int)pVect_ass->size();
+                    TVector3 pvector_trg = (*pVect_trg[i])[ntrg];
+                    double eta_trg = pvector_trg.Eta();
+                    double phi_trg = pvector_trg.Phi();
+                    double pt_trg = pvector_trg.Pt();
+
+                    double effweight_trg = 1;
+
+                    for(int nass=0;nass<nMult_ass;nass++)
+                    {
+                        TVector3 pvector_ass = (*pVect_ass)[nass];
+                        double eta_ass = pvector_ass.Eta();
+                        double phi_ass = pvector_ass.Phi();
+                        double pt_ass = pvector_ass.Pt();
+
+                        double effweight_ass = 1;
+
+                        double deltaEta=eta_ass-eta_trg;
+                        double deltaPhi=phi_ass-phi_trg;
+                        if(deltaPhi>PI)
+                            deltaPhi=deltaPhi-2*PI;
+                        if(deltaPhi<-PI)
+                            deltaPhi=deltaPhi+2*PI;
+                        if(deltaPhi>-PI && deltaPhi<-PI/2.)
+                            deltaPhi=deltaPhi+2*PI;
+
+                        if(fabs(deltaEta)==0 && fabs(deltaPhi)==0){
+                            if(nMult_trg==1 && nMult_ass==1){nMult_corr = 0;}
+                            nMult_ass_pair = nMult_ass_pair - 1;
+                            continue;}
+                        hSignal[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effweight_trg/effweight_ass);
+                    }
+                    if(nMult_corr > 0) hMult_assoc[i]->Fill(nMult_ass_pair);
+                }
+                hMult_good[i]->Fill(nMult_corr);
+                pVectVect_trg[i]->push_back(*pVect_trg[i]);
             }
-            hMult_good[i]->Fill(nMult_corr);
-            pVectVect_trg[i]->push_back(*pVect_trg[i]);
         }
         //
         // Make signal histogram for pairing of two charged primary GEN tracks
         //
-        int pepVect_trkhad_size = (int)pVect_ass->size();
-        HadPerEvt->Fill(pepVect_trkhad_size);
-
-        for(int trktrg1 = 0; trktrg1 < pepVect_trkhad_size; trktrg1++)
+        if(doGen_)
         {
-            TVector3 pepVect_had1 = (*pVect_ass)[trktrg1];
-            double eta_trg = pepVect_had1.Eta();
-            double phi_trg = pepVect_had1.Phi();
+            int pepVect_trkhad_size = (int)pVect_ass->size();
+            HadPerEvt->Fill(pepVect_trkhad_size);
 
-            for(int trktrg2 = 0; trktrg2 < pepVect_trkhad_size; trktrg2++)
+            for(int trktrg1 = 0; trktrg1 < pepVect_trkhad_size; trktrg1++)
             {
-                if(trktrg2 == trktrg1){
-                    continue;
+                TVector3 pepVect_had1 = (*pVect_ass)[trktrg1];
+                double eta_trg = pepVect_had1.Eta();
+                double phi_trg = pepVect_had1.Phi();
+
+                for(int trktrg2 = 0; trktrg2 < pepVect_trkhad_size; trktrg2++)
+                {
+                    if(trktrg2 == trktrg1){
+                        continue;
+                    }
+                    TVector3 pepVect_had2 = (*pVect_ass)[trktrg2];
+                    double eta_ass = pepVect_had2.Eta();
+                    double phi_ass = pepVect_had2.Phi();
+
+                    double dEta = eta_ass - eta_trg;
+                    double dPhi = phi_ass - phi_trg;
+
+                    if(dPhi > PI)
+                        dPhi=dPhi-2*PI;
+                    if(dPhi < -PI)
+                        dPhi=dPhi+2*PI;
+                    if(dPhi > -PI && dPhi < -PI/2.0)
+                        dPhi=dPhi+2*PI;
+
+                    // To reduce jet fragmentation contributions
+                    //if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
+                    SignalHad->Fill(dEta, dPhi,1.0/pepVect_trkhad_size);
                 }
-                TVector3 pepVect_had2 = (*pVect_ass)[trktrg2];
-                double eta_ass = pepVect_had2.Eta();
-                double phi_ass = pepVect_had2.Phi();
-
-                double dEta = eta_ass - eta_trg;
-                double dPhi = phi_ass - phi_trg;
-
-                if(dPhi > PI)
-                    dPhi=dPhi-2*PI;
-                if(dPhi < -PI)
-                    dPhi=dPhi+2*PI;
-                if(dPhi > -PI && dPhi < -PI/2.0)
-                    dPhi=dPhi+2*PI;
-
-                // To reduce jet fragmentation contributions
-                if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                SignalHad->Fill(dEta, dPhi,1.0/pepVect_trkhad_size);
             }
         }
 
@@ -248,9 +289,12 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
                 TVector3 pepVect_had2 = (*pepVect_trkass)[trktrg2];
                 double eta_ass = pepVect_had2.Eta();
                 double phi_ass = pepVect_had2.Phi();
+                double pt_ass = pepVect_had2.Pt();
 
                 double dEta = eta_ass - eta_trg;
                 double dPhi = phi_ass - phi_trg;
+
+                double eff = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                 if(dPhi > PI)
                     dPhi=dPhi-2*PI;
@@ -260,8 +304,8 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
                     dPhi=dPhi+2*PI;
 
                 // To reduce jet fragmentation contributions
-                if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
-                SignalHadReco->Fill(dEta, dPhi);
+                //if(fabs(dEta) < 0.028 && fabs(dPhi) < 0.02) continue;
+                SignalHadReco->Fill(dEta, dPhi, 1.0/eff);
             }
         }
 
@@ -270,7 +314,7 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
         pVectVect_ass->push_back(*pVect_ass);
         zvtxVect->push_back(bestvz);
 
-        for(int i=0; i<18; i++)
+        for(int i=0; i<numPtBins_; i++)
         {
             delete pVect_trg[i];
         }
@@ -283,9 +327,15 @@ HadronCorrelationGen::analyze(const edm::Event& iEvent, const edm::EventSetup& i
 // ------------ method called once each job just before starting event loop  ------------
 void
 HadronCorrelationGen::beginJob(){
-    
+
     TH1D::SetDefaultSumw2();
-    
+
+    edm::FileInPath fip2("XiAnalyzer/XiAnalyzer/data/Hijing_8TeV_dataBS.root");
+    TFile f2(fip2.fullPath().c_str(),"READ");
+    effhisto = (TH2F*)f2.Get("rTotalEff3D_0");
+
+    TFileDirectory KineParam = fs->mkdir("KineParam");
+    TFileDirectory Mult = fs->mkdir("Mult");
     hMult_selected = fs->make<TH1D>("mult_selected",";N",600,0,600);
     HadPerEvt       = fs->make<TH1D>("HadPerEvent", "Hadrons per Event", 1500, 0, 1500);
     BackgroundHad   = fs->make<TH2D>("BackgroundHad", "BkgHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
@@ -293,12 +343,15 @@ HadronCorrelationGen::beginJob(){
     BackgroundHadReco   = fs->make<TH2D>("BackgroundHadReco", "BkgHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     SignalHadReco       = fs->make<TH2D>("SignalHadReco", "SigHad; #Delta#eta;#Delta#phi", 33, -4.95, 4.95, 31, -(0.5 - 1.0/32)*PI, (1.5 - 1.0/32)*PI);
     
-    for(int i=0;i<18;i++)
+    for(int i=0;i<numPtBins_;i++)
     {
-        hPt[i] = fs->make<TH1D>(Form("Pt%d",i),";GeV",25000,0,12.5);
-        hMult[i] = fs->make<TH1D>(Form("mult%d",i),";N",300,0,300);
-        hMult_good[i] = fs->make<TH1D>(Form("mult_good%d",i),";N",300,0,300);
-        hMult_assoc[i] = fs->make<TH1D>(Form("mult_assoc%d",i),";N",300,0,300);
+        hPt[i] = KineParam.make<TH1D>(Form("Pt%d",i),";GeV",25000,0,12.5);
+        hRap[i] = KineParam.make<TH1D>(Form("rap_pt%d",i),";y",100,-5,5);
+        hEta[i] = KineParam.make<TH1D>(Form("Eta_pt%d",i),";#eta",100,-5.0,5.0);
+        hPhi[i] = KineParam.make<TH1D>(Form("Phi_pt%d",i),";#phi",132,-2.1*PI,2.1*PI);
+        hMult[i] = Mult.make<TH1D>(Form("mult%d",i),";N",300,0,300);
+        hMult_good[i] = Mult.make<TH1D>(Form("mult_good%d",i),";N",300,0,300);
+        hMult_assoc[i] = Mult.make<TH1D>(Form("mult_assoc%d",i),";N",300,0,300);
         hSignal[i] = fs->make<TH2D>(Form("signal%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
         hBackground[i] = fs->make<TH2D>(Form("background%d",i),";#Delta#eta;#Delta#phi",33,-4.95,4.95,31,-(0.5-1.0/32)*PI,(1.5-1.0/32)*PI);
         pVectVect_trg[i] = new vector< vector<TVector3> >;
@@ -316,74 +369,77 @@ HadronCorrelationGen::endJob() {
     cout << "End event loop" << endl;
     int nevttotal_ass = (int)pVectVect_ass->size();
     int nevttotal_ass_Reco = (int)pVect2_ass->size();
-    
-    // Calculate background
-    for(int i=0;i<18;i++)
-    {
-        int nevttotal_trg = (int)pVectVect_trg[i]->size();
-        
-        for(int nround=0;nround<bkgFactor_;nround++)
-        {
-            int ncount = 0;
-            for(int nevt_ass=0; nevt_ass<nevttotal_ass; nevt_ass++)
-            {
-                int nevt_trg = gRandom->Integer(nevttotal_trg);
-                if(nevt_trg == nevt_ass) { nevt_ass--; continue; }
-                if(fabs((*zvtxVect)[nevt_trg]-(*zvtxVect)[nevt_ass])>0.5) {
-                    nevt_ass--;
-                    ncount++;
-                    if(ncount>5000) {nevt_ass++; ncount = 0;}
-                    continue; }
-                
-                vector<TVector3> pVectTmp_trg = (*pVectVect_trg[i])[nevt_trg];
-                vector<TVector3> pVectTmp_ass = (*pVectVect_ass)[nevt_ass];
-                int nMult_trg = pVectTmp_trg.size();
-                int nMult_ass = pVectTmp_ass.size();
-                
-                double nMult_trg_eff=0;
-                
-                for(int ntrg=0;ntrg<nMult_trg;ntrg++)
-                {
-                    TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    //double phi_trg = pvectorTmp_trg.Phi();
-                    double pt_trg = pvectorTmp_trg.Pt();
-                    
-                    double effweight_trg = 1;
-                    
-                    nMult_trg_eff = nMult_trg_eff + 1.0/effweight_trg;
-                }
-                
-                for(int ntrg=0;ntrg<nMult_trg;ntrg++)
-                {
-                    TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
-                    double eta_trg = pvectorTmp_trg.Eta();
-                    double phi_trg = pvectorTmp_trg.Phi();
-                    double pt_trg = pvectorTmp_trg.Pt();
-                    
-                    double effweight_trg = 1;
-                    
-                    for(int nass=0;nass<nMult_ass;nass++)
-                    {
-                        TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
-                        double eta_ass = pvectorTmp_ass.Eta();
-                        double phi_ass = pvectorTmp_ass.Phi();
-                        double pt_ass = pvectorTmp_ass.Pt();
-                        
-                        double effweight_ass = 1;
 
-                        double deltaEta=eta_ass-eta_trg;
-                        double deltaPhi=phi_ass-phi_trg;
-                        if(deltaPhi>PI)
-                            deltaPhi=deltaPhi-2*PI;
-                        if(deltaPhi<-PI)
-                            deltaPhi=deltaPhi+2*PI;
-                        if(deltaPhi>-PI && deltaPhi<-PI/2.)
-                            deltaPhi=deltaPhi+2*PI;
-                        
-                        //if(fabs(deltaEta)<0.028 && fabs(deltaPhi)<0.02) continue;
-                        
-                        hBackground[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effweight_trg/effweight_ass);
+    // Calculate background
+    if(doGen_)
+    {
+        for(int i=0;i<numPtBins_;i++)
+        {
+            int nevttotal_trg = (int)pVectVect_trg[i]->size();
+
+            for(int nround=0;nround<bkgFactor_;nround++)
+            {
+                int ncount = 0;
+                for(int nevt_ass=0; nevt_ass<nevttotal_ass; nevt_ass++)
+                {
+                    int nevt_trg = gRandom->Integer(nevttotal_trg);
+                    if(nevt_trg == nevt_ass) { nevt_ass--; continue; }
+                    if(fabs((*zvtxVect)[nevt_trg]-(*zvtxVect)[nevt_ass])>0.5) {
+                        nevt_ass--;
+                        ncount++;
+                        if(ncount>5000) {nevt_ass++; ncount = 0;}
+                        continue; }
+
+                    vector<TVector3> pVectTmp_trg = (*pVectVect_trg[i])[nevt_trg];
+                    vector<TVector3> pVectTmp_ass = (*pVectVect_ass)[nevt_ass];
+                    int nMult_trg = pVectTmp_trg.size();
+                    int nMult_ass = pVectTmp_ass.size();
+
+                    double nMult_trg_eff=0;
+
+                    for(int ntrg=0;ntrg<nMult_trg;ntrg++)
+                    {
+                        TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        //double phi_trg = pvectorTmp_trg.Phi();
+                        double pt_trg = pvectorTmp_trg.Pt();
+
+                        double effweight_trg = 1;
+
+                        nMult_trg_eff = nMult_trg_eff + 1.0/effweight_trg;
+                    }
+
+                    for(int ntrg=0;ntrg<nMult_trg;ntrg++)
+                    {
+                        TVector3 pvectorTmp_trg = pVectTmp_trg[ntrg];
+                        double eta_trg = pvectorTmp_trg.Eta();
+                        double phi_trg = pvectorTmp_trg.Phi();
+                        double pt_trg = pvectorTmp_trg.Pt();
+
+                        double effweight_trg = 1;
+
+                        for(int nass=0;nass<nMult_ass;nass++)
+                        {
+                            TVector3 pvectorTmp_ass = pVectTmp_ass[nass];
+                            double eta_ass = pvectorTmp_ass.Eta();
+                            double phi_ass = pvectorTmp_ass.Phi();
+                            double pt_ass = pvectorTmp_ass.Pt();
+
+                            double effweight_ass = 1;
+
+                            double deltaEta=eta_ass-eta_trg;
+                            double deltaPhi=phi_ass-phi_trg;
+                            if(deltaPhi>PI)
+                                deltaPhi=deltaPhi-2*PI;
+                            if(deltaPhi<-PI)
+                                deltaPhi=deltaPhi+2*PI;
+                            if(deltaPhi>-PI && deltaPhi<-PI/2.)
+                                deltaPhi=deltaPhi+2*PI;
+
+                            //if(fabs(deltaEta)<0.028 && fabs(deltaPhi)<0.02) continue;
+
+                            hBackground[i]->Fill(deltaEta,deltaPhi,1.0/nMult_trg_eff/effweight_trg/effweight_ass);
+                        }
                     }
                 }
             }
@@ -394,56 +450,59 @@ HadronCorrelationGen::endJob() {
     // hadron paired with hadron GEN
     //
 
-    for(int bkgnum = 0; bkgnum<bkgFactor_; bkgnum++)
+    if(doGen_)
     {
-        int ncount = 0;
-        for(int nevt_ass=0; nevt_ass<nevttotal_ass; nevt_ass++)
+        for(int bkgnum = 0; bkgnum<bkgFactor_; bkgnum++)
         {
-            int nevt_trg = gRandom->Integer(nevttotal_ass);
-            if(nevt_trg == nevt_ass)
+            int ncount = 0;
+            for(int nevt_ass=0; nevt_ass<nevttotal_ass; nevt_ass++)
             {
-                nevt_ass--;
-                continue;
-            }
-            if(fabs((*zvtxVect)[nevt_trg] - (*zvtxVect)[nevt_ass]) > 0.5)
-            {
-                nevt_ass--;
-                ncount++;
-                if(ncount > 5000)
+                int nevt_trg = gRandom->Integer(nevttotal_ass);
+                if(nevt_trg == nevt_ass)
                 {
-                    nevt_ass++;
-                    ncount=0;
+                    nevt_ass--;
+                    continue;
                 }
-                continue;
-            }
-
-            vector<TVector3> pepVectTmp_trg = (*pVectVect_ass)[nevt_trg];
-            vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
-            int nMult_trg = pepVectTmp_trg.size();
-            int nMult_ass = pepVectTmp_ass.size();
-
-            for(int ntrg=0; ntrg<nMult_trg; ntrg++)
-            {
-                TVector3 pvectorTmp_trg = pepVectTmp_trg[ntrg];
-                double eta_trg = pvectorTmp_trg.Eta();
-                double phi_trg = pvectorTmp_trg.Phi();
-
-                for(int nass=0; nass<nMult_ass; nass++)
+                if(fabs((*zvtxVect)[nevt_trg] - (*zvtxVect)[nevt_ass]) > 0.5)
                 {
-                    TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
-                    double eta_ass = pvectorTmp_ass.Eta();
-                    double phi_ass = pvectorTmp_ass.Phi();
+                    nevt_ass--;
+                    ncount++;
+                    if(ncount > 5000)
+                    {
+                        nevt_ass++;
+                        ncount=0;
+                    }
+                    continue;
+                }
 
-                    double dEta = eta_ass - eta_trg;
-                    double dPhi = phi_ass - phi_trg;
+                vector<TVector3> pepVectTmp_trg = (*pVectVect_ass)[nevt_trg];
+                vector<TVector3> pepVectTmp_ass = (*pVectVect_ass)[nevt_ass];
+                int nMult_trg = pepVectTmp_trg.size();
+                int nMult_ass = pepVectTmp_ass.size();
 
-                    if(dPhi > PI)                    dPhi=dPhi-2*PI;
-                    if(dPhi < -PI)                   dPhi=dPhi+2*PI;
-                    if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
+                for(int ntrg=0; ntrg<nMult_trg; ntrg++)
+                {
+                    TVector3 pvectorTmp_trg = pepVectTmp_trg[ntrg];
+                    double eta_trg = pvectorTmp_trg.Eta();
+                    double phi_trg = pvectorTmp_trg.Phi();
 
-                    if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
+                    for(int nass=0; nass<nMult_ass; nass++)
+                    {
+                        TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
+                        double eta_ass = pvectorTmp_ass.Eta();
+                        double phi_ass = pvectorTmp_ass.Phi();
 
-                    BackgroundHad->Fill(dEta, dPhi, 1.0/nMult_trg);
+                        double dEta = eta_ass - eta_trg;
+                        double dPhi = phi_ass - phi_trg;
+
+                        if(dPhi > PI)                    dPhi=dPhi-2*PI;
+                        if(dPhi < -PI)                   dPhi=dPhi+2*PI;
+                        if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
+
+                        if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
+
+                        BackgroundHad->Fill(dEta, dPhi, 1.0/nMult_trg);
+                    }
                 }
             }
         }
@@ -492,17 +551,20 @@ HadronCorrelationGen::endJob() {
                     TVector3 pvectorTmp_ass = pepVectTmp_ass[nass];
                     double eta_ass = pvectorTmp_ass.Eta();
                     double phi_ass = pvectorTmp_ass.Phi();
+                    double pt_ass = pvectorTmp_ass.Pt();
 
                     double dEta = eta_ass - eta_trg;
                     double dPhi = phi_ass - phi_trg;
+
+                    double eff = effhisto->GetBinContent(effhisto->FindBin(eta_ass,pt_ass));
 
                     if(dPhi > PI)                    dPhi=dPhi-2*PI;
                     if(dPhi < -PI)                   dPhi=dPhi+2*PI;
                     if(dPhi > -PI && dPhi < -PI/2.0) dPhi=dPhi+2*PI;
 
-                    if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
+                    //if(fabs(dPhi) < 0.028 && fabs(dEta) < 0.02) continue;
 
-                    BackgroundHadReco->Fill(dEta, dPhi);
+                    BackgroundHadReco->Fill(dEta, dPhi, 1.0/eff);
                 }
             }
         }

@@ -14,8 +14,8 @@ MassPt = cms.EDAnalyzer('MassPtProducer',
         rapMin         = cms.double(-1.0),
         rapMax         = cms.double(1.0),
         MC             = cms.untracked.bool(False),
-        ks             = cms.untracked.bool(True),
-        la             = cms.untracked.bool(True),
+        ks             = cms.untracked.bool(False),
+        la             = cms.untracked.bool(False),
         xi             = cms.untracked.bool(True),
         om             = cms.untracked.bool(True)
 )
