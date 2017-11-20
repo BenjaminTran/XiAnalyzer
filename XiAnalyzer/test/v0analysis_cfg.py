@@ -40,7 +40,7 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 #process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -84,7 +84,7 @@ process.TFileService = cms.Service("TFileService",
                                     #'MatchV0ClosureB.root'
                                     #'MatchV0ClosureGenRef.root'
                                     #'V0CorrelationRapidityPeriSubTestRAM.root'
-                                    'V0ClosureRecoRef_wEff.root'
+                                    'V0ClosureRecoRef_NoV0Eff_80mult.root'
 				                    )
                                   )
 # CORRELATION
@@ -116,7 +116,7 @@ process.V0CorrAnalysisRapidityTight = cms.Sequence(process.selectV0CandidatesNew
 
 process.genSelector = cms.Sequence(process.selectGenCandidatesKshort*process.selectGenCandidatesLambda*process.MatchCandidatesKshort*process.MatchCandidatesLambda*process.v0CorrelationRapidityMatchMC)
 
-process.p = cms.Path(process.V0CorrAnalysisRapidityMCGen)
+process.p = cms.Path(process.V0CorrAnalysisRapidityMC)
 
 process.schedule = cms.Schedule(process.p)
 

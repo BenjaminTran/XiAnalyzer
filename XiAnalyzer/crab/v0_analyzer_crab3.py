@@ -7,9 +7,9 @@ try:
 except FileNotFoundError:
     counter = 0
 
-PDcounter = 2
-#collID = 'ppb'
-collID = 'Pbp'
+PDcounter = 1
+collID = 'ppb'
+#collID = 'Pbp'
 
 v0.config.General.workArea = 'crab_dir/HLT185_250FlowV0v2' + collID + '2016PD' + str(PDcounter) + 'Rap'
 v0.config.General.requestName = 'HLT185_250Flow2016Correlation' + collID + 'V0PD' + str(PDcounter) + 'JL' + str(counter)
