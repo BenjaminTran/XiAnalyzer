@@ -11,5 +11,6 @@
 *.pcm
 *.pyc
 *.log
+*.dat
 XiAnalyzer/crab/crab_dir/HLT*
 *.orig
