@@ -34,14 +34,15 @@ process.load("XiAnalyzer.XiAnalyzer.v0cascorrelation_cff")
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
-#process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
+#process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10000))
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
         #pPb HM
     'root://cmsxrootd.fnal.gov//store/user/davidlw/PAHighMultiplicity1/RecoSkim2016_pPb_V0Cascade_FullSkim_v4/170803_222621/0000/pPb_HM_109.root'
+    )
         #pPb MB
    #'root://cmsxrootd.fnal.gov//store/user/davidlw/PAMinimumBias1/RecoSkim2016_pPb_V0Cascade_v1/170302_094853/0000/pPb_HM_1.root'
    #),
@@ -71,7 +72,7 @@ process.TFileService = cms.Service("TFileService",
                                     #'V0CasCorrelationPeriSubOmegaTest.root'
                                     #'TESTV0CasCorrelationMBXiOm.root'
                                     'V0CasCorrelationHMXi.root'
-				    )
+				                    )
                                   )
 # CORRELATION
 # MinBias
@@ -82,6 +83,7 @@ process.TFileService = cms.Service("TFileService",
 process.RapidityAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
 
 process.RapidityAnalysisXi = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.v0CasCorrelationRapidity)
+process.RapidityAnalysisOm = cms.Sequence(process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
 
 process.RapidityAnalysisPeriSub = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidityPeriSub)
 
