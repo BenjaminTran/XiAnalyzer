@@ -34,8 +34,8 @@ process.load("XiAnalyzer.XiAnalyzer.v0cascorrelation_cff")
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
-#process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10000))
+# process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(5000))
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -71,7 +71,8 @@ process.TFileService = cms.Service("TFileService",
                                     #'V0CasCorrelationPbPb.root'
                                     #'V0CasCorrelationPeriSubOmegaTest.root'
                                     #'TESTV0CasCorrelationMBXiOm.root'
-                                    'V0CasCorrelationHMXi.root'
+                                    #'V0CasCorrelationHMXi.root'
+                                    'OmCorrelationHMRebin_v1.root'
 				                    )
                                   )
 # CORRELATION
@@ -92,7 +93,7 @@ process.RapidityAnalysisPeriSubXiOmega = cms.Sequence(process.selectV0Candidates
 process.RapidityAnalysisPbPb = cms.Sequence(process.selectV0CandidatesNewlambdaRapidityPbPb*process.selectV0CandidatesNewkshortRapidityPbPb*process.selectV0CandidatesLowXiRapidityPbPb*process.selectV0CandidatesLowOmegaRapidityPbPb*process.v0CasCorrelationRapidityPbPb)
 
 #process.p = cms.Path(process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
-process.p = cms.Path(process.RapidityAnalysisXi)
+process.p = cms.Path(process.RapidityAnalysisOm)
 
 process.schedule = cms.Schedule(process.p)
 
