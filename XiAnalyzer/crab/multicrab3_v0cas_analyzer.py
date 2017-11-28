@@ -1,7 +1,7 @@
 import v0casanalyzerheader as v0xi
 
-collID = 'pPb'
-#collID = 'Pbp'
+#collID = 'pPb'
+collID = 'Pbp'
 #collID = 'pPbMB'
 #collID = 'PbpMB'
 
