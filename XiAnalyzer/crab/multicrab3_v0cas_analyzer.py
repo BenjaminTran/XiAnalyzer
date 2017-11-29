@@ -5,7 +5,7 @@ import v0casanalyzerheader as v0xi
 #collID = 'pPbMB'
 collID = 'PbpMB'
 
-v0xi.config.JobType.priority = 8
+v0xi.config.JobType.priority = 9
 
 if __name__ == '__main__':
 
@@ -82,7 +82,7 @@ if __name__ == '__main__':
                     fle.write( str(counter) )
                 submit(v0xi.config)
         else:
-            for num in range(0,5):
+            for num in range(5,6):
                 try:
                     with open( 'V0XiVarStore.dat', 'r' ) as fle:
                         counter = int( fle.readline() )
