@@ -5,6 +5,8 @@ import v0casanalyzerheader as v0xi
 #collID = 'pPbMB'
 collID = 'PbpMB'
 
+v0xi.config.JobType.priority = 8
+
 if __name__ == '__main__':
 
     from CRABAPI.RawCommand import crabCommand
@@ -56,7 +58,7 @@ if __name__ == '__main__':
             submit(v0xi.config)
     else:
         if collID == 'pPbMB':
-            for num in range(1,8):
+            for num in range(6,8):
                 try:
                     with open( 'V0XiVarStore.dat', 'r' ) as fle:
                         counter = int( fle.readline() )
@@ -80,7 +82,7 @@ if __name__ == '__main__':
                     fle.write( str(counter) )
                 submit(v0xi.config)
         else:
-            for num in range(7,13):
+            for num in range(0,5):
                 try:
                     with open( 'V0XiVarStore.dat', 'r' ) as fle:
                         counter = int( fle.readline() )
