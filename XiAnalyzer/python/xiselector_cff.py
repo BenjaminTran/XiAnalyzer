@@ -21,11 +21,11 @@ selectV0CandidatesLowOmegaRapidity = selectV0CandidatesLowOmega.clone(
         )
 
 selectV0CandidatesLowXiRapidityPbPb = selectV0CandidatesLowXiRapidity.clone(
-        cas3DIpSigValue0 = cms.double(1.5)
+        cas3DIpSigValue0 = cms.double(1.5) #First Bin
         )
 
 selectV0CandidatesLowOmegaRapidityPbPb = selectV0CandidatesLowOmegaRapidity.clone(
-        cas3DIpSigValue0 = cms.double(1.8)
+        cas3DIpSigValue0 = cms.double(1.8) # All Bins
         )
 
 selectV0CandidatesXiRapidityLoose = selectV0CandidatesLowXiRapidity.clone(

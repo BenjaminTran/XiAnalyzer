@@ -23,18 +23,11 @@ selectV0CandidatesNewkshortRapidityPbPb = selectV0CandidatesNew.clone(
 
 selectV0CandidatesNewlambdaRapidityPbPb = selectV0CandidatesNewlambda.clone(
         dorap        = cms.bool(True),
-        cosThetaCut0 = cms.double(0.9999),
-        cosThetaCut = cms.double(0.9998)
+        cosThetaCut0 = cms.double(0.9999), #First bin
+        cosThetaCut = cms.double(0.9998) #Other bins
 )
 
-#### SYSTEMATICS AND MC
-selectV0CandidatesNewkshortRapidityMC = selectV0CandidatesNewkshortRapidity.clone(
-        v0CollName = cms.string("generalV0Candidates")
-)
-
-selectV0CandidatesNewlambdaRapidityMC = selectV0CandidatesNewlambdaRapidity.clone(
-        v0CollName = cms.string("generalV0Candidates")
-)
+#### SYSTEMATICS
 
 selectV0CandidatesNewlambdatight = selectV0CandidatesNewlambda.clone(
   dxySigCut1      = cms.double(1.25),
