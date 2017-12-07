@@ -32,10 +32,10 @@ process.load("XiAnalyzer.XiAnalyzer.omegaselector_cff")
 process.load("XiAnalyzer.XiAnalyzer.v0cascorrelation_cff")
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
+process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(1000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 #process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(60000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100000))
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -69,7 +69,7 @@ process.TFileService = cms.Service("TFileService",
                                     #'V0CasCorrelationPeriSubOmegaTest.root'
                                     #'MBomCorrelation_0_35_Rebin_v1.root'
                                     #'MBV0Correlation_0_35_V0DifferenceTest.root'
-                                    'MBV0XiCorrelation_0_35.root'
+                                    'MBXiCorrelation_0_35.root'
 				    )
                                   )
 # CORRELATION
@@ -86,6 +86,8 @@ process.RapidityAnalysisPeriSubV0 = cms.Sequence(process.selectV0CandidatesNewla
 
 process.RapidityAnalysisPeriSubV0Xi = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.v0CasCorrelationRapidityPeriSub)
 
+process.RapidityAnalysisPeriSubXi = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.v0CasCorrelationRapidityPeriSub)
+
 process.RapidityAnalysisPeriSubXiOmega = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidityPeriSub)
 
 process.RapidityAnalysisPeriSubOmega = cms.Sequence(process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidityPeriSub)
@@ -93,7 +95,7 @@ process.RapidityAnalysisPeriSubOmega = cms.Sequence(process.selectOmegaCandidate
 process.RapidityAnalysisPbPb = cms.Sequence(process.selectV0CandidatesNewlambdaRapidityPbPb*process.selectV0CandidatesNewkshortRapidityPbPb*process.selectV0CandidatesLowXiRapidityPbPb*process.selectV0CandidatesLowOmegaRapidityPbPb*process.v0CasCorrelationRapidityPbPb)
 
 #process.p = cms.Path(process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
-process.p = cms.Path(process.RapidityAnalysisPeriSubV0Xi)
+process.p = cms.Path(process.RapidityAnalysisPeriSubXi)
 
 process.schedule = cms.Schedule(process.p)
 
