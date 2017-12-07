@@ -27,6 +27,7 @@ process.GlobalTag.globaltag = '80X_dataRun2_Prompt_v15'
 #process.load("SimTracker.TrackAssociation.TrackAssociatorByHits_cfi")
 #process.load("SimTracker.TrackAssociation.TrackAssociatorByChi2_cfi")
 process.load("XiAnalyzer.XiAnalyzer.xiselector_cff")
+process.load("XiAnalyzer.XiAnalyzer.highmultfilter_cfi")
 process.load("XiAnalyzer.XiAnalyzer.v0selector_cff")
 process.load("XiAnalyzer.XiAnalyzer.omegaselector_cff")
 process.load("XiAnalyzer.XiAnalyzer.v0cascorrelation_cff")
@@ -86,7 +87,7 @@ process.RapidityAnalysisPeriSubV0 = cms.Sequence(process.selectV0CandidatesNewla
 
 process.RapidityAnalysisPeriSubV0Xi = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.v0CasCorrelationRapidityPeriSub)
 
-process.RapidityAnalysisPeriSubXi = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.v0CasCorrelationRapidityPeriSub)
+process.RapidityAnalysisPeriSubXi = cms.Sequence(process.HighMultFilter*process.selectV0CandidatesLowXiRapidity*process.v0CasCorrelationRapidityPeriSub)
 
 process.RapidityAnalysisPeriSubXiOmega = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidityPeriSub)
 
