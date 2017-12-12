@@ -18,12 +18,12 @@ v0CasCorrelationRapidity = v0CasCorrelation.clone(
         mean_la      = cms.untracked.vdouble(1.11668 ,1.11618 ,1.11597 ,1.11593 ,1.1159 ,1.11584 ,1.11582 ,1.11582 ,1.11583 ,1.11585 ,1.11586 ,1.11593 ,1.11587 ,1.11616 ,1.11543),
         mean_xi      = cms.untracked.vdouble(1.32339 ,1.3227 ,1.32243 ,1.32234 ,1.32224 ,1.32218 ,1.32214 ,1.3221 ,1.32208),
         sigma_xi     = cms.untracked.vdouble(0.00546234 ,0.00477726 ,0.00445783 ,0.00400124 ,0.00382872 ,0.00379973 ,0.00392485 ,0.00394356 ,0.00484037),
-        mean_om      = cms.untracked.vdouble(1.67306 ,1.67284 ,1.6728 ,1.67268 ,1.67272 ,1.6727 ,1.67262 ,1.67269 ,1.67279),
-        sigma_om     = cms.untracked.vdouble(0.00762585 ,0.00910153 ,0.00762863 ,0.00588798 ,0.00553094 ,0.00401328 ,0.00372463 ,0.00354882 ,0.00479006),
+        mean_om      = cms.untracked.vdouble(1.6727,1.6727,1.6727,1.6727,1.6727),
+        sigma_om     = cms.untracked.vdouble(0.0047,0.0040,0.0034,0.0032,0.0033),
         ptcut_ks     = cms.untracked.vdouble(0.2,0.4,0.6,0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5,10.0,15.0,20.0,25.0,30.0),
         ptcut_la     = cms.untracked.vdouble(0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5,10.0,15.0,20.0,25.0,30.0),
         ptcut_xi     = cms.untracked.vdouble(1.0, 1.4, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10),
-        ptcut_om     = cms.untracked.vdouble(1.5, 1.8, 2.2, 2.8, 3.6, 4.6, 6.0, 7.2, 10.0),
+        ptcut_om     = cms.untracked.vdouble(1.5, 2.2, 2.8, 3.6,5.0,8.0),
         doRap        = cms.untracked.bool(True),
         doDauEff     = cms.untracked.bool(True)
         )
@@ -44,7 +44,7 @@ v0CasCorrelationRapidityPbPb = v0CasCorrelationRapidity.clone(
         mean_xi       = cms.untracked.vdouble(1.3232 ,1.3226 ,1.3224 ,1.3223 ,1.3222 ,1.3222 ,1.3219, 1.3221),
         sigma_xi      = cms.untracked.vdouble(0.0043 ,0.0044,0.004 ,0.0035 ,0.0034 ,0.0034 ,0.0033, 0.0035),
         mean_om       = cms.untracked.vdouble(1.6728 ,1.6726 ,1.6727 ,1.6727 ,1.6728 ,1.6727),
-        sigma_om      = cms.untracked.vdouble(0.009,0.0056 ,0.0043 ,0.004 ,0.0042 ,0.0033)
+        sigma_om      = cms.untracked.vdouble(0.011,0.0083 ,0.0061 ,0.0043 ,0.0049 ,0.003)
         )
 
 v0CasCorrelationlooseRapidity = v0CasCorrelationRapidity.clone(
@@ -74,11 +74,11 @@ v0CasCorrelationRapidityMatchMC = v0CasCorrelationRapidity.clone(
 #hltHM = hltHM.clone()
 
 v0CasCorrelationRapidityPeriSub = v0CasCorrelationRapidity.clone(
-        ptcut_om = cms.untracked.vdouble(1.5, 1.8, 2.2, 2.8, 3.6, 5.0, 8.0),
+        ptcut_om = cms.untracked.vdouble(1.5, 2.2, 2.8, 3.6, 5.0, 8.0),
         ptcut_ks = cms.untracked.vdouble(0.2,0.4,0.6,0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5),
         ptcut_la = cms.untracked.vdouble(0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5),
-        mean_om  = cms.untracked.vdouble(1.6728, 1.6729, 1.6728, 1.6728,1.6728, 1.6728),
-        sigma_om = cms.untracked.vdouble(0.0033, 0.0033, 0.0030, 0.0030, 0.003, 0.003),
+        mean_om  = cms.untracked.vdouble(1.6728, 1.6728, 1.6728,1.6728, 1.6728),
+        sigma_om = cms.untracked.vdouble(0.0033, 0.0030, 0.0030, 0.003, 0.003),
         mean_xi  = cms.untracked.vdouble(1.32339 ,1.3227 ,1.32243 ,1.32234 ,1.32224 ,1.32218 ,1.32214 ,1.3221 ,1.32208),
         sigma_xi = cms.untracked.vdouble(0.00546234 ,0.00477726 ,0.004 ,0.00400124 ,0.0036 ,0.0034 ,0.0037 ,0.00394356 ,0.004),
         mean_ks  = cms.untracked.vdouble(0.4982 , 0.4978 , 0.4978 , 0.4978 , 0.4978 , 0.4977 , 0.4976 , 0.4976 , 0.4976 , 0.4976 , 0.4976 , 0.4976 , 0.4977),

@@ -241,6 +241,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
     hMult->Fill(nMult_ass_good);
 
     if ( nMult_ass_good < multMax_ && nMult_ass_good >= multMin_ ) {
+        cout << "V0CasCorrelation Good Loop Entry" << endl;
         hMult_accept->Fill(nMult_ass_good);
         for(int i=0;i<ptbin_n_;i++)
         {
@@ -278,6 +279,8 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
         }
 
         pVect_ass = new vector<TVector3>;
+
+        cout << "Containers initialized" << endl;
 
         if(doKs_)
         {
@@ -367,12 +370,16 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 double pt_dau2 = dau2->pt();
 
                 //efficiency
-                double effks = 0;
+                double effks = 1;
+
+                cout << "call to calc function" << endl;
 
                 if(doDauEff_)
                     effks = V0CasCorrelation::CalcEffDau(pt_dau1,pt_dau2,eta_dau1,eta_dau2,effhisto_dau);
                 else
                     effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt));
+
+                cout << " calc function good" << endl;
 
                 TLorentzVector pvector;
                 pvector.SetPtEtaPhiE(pt,eta,phi,rapidity);
@@ -395,6 +402,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         rapOrEtaMinCut = -1.0;
                         rapOrEta = rapidity;
                     }
+                    cout << "Fill " << i << " of ks hists" << endl;
                     if(rapOrEta<=rapOrEtaMaxCut && rapOrEta>=rapOrEtaMinCut && pt<=ptcut_ks_[i+1] && pt>=ptcut_ks_[i]){
                         hMass_ks[i]->Fill(mass);
                         if(mass<=(mean_ks_[i]+peakFactor_*sigma_ks_[i]) && mass>=(mean_ks_[i]-peakFactor_*sigma_ks_[i])){
@@ -508,7 +516,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 double pt_dau2 = dau2->pt();
 
                 //efficiency
-                double effla = 0;
+                double effla = 1;
 
                 if(doDauEff_)
                     effla = V0CasCorrelation::CalcEffDau(pt_dau1,pt_dau2,eta_dau1,eta_dau2,effhisto_dau);
@@ -535,6 +543,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         rapOrEtaMinCut = -1.0;
                         rapOrEta = rapidity;
                     }
+                    cout << "Fill " << i << " of la hists" << endl;
                     if(rapOrEta<=rapOrEtaMaxCut && rapOrEta>=rapOrEtaMinCut && pt<=ptcut_la_[i+1] && pt>=ptcut_la_[i]){
                         hMass_la[i]->Fill(mass);
                         if(mass<=(mean_la_[i]+peakFactor_*sigma_la_[i]) && mass>=(mean_la_[i]-peakFactor_*sigma_la_[i])){
@@ -797,7 +806,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     else
                         EffXchoice = eta_trg;
 
-                    double effks = 0;
+                    double effks = 1;
 
                     if(doDauEff_)
                         effks = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -834,7 +843,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     else
                         EffXchoice = eta_trg;
 
-                    double effks = 0;
+                    double effks = 1;
 
                     if(doDauEff_)
                         effks = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -895,7 +904,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     else
                         EffXchoice = eta_trg;
 
-                    double effks = 0;
+                    double effks = 1;
 
                     if(doDauEff_)
                         effks = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -932,7 +941,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     else
                         EffXchoice = eta_trg;
 
-                    double effks = 0;
+                    double effks = 1;
 
                     if(doDauEff_)
                         effks = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -996,7 +1005,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     else
                         EffXchoice = eta_trg;
 
-                    double effla = 0;
+                    double effla = 1;
 
                     if(doDauEff_)
                         effla = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -1032,7 +1041,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     else
                         EffXchoice = eta_trg;
 
-                    double effla = 0;
+                    double effla = 1;
 
                     if(doDauEff_)
                         effla = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -1093,7 +1102,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     else
                         EffXchoice = eta_trg;
 
-                    double effla = 0;
+                    double effla = 1;
 
                     if(doDauEff_)
                         effla = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -1128,7 +1137,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     else
                         EffXchoice = eta_trg;
 
-                    double effla = 0;
+                    double effla = 1;
 
                     if(doDauEff_)
                         effla = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -1564,6 +1573,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
         zvtxVect->push_back(bestvz);
         delete pVect_ass;
     }
+    cout << "End event" << endl;
 }
 
 
@@ -1768,7 +1778,7 @@ V0CasCorrelation::endJob() {
                         else
                             EffXchoice = eta_trg;
 
-                        double effks = 0;
+                        double effks = 1;
 
                         if(doDauEff_)
                             effks = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -1802,7 +1812,7 @@ V0CasCorrelation::endJob() {
                         else
                             EffXchoice = eta_trg;
 
-                        double effks = 0;
+                        double effks = 1;
 
                         if(doDauEff_)
                             effks = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -1886,7 +1896,7 @@ V0CasCorrelation::endJob() {
                         else
                             EffXchoice = eta_trg;
 
-                        double effla = 0;
+                        double effla = 1;
 
                         if(doDauEff_)
                             effla = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -1920,7 +1930,7 @@ V0CasCorrelation::endJob() {
                         else
                             EffXchoice = eta_trg;
 
-                        double effla = 0;
+                        double effla = 1;
 
                         if(doDauEff_)
                             effla = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -2008,7 +2018,7 @@ V0CasCorrelation::endJob() {
                         else
                             EffXchoice = eta_trg;
 
-                        double effks = 0;
+                        double effks = 1;
 
                         if(doDauEff_)
                             effks = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -2042,7 +2052,7 @@ V0CasCorrelation::endJob() {
                         else
                             EffXchoice = eta_trg;
 
-                        double effks = 0;
+                        double effks = 1;
 
                         if(doDauEff_)
                             effks = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -2126,7 +2136,7 @@ V0CasCorrelation::endJob() {
                         else
                             EffXchoice = eta_trg;
 
-                        double effla = 0;
+                        double effla = 1;
 
                         if(doDauEff_)
                             effla = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
@@ -2160,7 +2170,7 @@ V0CasCorrelation::endJob() {
                         else
                             EffXchoice = eta_trg;
 
-                        double effla = 0;
+                        double effla = 1;
 
                         if(doDauEff_)
                             effla = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
