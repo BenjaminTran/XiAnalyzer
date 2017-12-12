@@ -1797,7 +1797,7 @@ V0CasCorrelation::endJob() {
                         double effks = 0;
 
                         if(doDauEff_)
-                            effks = V0CasCorrekstion::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
+                            effks = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
                         else
                             effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
 
@@ -1831,7 +1831,7 @@ V0CasCorrelation::endJob() {
                         double effks = 0;
 
                         if(doDauEff_)
-                            effks = V0CasCorrekstion::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
+                            effks = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
                         else
                             effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
 
@@ -2041,7 +2041,7 @@ V0CasCorrelation::endJob() {
                         double effks = 0;
 
                         if(doDauEff_)
-                            effks = V0CasCorrekstion::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
+                            effks = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
                         else
                             effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
 
@@ -2075,7 +2075,7 @@ V0CasCorrelation::endJob() {
                         double effks = 0;
 
                         if(doDauEff_)
-                            effks = V0CasCorrekstion::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
+                            effks = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
                         else
                             effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt_trg));
 
