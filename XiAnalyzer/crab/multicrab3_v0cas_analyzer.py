@@ -82,7 +82,7 @@ if __name__ == '__main__':
                     fle.write( str(counter) )
                 submit(v0xi.config)
         else:
-            for num in range(11,20):
+            for num in range(12,13):
                 try:
                     with open( 'V0XiVarStore.dat', 'r' ) as fle:
                         counter = int( fle.readline() )

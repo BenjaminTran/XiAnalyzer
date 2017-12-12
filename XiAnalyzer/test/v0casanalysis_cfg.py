@@ -33,10 +33,10 @@ process.load("XiAnalyzer.XiAnalyzer.omegaselector_cff")
 process.load("XiAnalyzer.XiAnalyzer.v0cascorrelation_cff")
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(1000)
+process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 #process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(2000))
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -70,7 +70,7 @@ process.TFileService = cms.Service("TFileService",
                                     #'V0CasCorrelationPeriSubOmegaTest.root'
                                     #'MBomCorrelation_0_35_Rebin_v1.root'
                                     #'MBV0Correlation_0_35_V0DifferenceTest.root'
-                                    'MBXiCorrelation_0_35.root'
+                                    'MBXiCorrelation_0_35_wMultFilter.root'
 				    )
                                   )
 # CORRELATION
