@@ -70,7 +70,8 @@ process.TFileService = cms.Service("TFileService",
                                     #'V0CasCorrelationPeriSubOmegaTest.root'
                                     #'MBomCorrelation_0_35_Rebin_v1.root'
                                     #'MBV0Correlation_0_35_V0DifferenceTest.root'
-                                    'MBXiCorrelation_0_35_wMultFilter.root'
+                                    #'MBXiCorrelation_0_35_wMultFilter.root'
+                                    'V0CasCorrelationV0DauEff.root'
 				    )
                                   )
 # CORRELATION
@@ -79,15 +80,17 @@ process.TFileService = cms.Service("TFileService",
 
 # HM
 #process.XiAnalysis = cms.Sequence(process.hltHM*process.selectV0CandidatesLowXi*process.xiCorrelation)
-process.RapidityAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
+process.RapidityAnalysis = cms.Sequence(process.HighMultFilter*process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
+
+process.RapidityAnalysisV0 = cms.Sequence(process.HighMultFilter*process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.v0CasCorrelationRapidity)
 
 process.RapidityAnalysisPeriSub = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidityPeriSub)
 
-process.RapidityAnalysisPeriSubV0 = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.v0CasCorrelationRapidityPeriSub)
+process.RapidityAnalysisPeriSubV0 = cms.Sequence(process.HighMultFilterPeriSub*process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.v0CasCorrelationRapidityPeriSub)
 
 process.RapidityAnalysisPeriSubV0Xi = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.v0CasCorrelationRapidityPeriSub)
 
-process.RapidityAnalysisPeriSubXi = cms.Sequence(process.HighMultFilter*process.selectV0CandidatesLowXiRapidity*process.v0CasCorrelationRapidityPeriSub)
+process.RapidityAnalysisPeriSubXi = cms.Sequence(process.HighMultFilterPeriSub*process.selectV0CandidatesLowXiRapidity*process.v0CasCorrelationRapidityPeriSub)
 
 process.RapidityAnalysisPeriSubXiOmega = cms.Sequence(process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidityPeriSub)
 
@@ -96,7 +99,7 @@ process.RapidityAnalysisPeriSubOmega = cms.Sequence(process.selectOmegaCandidate
 process.RapidityAnalysisPbPb = cms.Sequence(process.selectV0CandidatesNewlambdaRapidityPbPb*process.selectV0CandidatesNewkshortRapidityPbPb*process.selectV0CandidatesLowXiRapidityPbPb*process.selectV0CandidatesLowOmegaRapidityPbPb*process.v0CasCorrelationRapidityPbPb)
 
 #process.p = cms.Path(process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
-process.p = cms.Path(process.RapidityAnalysisPeriSubXi)
+process.p = cms.Path(process.RapidityAnalysisV0)
 
 process.schedule = cms.Schedule(process.p)
 
