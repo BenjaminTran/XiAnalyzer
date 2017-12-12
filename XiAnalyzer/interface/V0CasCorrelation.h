@@ -62,6 +62,8 @@ class V0CasCorrelation : public edm::EDAnalyzer {
 public:
     explicit V0CasCorrelation(const edm::ParameterSet&);
     ~V0CasCorrelation();
+    double EffDau(double _pt_dau, double _eta_dau, TH2D* hEff);
+    double CalcEffDau(double _pt_dau1, double _pt_dau2, double _eta_dau1, double _eta_dau2, TH2D* hEff);
 
 
 private:
@@ -75,6 +77,7 @@ private:
     TH1D* hMult_accept;
 
     TH2F* effhisto;
+    TH2D* effhist_dau;
     TH2D* effhisto_ks;
     TH2D* effhisto_la;
 
