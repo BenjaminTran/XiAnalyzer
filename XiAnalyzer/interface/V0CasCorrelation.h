@@ -173,6 +173,7 @@ private:
     bool rejectDaughter_;
     bool useCentrality_;
     bool doRap_;
+    bool doDauEff_;
     bool doGenRef_;
     bool doKs_;
     bool doLa_;
