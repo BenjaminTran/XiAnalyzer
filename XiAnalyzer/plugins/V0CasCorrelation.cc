@@ -785,12 +785,10 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                     TVector3 pvector_trg_dau1 = (*pVect_dau_ks[i])[2*ntrg];
                     double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
                     double pt_trg_dau1 = pvector_trg_dau1.Pt();
 
                     TVector3 pvector_trg_dau2 = (*pVect_dau_ks[i])[2*ntrg+1];
                     double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
                     double pt_trg_dau2 = pvector_trg_dau2.Pt();
 
 
@@ -886,12 +884,10 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                     TVector3 pvector_trg_dau1 = (*pVect_dau_ks[i])[2*ntrg];
                     double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
                     double pt_trg_dau1 = pvector_trg_dau1.Pt();
 
                     TVector3 pvector_trg_dau2 = (*pVect_dau_ks[i])[2*ntrg+1];
                     double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
                     double pt_trg_dau2 = pvector_trg_dau2.Pt();
 
                     if(doRap_)
@@ -989,12 +985,10 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                     TVector3 pvector_trg_dau1 = (*pVect_dau_la[i])[2*ntrg];
                     double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
                     double pt_trg_dau1 = pvector_trg_dau1.Pt();
 
                     TVector3 pvector_trg_dau2 = (*pVect_dau_la[i])[2*ntrg+1];
                     double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
                     double pt_trg_dau2 = pvector_trg_dau2.Pt();
 
                     if(doRap_)
@@ -1088,12 +1082,10 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
                     TVector3 pvector_trg_dau1 = (*pVect_dau_la[i])[2*ntrg];
                     double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
                     double pt_trg_dau1 = pvector_trg_dau1.Pt();
 
                     TVector3 pvector_trg_dau2 = (*pVect_dau_la[i])[2*ntrg+1];
                     double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
                     double pt_trg_dau2 = pvector_trg_dau2.Pt();
 
                     if(doRap_)
@@ -1765,12 +1757,10 @@ V0CasCorrelation::endJob() {
 
                         TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
                         double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                        double phi_trg_dau1 = pvector_trg_dau1.Phi();
                         double pt_trg_dau1 = pvector_trg_dau1.Pt();
 
                         TVector3 pvector_trg_dau2 = pVectTmp_dau[2*ntrg+1];
                         double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                        double phi_trg_dau2 = pvector_trg_dau2.Phi();
                         double pt_trg_dau2 = pvector_trg_dau2.Pt();
 
                         if(doRap_)
@@ -1885,12 +1875,10 @@ V0CasCorrelation::endJob() {
 
                         TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
                         double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                        double phi_trg_dau1 = pvector_trg_dau1.Phi();
                         double pt_trg_dau1 = pvector_trg_dau1.Pt();
 
                         TVector3 pvector_trg_dau2 = pVectTmp_dau[2*ntrg+1];
                         double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                        double phi_trg_dau2 = pvector_trg_dau2.Phi();
                         double pt_trg_dau2 = pvector_trg_dau2.Pt();
 
                         if(doRap_)
@@ -2009,12 +1997,10 @@ V0CasCorrelation::endJob() {
 
                         TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
                         double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                        double phi_trg_dau1 = pvector_trg_dau1.Phi();
                         double pt_trg_dau1 = pvector_trg_dau1.Pt();
 
                         TVector3 pvector_trg_dau2 = pVectTmp_dau[2*ntrg+1];
                         double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                        double phi_trg_dau2 = pvector_trg_dau2.Phi();
                         double pt_trg_dau2 = pvector_trg_dau2.Pt();
 
                         if(doRap_)
@@ -2129,12 +2115,10 @@ V0CasCorrelation::endJob() {
 
                         TVector3 pvector_trg_dau1 = pVectTmp_dau[2*ntrg];
                         double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                        double phi_trg_dau1 = pvector_trg_dau1.Phi();
                         double pt_trg_dau1 = pvector_trg_dau1.Pt();
 
                         TVector3 pvector_trg_dau2 = pVectTmp_dau[2*ntrg+1];
                         double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                        double phi_trg_dau2 = pvector_trg_dau2.Phi();
                         double pt_trg_dau2 = pvector_trg_dau2.Pt();
 
                         if(doRap_)
