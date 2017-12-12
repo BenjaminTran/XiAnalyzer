@@ -77,7 +77,7 @@ private:
     TH1D* hMult_accept;
 
     TH2F* effhisto;
-    TH2D* effhist_dau;
+    TH2D* effhisto_dau;
     TH2D* effhisto_ks;
     TH2D* effhisto_la;
 

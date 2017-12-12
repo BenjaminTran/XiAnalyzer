@@ -1045,14 +1045,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     else
                         effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
 
-                    TVector3 pvector_trg_dau1 = (*pVect_dau_la[i])[2*ntrg];
-                    double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
-
-                    TVector3 pvector_trg_dau2 = (*pVect_dau_la[i])[2*ntrg+1];
-                    double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
-
                     for(int nass=0;nass<nMult_ass;nass++)
                     {
                         TVector3 pvector_ass = (*pVect_ass)[nass];
@@ -1150,14 +1142,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         effla = V0CasCorrelation::CalcEffDau(pt_trg_dau1,pt_trg_dau2,eta_trg_dau1,eta_trg_dau2,effhisto_dau);
                     else
                         effla = effhisto_la->GetBinContent(effhisto_la->FindBin(EffXchoice,pt_trg));
-
-                    TVector3 pvector_trg_dau1 = (*pVect_dau_la_bkg[i])[2*ntrg];
-                    double eta_trg_dau1 = pvector_trg_dau1.Eta();
-                    double phi_trg_dau1 = pvector_trg_dau1.Phi();
-
-                    TVector3 pvector_trg_dau2 = (*pVect_dau_la_bkg[i])[2*ntrg+1];
-                    double eta_trg_dau2 = pvector_trg_dau2.Eta();
-                    double phi_trg_dau2 = pvector_trg_dau2.Phi();
 
                     for(int nass=0;nass<nMult_ass;nass++)
                     {
