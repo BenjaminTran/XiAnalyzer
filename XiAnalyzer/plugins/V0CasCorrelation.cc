@@ -241,7 +241,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
     hMult->Fill(nMult_ass_good);
 
     if ( nMult_ass_good < multMax_ && nMult_ass_good >= multMin_ ) {
-        cout << "V0CasCorrelation Good Loop Entry" << endl;
         hMult_accept->Fill(nMult_ass_good);
         for(int i=0;i<ptbin_n_;i++)
         {
@@ -280,7 +279,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
         pVect_ass = new vector<TVector3>;
 
-        cout << "Containers initialized" << endl;
 
         if(doKs_)
         {
@@ -372,14 +370,12 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 //efficiency
                 double effks = 1;
 
-                cout << "call to calc function" << endl;
 
                 if(doDauEff_)
                     effks = V0CasCorrelation::CalcEffDau(pt_dau1,pt_dau2,eta_dau1,eta_dau2,effhisto_dau);
                 else
                     effks = effhisto_ks->GetBinContent(effhisto_ks->FindBin(EffXchoice,pt));
 
-                cout << " calc function good" << endl;
 
                 TLorentzVector pvector;
                 pvector.SetPtEtaPhiE(pt,eta,phi,rapidity);
@@ -402,7 +398,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         rapOrEtaMinCut = -1.0;
                         rapOrEta = rapidity;
                     }
-                    cout << "Fill " << i << " of ks hists" << endl;
                     if(rapOrEta<=rapOrEtaMaxCut && rapOrEta>=rapOrEtaMinCut && pt<=ptcut_ks_[i+1] && pt>=ptcut_ks_[i]){
                         hMass_ks[i]->Fill(mass);
                         if(mass<=(mean_ks_[i]+peakFactor_*sigma_ks_[i]) && mass>=(mean_ks_[i]-peakFactor_*sigma_ks_[i])){
@@ -543,7 +538,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                         rapOrEtaMinCut = -1.0;
                         rapOrEta = rapidity;
                     }
-                    cout << "Fill " << i << " of la hists" << endl;
                     if(rapOrEta<=rapOrEtaMaxCut && rapOrEta>=rapOrEtaMinCut && pt<=ptcut_la_[i+1] && pt>=ptcut_la_[i]){
                         hMass_la[i]->Fill(mass);
                         if(mass<=(mean_la_[i]+peakFactor_*sigma_la_[i]) && mass>=(mean_la_[i]-peakFactor_*sigma_la_[i])){
@@ -891,11 +885,11 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     double rap_trg = pvector_trg.E();
                     double EffXchoice = 0;
 
-                    TVector3 pvector_trg_dau1 = (*pVect_dau_ks[i])[2*ntrg];
+                    TVector3 pvector_trg_dau1 = (*pVect_dau_ks_bkg[i])[2*ntrg];
                     double eta_trg_dau1 = pvector_trg_dau1.Eta();
                     double pt_trg_dau1 = pvector_trg_dau1.Pt();
 
-                    TVector3 pvector_trg_dau2 = (*pVect_dau_ks[i])[2*ntrg+1];
+                    TVector3 pvector_trg_dau2 = (*pVect_dau_ks_bkg[i])[2*ntrg+1];
                     double eta_trg_dau2 = pvector_trg_dau2.Eta();
                     double pt_trg_dau2 = pvector_trg_dau2.Pt();
 
@@ -926,12 +920,12 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     double rap_trg = pvector_trg.E();
                     double EffXchoice = 0;
 
-                    TVector3 pvector_trg_dau1 = (*pVect_dau_ks[i])[2*ntrg];
+                    TVector3 pvector_trg_dau1 = (*pVect_dau_ks_bkg[i])[2*ntrg];
                     double eta_trg_dau1 = pvector_trg_dau1.Eta();
                     double phi_trg_dau1 = pvector_trg_dau1.Phi();
                     double pt_trg_dau1 = pvector_trg_dau1.Pt();
 
-                    TVector3 pvector_trg_dau2 = (*pVect_dau_ks[i])[2*ntrg+1];
+                    TVector3 pvector_trg_dau2 = (*pVect_dau_ks_bkg[i])[2*ntrg+1];
                     double eta_trg_dau2 = pvector_trg_dau2.Eta();
                     double phi_trg_dau2 = pvector_trg_dau2.Phi();
                     double pt_trg_dau2 = pvector_trg_dau2.Pt();
@@ -1089,11 +1083,11 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     double rap_trg = pvector_trg.E();
                     double EffXchoice = 0;
 
-                    TVector3 pvector_trg_dau1 = (*pVect_dau_la[i])[2*ntrg];
+                    TVector3 pvector_trg_dau1 = (*pVect_dau_la_bkg[i])[2*ntrg];
                     double eta_trg_dau1 = pvector_trg_dau1.Eta();
                     double pt_trg_dau1 = pvector_trg_dau1.Pt();
 
-                    TVector3 pvector_trg_dau2 = (*pVect_dau_la[i])[2*ntrg+1];
+                    TVector3 pvector_trg_dau2 = (*pVect_dau_la_bkg[i])[2*ntrg+1];
                     double eta_trg_dau2 = pvector_trg_dau2.Eta();
                     double pt_trg_dau2 = pvector_trg_dau2.Pt();
 
@@ -1122,12 +1116,12 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                     double rap_trg = pvector_trg.E();
                     double EffXchoice = 0;
 
-                    TVector3 pvector_trg_dau1 = (*pVect_dau_la[i])[2*ntrg];
+                    TVector3 pvector_trg_dau1 = (*pVect_dau_la_bkg[i])[2*ntrg];
                     double eta_trg_dau1 = pvector_trg_dau1.Eta();
                     double phi_trg_dau1 = pvector_trg_dau1.Phi();
                     double pt_trg_dau1 = pvector_trg_dau1.Pt();
 
-                    TVector3 pvector_trg_dau2 = (*pVect_dau_la[i])[2*ntrg+1];
+                    TVector3 pvector_trg_dau2 = (*pVect_dau_la_bkg[i])[2*ntrg+1];
                     double eta_trg_dau2 = pvector_trg_dau2.Eta();
                     double phi_trg_dau2 = pvector_trg_dau2.Phi();
                     double pt_trg_dau2 = pvector_trg_dau2.Pt();
@@ -1573,7 +1567,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
         zvtxVect->push_back(bestvz);
         delete pVect_ass;
     }
-    cout << "End event" << endl;
 }
 
 
@@ -1601,7 +1594,12 @@ V0CasCorrelation::beginJob()
     effhisto_la = (TH2D*)f0.Get("EffHistoLa");
     //
     //Daughter track efficiency for V0s loose
-    edm::FileInPath fip1("XiAnalyzer/XiAnalyzer/data/Loose_V0daughterTrack_DCA1_eff.root");
+    //w/ DCA
+    //edm::FileInPath fip1("XiAnalyzer/XiAnalyzer/data/Loose_V0daughterTrack_DCA1_eff.root");
+    //TFile f1(fip1.fullPath().c_str(),"READ");
+    //effhisto_dau = (TH2D*)f1.Get("rTotalEff3D");
+    //w/o DCA
+    edm::FileInPath fip1("XiAnalyzer/XiAnalyzer/data/Loose_V0daugterTrack_noDCA_eff.root");
     TFile f1(fip1.fullPath().c_str(),"READ");
     effhisto_dau = (TH2D*)f1.Get("rTotalEff3D");
 
