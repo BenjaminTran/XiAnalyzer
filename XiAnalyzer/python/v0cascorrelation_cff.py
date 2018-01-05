@@ -74,16 +74,16 @@ v0CasCorrelationRapidityMatchMC = v0CasCorrelationRapidity.clone(
 
 v0CasCorrelationRapidityPeriSub = v0CasCorrelationRapidity.clone(
         ptcut_om = cms.untracked.vdouble(1.5, 1.8, 2.2, 2.8, 3.6, 5.0, 8.0),
-        ptcut_ks     = cms.untracked.vdouble(0.2,0.4,0.6,0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5),
-        ptcut_la     = cms.untracked.vdouble(0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5),
+        ptcut_ks     = cms.untracked.vdouble(0.2,0.4,0.6,0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5,10.0),
+        ptcut_la     = cms.untracked.vdouble(0.8,1.0,1.4,1.8,2.2,2.8,3.6,4.6,6.0,7.0,8.5,10.0),
         mean_om  = cms.untracked.vdouble(1.6728, 1.6729, 1.6728, 1.6728,1.6728, 1.6728),
         sigma_om = cms.untracked.vdouble(0.0033, 0.0033, 0.0030, 0.0030, 0.003, 0.003),
         mean_xi      = cms.untracked.vdouble(1.32339 ,1.3227 ,1.32243 ,1.32234 ,1.32224 ,1.32218 ,1.32214 ,1.3221 ,1.32208),
         sigma_xi     = cms.untracked.vdouble(0.00546234 ,0.00477726 ,0.004 ,0.00400124 ,0.0036 ,0.0034 ,0.0037 ,0.00394356 ,0.004),
-        mean_ks      = cms.untracked.vdouble(0.4982 , 0.4978 , 0.4978 , 0.4978 , 0.4978 , 0.4977 , 0.4976 , 0.4976 , 0.4976 , 0.4976 , 0.4976 , 0.4976 , 0.4977 , 0.4976),
-        sigma_ks     = cms.untracked.vdouble(0.0049 , 0.0051 , 0.0049 , 0.0048 , 0.0045 , 0.0046 , 0.0047 , 0.0048 , 0.0051 , 0.0053 , 0.0056 , 0.0058 , 0.006 , 0.0063),
+        mean_ks      = cms.untracked.vdouble(0.4982 , 0.4978 , 0.4978 , 0.4978 , 0.4978 , 0.4977 , 0.4976 , 0.4976 , 0.4976 , 0.4976 , 0.4976 , 0.4976 , 0.4977 , 0.4977),
+        sigma_ks     = cms.untracked.vdouble(0.0049 , 0.0051 , 0.0049 , 0.0048 , 0.0045 , 0.0046 , 0.0047 , 0.0048 , 0.0051 , 0.0053 , 0.0056 , 0.0058 , 0.006 , 0.0064),
         mean_la      = cms.untracked.vdouble(1.117  , 1.116  , 1.116  , 1.116  , 1.116  , 1.116 , 1.116 , 1.116  , 1.116  , 1.116 , 1.116),
-        sigma_la     = cms.untracked.vdouble(0.002 , 0.0018 , 0.0018 , 0.0019 , 0.0019 , 0.002 , 0.002 , 0.0021 , 0.0023 , 0.0023, 0.0023),
+        sigma_la     = cms.untracked.vdouble(0.002 , 0.0018 , 0.0018 , 0.0019 , 0.0019 , 0.002 , 0.002 , 0.0021 , 0.0023 , 0.0023, 0.0024),
         multHigh = cms.untracked.double(35),
         multLow  = cms.untracked.double(0)
         )
