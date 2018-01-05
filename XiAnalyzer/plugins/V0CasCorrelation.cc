@@ -185,42 +185,6 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
         iEvent.getByToken(_gnCollection,genpars);
     }
 
-    for(int i=0;i<ptbin_n_;i++)
-    {
-        if(doKs_)
-        {
-            pVect_trg_ks[i] = new vector<TLorentzVector>;
-            pVect_dau_ks[i] = new vector<TVector3>;
-            pVect_trg_ks_bkg[i] = new vector<TLorentzVector>;
-            pVect_dau_ks_bkg[i] = new vector<TVector3>;
-        }
-        if(doLa_)
-        {
-            pVect_trg_la[i] = new vector<TLorentzVector>;
-            pVect_dau_la[i] = new vector<TVector3>;
-            pVect_trg_la_bkg[i] = new vector<TLorentzVector>;
-            pVect_dau_la_bkg[i] = new vector<TVector3>;
-        }
-    }
-    for(int i=0; i<ptbin_n_cas_; i++)
-    {
-        if(doXi_)
-        {
-            pepVect_xi_peak[i]    = new vector<TLorentzVector>;
-            pepVect_xi_side[i]    = new vector<TLorentzVector>;
-            pepVect_dau_xi_peak[i]= new vector<TVector3>;
-            pepVect_dau_xi_side[i]= new vector<TVector3>;
-        }
-        if(doOm_)
-        {
-            pepVect_om_peak[i]    = new vector<TLorentzVector>;
-            pepVect_om_side[i]    = new vector<TLorentzVector>;
-            pepVect_dau_om_peak[i]= new vector<TVector3>;
-            pepVect_dau_om_side[i]= new vector<TVector3>;
-        }
-    }
-
-    pVect_ass = new vector<TVector3>;
 
 
     //track selection
@@ -252,6 +216,43 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
     if ( nMult_ass_good < multMax_ && nMult_ass_good >= multMin_ ) {
         hMult_accept->Fill(nMult_ass_good);
+        for(int i=0;i<ptbin_n_;i++)
+        {
+            if(doKs_)
+            {
+                pVect_trg_ks[i] = new vector<TLorentzVector>;
+                pVect_dau_ks[i] = new vector<TVector3>;
+                pVect_trg_ks_bkg[i] = new vector<TLorentzVector>;
+                pVect_dau_ks_bkg[i] = new vector<TVector3>;
+            }
+            if(doLa_)
+            {
+                pVect_trg_la[i] = new vector<TLorentzVector>;
+                pVect_dau_la[i] = new vector<TVector3>;
+                pVect_trg_la_bkg[i] = new vector<TLorentzVector>;
+                pVect_dau_la_bkg[i] = new vector<TVector3>;
+            }
+        }
+        for(int i=0; i<ptbin_n_cas_; i++)
+        {
+            if(doXi_)
+            {
+                pepVect_xi_peak[i]    = new vector<TLorentzVector>;
+                pepVect_xi_side[i]    = new vector<TLorentzVector>;
+                pepVect_dau_xi_peak[i]= new vector<TVector3>;
+                pepVect_dau_xi_side[i]= new vector<TVector3>;
+            }
+            if(doOm_)
+            {
+                pepVect_om_peak[i]    = new vector<TLorentzVector>;
+                pepVect_om_side[i]    = new vector<TLorentzVector>;
+                pepVect_dau_om_peak[i]= new vector<TVector3>;
+                pepVect_dau_om_side[i]= new vector<TVector3>;
+            }
+        }
+
+        pVect_ass = new vector<TVector3>;
+
         if(doKs_)
         {
             for(unsigned it=0; it<v0candidates_ks->size(); ++it){
