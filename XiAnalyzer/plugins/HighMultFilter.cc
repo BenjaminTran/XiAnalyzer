@@ -107,7 +107,7 @@
 #include "SimDataFormats/TrackingAnalysis/interface/TrackingVertexContainer.h"
 #include "SimDataFormats/TrackingAnalysis/interface/TrackingParticle.h"
 #include "SimDataFormats/TrackingHit/interface/PSimHit.h"
-#include "SimGeneral/HepPDTRecord/interface/ParticleDataTable.h"
+//#include "SimGeneral/HepPDTRecord/interface/ParticleDataTable.h"
 #include "SimTracker/TrackerHitAssociation/interface/TrackerHitAssociator.h"
 
 #include "DataFormats/SiPixelDetId/interface/PixelEndcapName.h"
