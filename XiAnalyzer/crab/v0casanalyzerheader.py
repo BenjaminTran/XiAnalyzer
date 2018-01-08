@@ -21,6 +21,7 @@ config.Data.splitting = 'EventAwareLumiBased'
 #config.Data.unitsPerJob = 550000 #Xi 0-35
 #config.Data.unitsPerJob = 150000 #V0s + Xi 0-35
 #######HM
+#config.Data.unitsPerJob = 80000 #Xi
 config.Data.unitsPerJob = 80000 #Xi
 config.Data.outLFNDirBase = '/store/group/phys_heavyions/btran/'
 config.Data.useParent = True

@@ -5,7 +5,7 @@ collID = 'pPb'
 #collID = 'pPbMB'
 #collID = 'PbpMB'
 
-v0xi.config.JobType.priority = 20
+v0xi.config.JobType.priority = 10
 
 if __name__ == '__main__':
 
