@@ -48,6 +48,7 @@ V0CasCorrelation::V0CasCorrelation(const edm::ParameterSet& iConfig)
     rejectDaughter_ = iConfig.getUntrackedParameter<bool>("rejectDaughter");
     doRap_          = iConfig.getUntrackedParameter<bool>("doRap");
     doGenRef_       = iConfig.getUntrackedParameter<bool>("doGenRef");
+    doThrowAway_ = iConfig.getUntrackedParameter<bool>("doThrowAway");
     useCentrality_ = iConfig.getUntrackedParameter<bool>("useCentrality");
     doKs_ = iConfig.getUntrackedParameter<bool>("doKs");
     doLa_ = iConfig.getUntrackedParameter<bool>("doLa");
@@ -351,6 +352,12 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 TVector3 pvector_dau2;
                 pvector_dau2.SetPtEtaPhi(pt_dau2,eta_dau2,phi_dau2);
 
+                // Throws away random 5% of data
+                if(doThrowAway_)
+                {
+                    int tmpRnd = gRandom->Integer(100);
+                    if(tmpRnd<5) continue;
+                }
                 for(int i=0;i<ptbin_n_;i++)
                 {
                     double rapOrEtaMaxCut = etaMax_trg_;
@@ -488,6 +495,12 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
                 TVector3 pvector_dau2;
                 pvector_dau2.SetPtEtaPhi(pt_dau2,eta_dau2,phi_dau2);
 
+                // Throws away random 5% of data
+                if(doThrowAway_)
+                {
+                    int tmpRnd = gRandom->Integer(100);
+                    if(tmpRnd<5) continue;
+                }
                 for(int i=0;i<ptbin_n_;i++)
                 {
                     double rapOrEtaMaxCut = etaMax_trg_;
