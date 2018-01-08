@@ -1,11 +1,11 @@
 import v0casanalyzerheader as v0xi
 
-#collID = 'pPb'
+collID = 'pPb'
 #collID = 'Pbp'
 #collID = 'pPbMB'
-collID = 'PbpMB'
+#collID = 'PbpMB'
 
-v0xi.config.JobType.priority = 9
+v0xi.config.JobType.priority = 20
 
 if __name__ == '__main__':
 
@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
 
     if collID == 'pPb' or collID == 'Pbp':
-        for num in range(0,3):
+        for num in range(0,1):
             try:
                 with open( 'V0XiVarStore.dat', 'r' ) as fle:
                     counter = int( fle.readline() )
