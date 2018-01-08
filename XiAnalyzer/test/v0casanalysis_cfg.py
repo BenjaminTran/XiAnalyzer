@@ -36,7 +36,7 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 #process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(5000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -75,7 +75,8 @@ process.TFileService = cms.Service("TFileService",
                                     #'MBV0Correlation_0_35_V0DifferenceTest.root'
                                     #'MBV0Correlation_0_35_Pt8p5_10.root'
                                     #'MBXiCorrelation_0_35_wMultFilter.root'
-                                    'CasCrossCheck_ARC3.root'
+                                    #'CasCrossCheck_ARC3.root'
+                                    'V0CrossCheck_ARC3.root'
 				    )
                                   )
 # CORRELATION
@@ -83,6 +84,8 @@ process.TFileService = cms.Service("TFileService",
 # HM
 #process.XiAnalysis = cms.Sequence(process.hltHM*process.selectV0CandidatesLowXi*process.xiCorrelation)
 process.RapidityAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
+
+process.RapidityAnalysisV0 = cms.Sequence(process.HighMultFilter*process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.v0CasCorrelationRapidity)
 
 # MB
 process.RapidityAnalysisPeriSub = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidityPeriSub)
@@ -106,7 +109,7 @@ process.RapidityAnalysisLoose = cms.Sequence(process.HighMultFilter*process.sele
 process.RapidityAnalysisTight = cms.Sequence(process.HighMultFilter*process.selectV0CandidatesXiRapidityTight*process.v0CasCorrelationtightRapidity)
 
 #process.p = cms.Path(process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
-process.p = cms.Path(process.RapidityAnalysisLoose)
+process.p = cms.Path(process.RapidityAnalysisV0)
 
 process.schedule = cms.Schedule(process.p)
 

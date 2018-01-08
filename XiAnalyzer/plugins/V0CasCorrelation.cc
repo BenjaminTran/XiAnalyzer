@@ -1472,6 +1472,7 @@ V0CasCorrelation::beginJob()
     if(doLa_) cout << "Will Access La" << endl;
     if(doXi_) cout << "Will Access Xi" << endl;
     if(doOm_) cout << "Will Access Om" << endl;
+    if(doThrowAway_) cout << "Will throw away some V0s" << endl;
     edm::Service<TFileService> fs;
 
     TH1::SetDefaultSumw2();
