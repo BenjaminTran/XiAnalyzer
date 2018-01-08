@@ -36,7 +36,7 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32(5000)
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 #process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(2000))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(500))
 
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
@@ -69,7 +69,8 @@ process.TFileService = cms.Service("TFileService",
                                     #'V0CasCorrelationPbPb.root'
                                     #'V0CasCorrelationPeriSubOmegaTest.root'
                                     #'MBomCorrelation_0_35_Rebin_v1.root'
-                                    'MBV0Correlation_0_35_V0DifferenceTest.root'
+                                    #'MBV0Correlation_0_35_V0DifferenceTest.root'
+                                    'MBV0Correlation_0_35_Pt8p5_10.root'
                                     #'MBXiCorrelation_0_35_wMultFilter.root'
 				    )
                                   )

@@ -58,7 +58,7 @@ if __name__ == '__main__':
             submit(v0xi.config)
     else:
         if collID == 'pPbMB':
-            for num in range(6,8):
+            for num in range(0,8):
                 try:
                     with open( 'V0XiVarStore.dat', 'r' ) as fle:
                         counter = int( fle.readline() )
