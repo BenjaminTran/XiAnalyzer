@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
 
     if collID == 'pPb' or collID == 'Pbp':
-        for num in range(0,1):
+        for num in range(1,3):
             try:
                 with open( 'V0XiVarStore.dat', 'r' ) as fle:
                     counter = int( fle.readline() )
