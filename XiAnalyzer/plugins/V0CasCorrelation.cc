@@ -188,6 +188,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
 
 
+    /*
     //track selection
     int nMult_ass_good = 0;
     for(unsigned it=0; it<tracks->size(); ++it){
@@ -214,8 +215,9 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
         nMult_ass_good++;
     }
     hMult->Fill(nMult_ass_good);
+    */
 
-    if ( nMult_ass_good < multMax_ && nMult_ass_good >= multMin_ ) {
+    //if ( nMult_ass_good < multMax_ && nMult_ass_good >= multMin_ ) {
         hMult_accept->Fill(nMult_ass_good);
         for(int i=0;i<ptbin_n_;i++)
         {
@@ -1459,7 +1461,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
         pVectVect_ass->push_back(*pVect_ass);
         zvtxVect->push_back(bestvz);
         delete pVect_ass;
-    }
+    //}
 }
 
 
