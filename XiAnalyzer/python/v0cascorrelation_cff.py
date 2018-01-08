@@ -48,12 +48,14 @@ v0CasCorrelationRapidityPbPb = v0CasCorrelationRapidity.clone(
 
 v0CasCorrelationlooseRapidity = v0CasCorrelationRapidity.clone(
         laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdalooseRapidity:Lambda'),
-        ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshortlooseRapidity:Kshort')
+        ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshortlooseRapidity:Kshort'),
+        xiCollection  = cms.untracked.InputTag('selectV0CandidatesXiRapidityLoose:Xi')
         )
 
 v0CasCorrelationtightRapidity = v0CasCorrelationRapidity.clone(
         laCollection   = cms.untracked.InputTag('selectV0CandidatesNewlambdatightRapidity:Lambda'),
-        ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshorttightRapidity:Kshort')
+        ksCollection   = cms.untracked.InputTag('selectV0CandidatesNewkshorttightRapidity:Kshort'),
+        xiCollection  = cms.untracked.InputTag('selectV0CandidatesXiRapidityTight:Xi')
         )
 
 v0CasCorrelationRapidityMC = v0CasCorrelationRapidity.clone(

@@ -31,17 +31,17 @@ selectV0CandidatesLowOmegaRapidityPbPb = selectV0CandidatesLowOmegaRapidity.clon
 selectV0CandidatesXiRapidityLoose = selectV0CandidatesLowXiRapidity.clone(
     cas3DIpSigValue        = cms.double(3.0),
     casBat3DIpSigValue      = cms.double(4.5),
-    VTrkPi3DIpSigValue    = cms.double(3.5),
-    VTrkP3DIpSigValue     = cms.double(2.5),
-    casFlightSigValue      = cms.double(2.5),
-    distanceSigValue      = cms.double(10.0)
+    casFlightSigValue      = cms.double(2.5)#,
+    # VTrkPi3DIpSigValue    = cms.double(3.5),
+    # VTrkP3DIpSigValue     = cms.double(2.5),
+    # distanceSigValue      = cms.double(10.0)
         )
 
 selectV0CandidatesXiRapidityTight = selectV0CandidatesLowXiRapidity.clone(
     cas3DIpSigValue        = cms.double(2.0),
     casBat3DIpSigValue      = cms.double(5.5),
-    VTrkPi3DIpSigValue    = cms.double(4.5),
-    VTrkP3DIpSigValue     = cms.double(3.5),
-    casFlightSigValue      = cms.double(3.5),
-    distanceSigValue      = cms.double(14.0)
+    casFlightSigValue      = cms.double(3.5)#,
+    # VTrkPi3DIpSigValue    = cms.double(4.5),
+    # VTrkP3DIpSigValue     = cms.double(3.5),
+    # distanceSigValue      = cms.double(14.0)
         )

@@ -13,5 +13,6 @@
 *.log
 *.dat
 XiAnalyzer/crab/crab_dir/HLT*
+XiAnalyzer/crab/crab_dir_12_26_17/
 *.orig
 tags
