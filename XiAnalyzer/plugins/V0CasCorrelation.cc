@@ -218,7 +218,7 @@ V0CasCorrelation::analyze(const edm::Event& iEvent, const edm::EventSetup&
     */
 
     //if ( nMult_ass_good < multMax_ && nMult_ass_good >= multMin_ ) {
-        hMult_accept->Fill(nMult_ass_good);
+        //hMult_accept->Fill(nMult_ass_good);
         for(int i=0;i<ptbin_n_;i++)
         {
             if(doKs_)
