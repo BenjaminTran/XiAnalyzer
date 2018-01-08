@@ -174,6 +174,7 @@ private:
     bool useCentrality_;
     bool doRap_;
     bool doGenRef_;
+    bool doThrowAway_;
     bool doKs_;
     bool doLa_;
     bool doXi_;
