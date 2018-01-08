@@ -75,13 +75,12 @@ process.TFileService = cms.Service("TFileService",
 				    )
                                   )
 # CORRELATION
-# MinBias
-#process.XiAnalysis = cms.Sequence(process.selectV0CandidatesLowXi*process.xiCorrelation)
 
 # HM
 #process.XiAnalysis = cms.Sequence(process.hltHM*process.selectV0CandidatesLowXi*process.xiCorrelation)
 process.RapidityAnalysis = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
 
+# MB
 process.RapidityAnalysisPeriSub = cms.Sequence(process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.selectV0CandidatesLowXiRapidity*process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidityPeriSub)
 
 process.RapidityAnalysisPeriSubV0 = cms.Sequence(process.HighMultFilter*process.selectV0CandidatesNewlambdaRapidity*process.selectV0CandidatesNewkshortRapidity*process.v0CasCorrelationRapidityPeriSub)
@@ -94,10 +93,16 @@ process.RapidityAnalysisPeriSubXiOmega = cms.Sequence(process.selectV0Candidates
 
 process.RapidityAnalysisPeriSubOmega = cms.Sequence(process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidityPeriSub)
 
+# PbPb
 process.RapidityAnalysisPbPb = cms.Sequence(process.selectV0CandidatesNewlambdaRapidityPbPb*process.selectV0CandidatesNewkshortRapidityPbPb*process.selectV0CandidatesLowXiRapidityPbPb*process.selectV0CandidatesLowOmegaRapidityPbPb*process.v0CasCorrelationRapidityPbPb)
 
+# Reco Cuts pPb
+process.RapidityAnalysisLoose = cms.Sequence(process.HighMultFilter*process.selectV0CandidatesLowXiRapidityLoose*process.v0CasCorrelationlooseRapidity)
+
+process.RapidityAnalysisTight = cms.Sequence(process.HighMultFilter*process.selectV0CandidatesLowXiRapidityTight*process.v0CasCorrelationtightRapidity)
+
 #process.p = cms.Path(process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
-process.p = cms.Path(process.RapidityAnalysisPeriSubV0)
+process.p = cms.Path(process.RapidityAnalysisLoose)
 
 process.schedule = cms.Schedule(process.p)
 
