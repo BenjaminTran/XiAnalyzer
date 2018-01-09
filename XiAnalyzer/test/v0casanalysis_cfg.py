@@ -106,7 +106,7 @@ process.RapidityAnalysisLoose = cms.Sequence(process.HighMultFilter*process.sele
 process.RapidityAnalysisTight = cms.Sequence(process.HighMultFilter*process.selectV0CandidatesXiRapidityTight*process.v0CasCorrelationtightRapidity)
 
 #process.p = cms.Path(process.selectOmegaCandidatesNewRapidity*process.v0CasCorrelationRapidity)
-process.p = cms.Path(process.RapidityAnalysisLoose)
+process.p = cms.Path(process.RapidityAnalysisTight)
 
 process.schedule = cms.Schedule(process.p)
 
