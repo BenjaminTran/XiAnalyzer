@@ -661,3 +661,5 @@ V0XiOmTTreeProducer::beginJob()
 //loop  ------------
 void
 V0XiOmTTreeProducer::endJob(){}
+
+DEFINE_FWK_MODULE(V0XiOmTTreeProducer);

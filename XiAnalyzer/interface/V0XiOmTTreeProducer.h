@@ -11,6 +11,7 @@
 // user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/one/EDAnalyzer.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
@@ -71,7 +72,7 @@ using namespace reco;
 using std::vector;
 
 
-class V0XiOmTTreeProducer : public edm::EDAnalyzer
+class V0XiOmTTreeProducer : public edm::one::EDAnalyzer<edm::one::SharedResources>
 {
 public:
 	explicit V0XiOmTTreeProducer(const edm::ParameterSet&);
